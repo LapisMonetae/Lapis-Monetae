@@ -3,10 +3,10 @@ use crate::storage::local::interface::LocalStore;
 use crate::storage::WalletDescriptor;
 use crate::wallet as native;
 use crate::wasm::notify::{WalletEventTarget, WalletNotificationCallback, WalletNotificationTypeOrCallback};
-use kaspa_consensus_core::network::NetworkIdT;
-use kaspa_wallet_macros::declare_typescript_wasm_interface as declare;
-use kaspa_wasm_core::events::{get_event_targets, Sink};
-use kaspa_wrpc_wasm::{IConnectOptions, Resolver, RpcClient, RpcConfig, WrpcEncoding};
+use lmt_consensus_core::network::NetworkIdT;
+use lmt_wallet_macros::declare_typescript_wasm_interface as declare;
+use lmt_wasm_core::events::{get_event_targets, Sink};
+use lmt_wrpc_wasm::{IConnectOptions, Resolver, RpcClient, RpcConfig, WrpcEncoding};
 
 declare! {
     IWalletConfig,
@@ -136,7 +136,7 @@ cfg_if! {
             addEventListener<M extends keyof WalletEventMap>(
                 event: M,
                 callback: (eventData: WalletEventMap[M]) => void
-            )
+            ): void;
         }"#;
     }
 }

@@ -1,11 +1,11 @@
 use std::sync::Arc;
 
-use kaspa_database::{
+use lmt_database::{
     prelude::{CachedDbItem, DirectDbWriter, StoreError, StoreResult, DB},
     registry::DatabaseStorePrefixes,
 };
 
-use kaspa_consensus_core::BlockHashSet;
+use lmt_consensus_core::BlockHashSet;
 
 /// Reader API for `UtxoIndexTipsStore`.
 pub trait UtxoIndexTipsStoreReader {

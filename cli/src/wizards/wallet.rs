@@ -1,15 +1,15 @@
-use crate::cli::KaspaCli;
+use crate::cli::LmtCli;
 use crate::imports::*;
 use crate::result::Result;
-use kaspa_bip32::{Language, Mnemonic, WordCount};
-use kaspa_wallet_core::storage::keydata::PrvKeyDataVariantKind;
-use kaspa_wallet_core::{
+use lmt_bip32::{Language, Mnemonic, WordCount};
+use lmt_wallet_core::storage::keydata::PrvKeyDataVariantKind;
+use lmt_wallet_core::{
     storage::{make_filename, Hint},
     wallet::WalletGuard,
 };
 
 pub(crate) async fn create(
-    ctx: &Arc<KaspaCli>,
+    ctx: &Arc<LmtCli>,
     wallet_guard: Option<WalletGuard<'_>>,
     name: Option<&str>,
     import_with_mnemonic: bool,

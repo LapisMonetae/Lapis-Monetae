@@ -1,17 +1,17 @@
 use async_channel::Sender;
-use kaspa_consensus_core::coinbase::MinerData;
-use kaspa_consensus_core::mining_rules::MiningRules;
-use kaspa_consensus_core::tx::ScriptPublicKey;
-use kaspa_consensus_core::{
+use lmt_consensus_core::coinbase::MinerData;
+use lmt_consensus_core::mining_rules::MiningRules;
+use lmt_consensus_core::tx::ScriptPublicKey;
+use lmt_consensus_core::{
     api::ConsensusApi, block::MutableBlock, blockstatus::BlockStatus, header::Header, merkle::calc_hash_merkle_root,
     subnets::SUBNETWORK_ID_COINBASE, tx::Transaction,
 };
-use kaspa_consensus_notify::{notification::Notification, root::ConsensusNotificationRoot};
-use kaspa_consensusmanager::{ConsensusFactory, ConsensusInstance, DynConsensusCtl};
-use kaspa_core::{core::Core, service::Service};
-use kaspa_database::utils::DbLifetime;
-use kaspa_hashes::Hash;
-use kaspa_notify::subscription::context::SubscriptionContext;
+use lmt_consensus_notify::{notification::Notification, root::ConsensusNotificationRoot};
+use lmt_consensusmanager::{ConsensusFactory, ConsensusInstance, DynConsensusCtl};
+use lmt_core::{core::Core, service::Service};
+use lmt_database::utils::DbLifetime;
+use lmt_hashes::Hash;
+use lmt_notify::subscription::context::SubscriptionContext;
 use parking_lot::RwLock;
 
 use super::services::{DbDagTraversalManager, DbGhostdagManager, DbWindowManager};
@@ -33,8 +33,8 @@ use crate::{
     pipeline::{body_processor::BlockBodyProcessor, virtual_processor::VirtualStateProcessor, ProcessingCounters},
     test_helpers::header_from_precomputed_hash,
 };
-use kaspa_database::create_temp_db;
-use kaspa_database::prelude::ConnBuilder;
+use lmt_database::create_temp_db;
+use lmt_database::prelude::ConnBuilder;
 use std::future::Future;
 use std::{sync::Arc, thread::JoinHandle};
 
@@ -148,7 +148,7 @@ impl TestConsensus {
     /// # Panics
     ///
     /// Panics if block builder validation rules are violated.
-    /// See `kaspa_consensus_core::errors::block::RuleError` for the complete list of possible validation rules.
+    /// See `lmt_consensus_core::errors::block::RuleError` for the complete list of possible validation rules.
     pub fn add_utxo_valid_block_with_parents(
         &self,
         hash: Hash,
@@ -165,7 +165,7 @@ impl TestConsensus {
     /// # Panics
     ///
     /// Panics if block builder validation rules are violated.
-    /// See `kaspa_consensus_core::errors::block::RuleError` for the complete list of possible validation rules.
+    /// See `lmt_consensus_core::errors::block::RuleError` for the complete list of possible validation rules.
     pub fn build_utxo_valid_block_with_parents(
         &self,
         hash: Hash,

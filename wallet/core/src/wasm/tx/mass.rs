@@ -1,11 +1,11 @@
 use crate::result::Result;
 use crate::tx::{mass, MAXIMUM_STANDARD_TRANSACTION_MASS};
 use js_sys::Array;
-use kaspa_consensus_client::*;
-use kaspa_consensus_core::config::params::Params;
-use kaspa_consensus_core::mass::{calc_storage_mass, UtxoCell};
-use kaspa_consensus_core::network::{NetworkId, NetworkIdT};
-use kaspa_wasm_core::types::NumberArray;
+use lmt_consensus_client::*;
+use lmt_consensus_core::config::params::Params;
+use lmt_consensus_core::mass::{calc_storage_mass, UtxoCell};
+use lmt_consensus_core::network::{NetworkId, NetworkIdT};
+use lmt_wasm_core::types::NumberArray;
 use wasm_bindgen::prelude::*;
 use workflow_wasm::convert::*;
 

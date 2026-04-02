@@ -2,8 +2,8 @@
 //! Partially Signed LMT Transaction (PSKT)
 //!
 
-use kaspa_bip32::{secp256k1, DerivationPath, KeyFingerprint};
-use kaspa_consensus_core::{hashing::sighash::SigHashReusedValuesUnsync, Hash};
+use lmt_bip32::{secp256k1, DerivationPath, KeyFingerprint};
+use lmt_consensus_core::{hashing::sighash::SigHashReusedValuesUnsync, Hash};
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use std::{collections::BTreeMap, fmt::Display, fmt::Formatter, future::Future, marker::PhantomData, ops::Deref};
@@ -13,14 +13,14 @@ pub use crate::global::{Global, GlobalBuilder};
 pub use crate::input::{Input, InputBuilder};
 pub use crate::output::{Output, OutputBuilder};
 pub use crate::role::{Combiner, Constructor, Creator, Extractor, Finalizer, Signer, Updater};
-use kaspa_consensus_core::config::params::Params;
-use kaspa_consensus_core::mass::{MassCalculator, NonContextualMasses};
-use kaspa_consensus_core::{
+use lmt_consensus_core::config::params::Params;
+use lmt_consensus_core::mass::{MassCalculator, NonContextualMasses};
+use lmt_consensus_core::{
     hashing::sighash_type::SigHashType,
     subnets::SUBNETWORK_ID_NATIVE,
     tx::{MutableTransaction, SignableTransaction, Transaction, TransactionId, TransactionInput, TransactionOutput},
 };
-use kaspa_txscript::{caches::Cache, TxScriptEngine};
+use lmt_txscript::{caches::Cache, TxScriptEngine};
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -53,7 +53,7 @@ impl Display for Version {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct KeySource {
-    #[serde(with = "kaspa_utils::serde_bytes_fixed")]
+    #[serde(with = "lmt_utils::serde_bytes_fixed")]
     pub key_fingerprint: KeyFingerprint,
     pub derivation_path: DerivationPath,
 }
@@ -445,7 +445,7 @@ impl PSKT<Extractor> {
 
     pub fn extract_tx(self, params: &Params) -> Result<MutableTransaction<Transaction>, ExtractError> {
         let tx = self.extract_tx_unchecked(params)?;
-        use kaspa_consensus_core::tx::VerifiableTransaction;
+        use lmt_consensus_core::tx::VerifiableTransaction;
         {
             let tx = tx.as_verifiable();
             let cache = Cache::new(10_000);
@@ -484,7 +484,7 @@ pub enum FinalizeError<E> {
 #[derive(thiserror::Error, Debug, Clone, PartialEq, Eq)]
 pub enum ExtractError {
     #[error(transparent)]
-    TxScriptError(#[from] kaspa_txscript_errors::TxScriptError),
+    TxScriptError(#[from] lmt_txscript_errors::TxScriptError),
     #[error(transparent)]
     TxNotFinalized(#[from] TxNotFinalized),
 }

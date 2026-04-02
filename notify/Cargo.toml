@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-notify"
-description = "Kaspa notification subsystem"
+name = "lmt-notify"
+description = "Lapis Monetae notification subsystem"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -18,13 +18,13 @@ futures-util.workspace = true
 futures.workspace = true
 indexmap.workspace = true
 itertools.workspace = true
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-txscript-errors.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
+lmt-addresses.workspace = true
+lmt-consensus-core.workspace = true
+lmt-core.workspace = true
+lmt-hashes.workspace = true
+lmt-txscript-errors.workspace = true
+lmt-txscript.workspace = true
+lmt-utils.workspace = true
 log.workspace = true
 parking_lot.workspace = true
 paste.workspace = true
@@ -38,8 +38,8 @@ workflow-serializer.workspace = true
 
 [dev-dependencies]
 criterion.workspace = true
-kaspa-alloc.workspace = true
-kaspa-math.workspace = true
+lmt-alloc.workspace = true
+lmt-math.workspace = true
 tokio = { workspace = true, features = ["rt", "macros"] }
 workflow-perf-monitor.workspace = true
 

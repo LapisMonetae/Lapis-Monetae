@@ -1,8 +1,6 @@
 use crate::{flow_context::FlowContext, flow_trait::Flow};
-use kaspa_core::debug;
-use kaspa_p2p_lib::{
-    common::ProtocolError, dequeue_with_request_id, make_response, pb::kaspad_message::Payload, IncomingRoute, Router,
-};
+use lmt_core::debug;
+use lmt_p2p_lib::{common::ProtocolError, dequeue_with_request_id, make_response, pb::lmtd_message::Payload, IncomingRoute, Router};
 use std::sync::Arc;
 
 pub struct HandleIbdBlockRequests {

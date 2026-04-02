@@ -29,7 +29,7 @@ use crate::{
 };
 use crossbeam_channel::{Receiver, Sender};
 use itertools::Itertools;
-use kaspa_consensus_core::{
+use lmt_consensus_core::{
     blockhash::{BlockHashes, ORIGIN},
     blockstatus::BlockStatus::{self, StatusHeaderOnly, StatusInvalid},
     config::{
@@ -39,10 +39,10 @@ use kaspa_consensus_core::{
     header::Header,
     BlockHashSet, BlockLevel,
 };
-use kaspa_consensusmanager::SessionLock;
-use kaspa_database::prelude::{StoreResultEmptyTuple, StoreResultExtensions};
-use kaspa_hashes::Hash;
-use kaspa_utils::vec::VecExtensions;
+use lmt_consensusmanager::SessionLock;
+use lmt_database::prelude::{StoreResultEmptyTuple, StoreResultExtensions};
+use lmt_hashes::Hash;
+use lmt_utils::vec::VecExtensions;
 use parking_lot::RwLock;
 use rayon::ThreadPool;
 use rocksdb::WriteBatch;

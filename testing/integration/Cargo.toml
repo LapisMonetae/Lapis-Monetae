@@ -1,5 +1,5 @@
 [package]
-name = "kaspa-testing-integration"
+name = "lmt-testing-integration"
 publish = false
 rust-version.workspace = true
 version.workspace = true
@@ -10,33 +10,33 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-alloc.workspace = true            # This changes the global allocator for all of the next dependencies so should be kept first
+lmt-alloc.workspace = true            # This changes the global allocator for all of the next dependencies so should be kept first
 
-kaspa-addresses.workspace = true
-kaspa-bip32.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensus.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-database.workspace = true
-kaspa-grpc-client.workspace = true
-kaspa-grpc-core.workspace = true
-kaspa-grpc-server.workspace = true
-kaspa-hashes.workspace = true
-kaspa-index-processor.workspace = true
-kaspa-math.workspace = true
-kaspa-merkle.workspace = true
-kaspa-muhash.workspace = true
-kaspa-notify.workspace = true
-kaspa-pow.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-rpc-service.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
-kaspa-utxoindex.workspace = true
-kaspa-wrpc-server.workspace = true
-kaspad.workspace = true
+lmt-addresses.workspace = true
+lmt-bip32.workspace = true
+lmt-consensus-core.workspace = true
+lmt-consensus-notify.workspace = true
+lmt-consensus.workspace = true
+lmt-consensusmanager.workspace = true
+lmt-core.workspace = true
+lmt-database.workspace = true
+lmt-grpc-client.workspace = true
+lmt-grpc-core.workspace = true
+lmt-grpc-server.workspace = true
+lmt-hashes.workspace = true
+lmt-index-processor.workspace = true
+lmt-math.workspace = true
+lmt-merkle.workspace = true
+lmt-muhash.workspace = true
+lmt-notify.workspace = true
+lmt-pow.workspace = true
+lmt-rpc-core.workspace = true
+lmt-rpc-service.workspace = true
+lmt-txscript.workspace = true
+lmt-utils.workspace = true
+lmt-utxoindex.workspace = true
+lmt-wrpc-server.workspace = true
+lmtd.workspace = true
 
 async-channel.workspace = true
 async-trait.workspace = true
@@ -69,12 +69,12 @@ workflow-perf-monitor.workspace = true
 criterion.workspace = true
 rand = { workspace = true, features = ["small_rng"] }
 tokio = { workspace = true, features = ["rt", "macros", "process"] }
-kaspa-txscript-errors.workspace = true
+lmt-txscript-errors.workspace = true
 
 [features]
 heap = ["dhat"]
 html_reports = []
-devnet-prealloc = ["kaspad/devnet-prealloc"]
+devnet-prealloc = ["lmtd/devnet-prealloc"]
 
 [lints]
 workspace = true

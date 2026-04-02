@@ -5,24 +5,24 @@ set -e
 
 if [ "$1" == "--keygen" ]; then
     echo "building keygen"
-    typedoc --name "LMT WASM32 SDK - Key Generation" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/kaspa-keygen ./build/docs/kaspa-keygen.ts
+    typedoc --name "LMT WASM32 SDK - Key Generation" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/lmt-keygen ./build/docs/lmt-keygen.ts
 elif [ "$1" == "--rpc" ]; then
     echo "building rpc"
-    typedoc --name "LMT WASM32 SDK - RPC" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/kaspa-rpc ./build/docs/kaspa-rpc.ts
+    typedoc --name "LMT WASM32 SDK - RPC" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/lmt-rpc ./build/docs/lmt-rpc.ts
 elif [ "$1" == "--core" ]; then
     echo "building core"
-    typedoc --name "LMT WASM32 SDK - Core" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/kaspa-core ./build/docs/kaspa-core.ts
+    typedoc --name "LMT WASM32 SDK - Core" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/lmt-core ./build/docs/lmt-core.ts
 elif [ "$1" == "--sdk" ]; then
     echo "building full"
-    typedoc --name "LMT WASM32 SDK" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/kaspa ./build/docs/kaspa.ts
+    typedoc --name "LMT WASM32 SDK" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/lmt ./build/docs/lmt.ts
 else
     echo "building keygen"
-    typedoc --name "LMT WASM32 SDK - Key Generation" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/kaspa-keygen ./build/docs/kaspa-keygen.ts
+    typedoc --name "LMT WASM32 SDK - Key Generation" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/lmt-keygen ./build/docs/lmt-keygen.ts
     echo "building rpc"
-    typedoc --name "LMT WASM32 SDK - RPC" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/kaspa-rpc ./build/docs/kaspa-rpc.ts
+    typedoc --name "LMT WASM32 SDK - RPC" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/lmt-rpc ./build/docs/lmt-rpc.ts
     echo "building core"
-    typedoc --name "LMT WASM32 SDK - Core" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/kaspa-core ./build/docs/kaspa-core.ts
+    typedoc --name "LMT WASM32 SDK - Core" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/lmt-core ./build/docs/lmt-core.ts
     echo "building full"
-    typedoc --name "LMT WASM32 SDK" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/kaspa ./build/docs/kaspa.ts
+    typedoc --name "LMT WASM32 SDK" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out ./docs/lmt ./build/docs/lmt.ts
 
 fi

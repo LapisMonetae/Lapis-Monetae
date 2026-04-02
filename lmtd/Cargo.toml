@@ -1,0 +1,76 @@
+[package]
+name = "lmtd"
+description = "Lapis Monetae full node daemon"
+keywords = ["lapis-monetae", "lmt", "blockdag"]
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "lmtd_lib"
+crate-type = ["cdylib", "lib"]
+
+[[bin]]
+name = "lmtd"
+path = "src/bin/lmtd.rs"
+
+[dependencies]
+lmt-alloc.workspace = true # This changes the global allocator for all of the next dependencies so should be kept first
+
+lmt-addresses.workspace = true
+lmt-addressmanager.workspace = true
+lmt-consensus-core.workspace = true
+lmt-consensus-notify.workspace = true
+lmt-consensus.workspace = true
+lmt-consensusmanager.workspace = true
+lmt-core.workspace = true
+lmt-database.workspace = true
+lmt-grpc-server.workspace = true
+lmt-hashes.workspace = true
+lmt-index-processor.workspace = true
+lmt-mining.workspace = true
+lmt-notify.workspace = true
+lmt-p2p-flows.workspace = true
+lmt-p2p-lib.workspace = true
+lmt-p2p-mining.workspace = true
+lmt-perf-monitor.workspace = true
+lmt-rpc-core.workspace = true
+lmt-rpc-service.workspace = true
+lmt-txscript.workspace = true
+lmt-utils.workspace = true
+lmt-utils-tower.workspace = true
+lmt-utxoindex.workspace = true
+lmt-wrpc-server.workspace = true
+
+async-channel.workspace = true
+cfg-if.workspace = true
+clap.workspace = true
+dhat = { workspace = true, optional = true }
+dirs.workspace = true
+futures-util.workspace = true
+itertools.workspace = true
+log.workspace = true
+num_cpus.workspace = true
+rand.workspace = true
+rayon.workspace = true
+rocksdb.workspace = true
+serde.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["rt", "macros", "rt-multi-thread"] }
+workflow-log.workspace = true
+
+toml = "0.8.10"
+serde_with = "3.7.0"
+
+[features]
+heap = ["dhat", "lmt-alloc/heap"]
+devnet-prealloc = ["lmt-consensus/devnet-prealloc"]
+semaphore-trace = ["lmt-utils/semaphore-trace"]
+
+[lints]
+workspace = true

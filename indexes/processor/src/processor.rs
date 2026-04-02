@@ -3,18 +3,18 @@ use crate::{
     IDENT,
 };
 use async_trait::async_trait;
-use kaspa_consensus_notify::{notification as consensus_notification, notification::Notification as ConsensusNotification};
-use kaspa_core::{debug, trace};
-use kaspa_index_core::notification::{Notification, PruningPointUtxoSetOverrideNotification, UtxosChangedNotification};
-use kaspa_notify::{
+use lmt_consensus_notify::{notification as consensus_notification, notification::Notification as ConsensusNotification};
+use lmt_core::{debug, trace};
+use lmt_index_core::notification::{Notification, PruningPointUtxoSetOverrideNotification, UtxosChangedNotification};
+use lmt_notify::{
     collector::{Collector, CollectorNotificationReceiver},
     error::Result,
     events::EventType,
     notification::Notification as NotificationTrait,
     notifier::DynNotify,
 };
-use kaspa_utils::triggers::SingleTrigger;
-use kaspa_utxoindex::api::UtxoIndexProxy;
+use lmt_utils::triggers::SingleTrigger;
+use lmt_utxoindex::api::UtxoIndexProxy;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc,
@@ -82,6 +82,12 @@ impl Processor {
                 Ok(Notification::UtxosChanged(self.process_utxos_changed(utxos_changed).await?))
             }
             ConsensusNotification::PruningPointUtxoSetOverride(_) => {
+                // Trigger UTXO index resync after pruning point UTXO set is overridden (e.g., after IBD).
+                // Without this, the UTXO index can become stale and wallets show zero balance.
+                if let Some(utxoindex) = self.utxoindex.clone() {
+                    debug!("[{IDENT}]: triggering utxoindex resync after pruning point UTXO set override");
+                    utxoindex.resync().await?;
+                }
                 Ok(Notification::PruningPointUtxoSetOverride(PruningPointUtxoSetOverrideNotification {}))
             }
             _ => Err(IndexError::NotSupported(notification.event_type())),
@@ -129,14 +135,14 @@ impl Collector<Notification> for Processor {
 mod tests {
     use super::*;
     use async_channel::{unbounded, Receiver, Sender};
-    use kaspa_consensus::{config::Config, consensus::test_consensus::TestConsensus, params::DEVNET_PARAMS, test_helpers::*};
-    use kaspa_consensus_core::utxo::{utxo_collection::UtxoCollection, utxo_diff::UtxoDiff};
-    use kaspa_consensusmanager::ConsensusManager;
-    use kaspa_database::create_temp_db;
-    use kaspa_database::prelude::ConnBuilder;
-    use kaspa_database::utils::DbLifetime;
-    use kaspa_notify::notifier::test_helpers::NotifyMock;
-    use kaspa_utxoindex::UtxoIndex;
+    use lmt_consensus::{config::Config, consensus::test_consensus::TestConsensus, params::DEVNET_PARAMS, test_helpers::*};
+    use lmt_consensus_core::utxo::{utxo_collection::UtxoCollection, utxo_diff::UtxoDiff};
+    use lmt_consensusmanager::ConsensusManager;
+    use lmt_database::create_temp_db;
+    use lmt_database::prelude::ConnBuilder;
+    use lmt_database::utils::DbLifetime;
+    use lmt_notify::notifier::test_helpers::NotifyMock;
+    use lmt_utxoindex::UtxoIndex;
     use rand::{rngs::SmallRng, SeedableRng};
     use std::sync::Arc;
 

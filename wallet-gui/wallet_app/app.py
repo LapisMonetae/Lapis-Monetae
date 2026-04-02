@@ -83,6 +83,7 @@ class WalletGui(tk.Tk):
 
         self.ws = WalletState(network=self._profile.get("network", DEFAULT_NETWORK))
         self.ws.refresh_cli(self._config)
+        self._validate_cli_binary()
         self.ws.add_listener(self._on_state_change)
 
         self.history_store = HistoryStore()
@@ -658,13 +659,33 @@ class WalletGui(tk.Tk):
         if path:
             self.cli_path_var.set(path)
 
+    def _validate_cli_binary(self) -> None:
+        """Run --version on the resolved CLI binary to verify it works."""
+        binary = self.ws.cli_binary
+        if not binary:
+            return
+        try:
+            code, _ = run_capture(binary, ["--version"], timeout_sec=5)
+            if code != 0:
+                self.ws.cli_binary = None
+                self.ws._notify()
+        except Exception:
+            self.ws.cli_binary = None
+            self.ws._notify()
+
     def on_save_cli_path(self) -> None:
         self._profile["cli_path"] = self.cli_path_var.get().strip()
         self._persist_profile()
         self.ws.refresh_cli(self._config)
-        self.log("CLI path saved.")
-        self.toast("CLI path saved", "ok")
-        self.history_panel and self.history_panel.add_and_refresh("system", "CLI path saved", "ok")
+        self._validate_cli_binary()
+        if self.ws.cli_binary:
+            self.log("CLI path saved and verified.")
+            self.toast("CLI path saved", "ok")
+            self.history_panel and self.history_panel.add_and_refresh("system", "CLI path saved", "ok")
+        else:
+            self.log("CLI path saved but binary failed validation.")
+            self.toast("CLI binary not valid", "error")
+            self.history_panel and self.history_panel.add_and_refresh("system", "CLI binary validation failed", "error")
 
     def _save_last_wallet(self, wallet_name: str) -> None:
         normalized = wallet_name.strip()

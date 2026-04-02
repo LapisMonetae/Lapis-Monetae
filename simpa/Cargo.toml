@@ -1,6 +1,6 @@
 [package]
 name = "simpa"
-description = "Kaspa Network Simulator"
+description = "Lapis Monetae Network Simulator"
 publish = false
 rust-version.workspace = true
 version.workspace = true
@@ -11,15 +11,15 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-alloc.workspace = true            # This changes the global allocator for all of the next dependencies so should be kept first
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensus.workspace = true
-kaspa-core.workspace = true
-kaspa-database.workspace = true
-kaspa-hashes.workspace = true
-kaspa-perf-monitor.workspace = true
-kaspa-utils.workspace = true
+lmt-alloc.workspace = true            # This changes the global allocator for all of the next dependencies so should be kept first
+lmt-consensus-core.workspace = true
+lmt-consensus-notify.workspace = true
+lmt-consensus.workspace = true
+lmt-core.workspace = true
+lmt-database.workspace = true
+lmt-hashes.workspace = true
+lmt-perf-monitor.workspace = true
+lmt-utils.workspace = true
 
 async-channel.workspace = true
 cfg-if.workspace = true
@@ -38,8 +38,8 @@ secp256k1.workspace = true
 tokio = { workspace = true, features = ["rt", "macros", "rt-multi-thread"] }
 
 [features]
-heap = ["dhat", "kaspa-alloc/heap"]
-semaphore-trace = ["kaspa-utils/semaphore-trace"]
+heap = ["dhat", "lmt-alloc/heap"]
+semaphore-trace = ["lmt-utils/semaphore-trace"]
 
 [lints]
 workspace = true

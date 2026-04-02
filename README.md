@@ -34,7 +34,7 @@ lapis-monetae/
 ├── daemon/         # Node daemon wrapper
 ├── database/       # RocksDB storage layer
 ├── indexes/        # UTXO and transaction indexes
-├── kaspad/         # Main node binary (lmtd)
+├── lmtd/           # Main node binary (lmtd)
 ├── math/           # Mathematical utilities
 ├── metrics/        # Prometheus metrics
 ├── mining/         # Mining manager and mempool
@@ -234,8 +234,21 @@ cargo bench
 - Ensure `protoc` (protobuf compiler) is installed and in PATH.
 - On Windows, verify LLVM `bin` directory is in PATH.
 
+## Acknowledgments
+
+Lapis Monetae is built upon the work of the following open-source projects:
+
+- **[Rusty Kaspa](https://github.com/kaspanet/rusty-kaspa)** — The Rust implementation of the Kaspa full node, from which this codebase is derived. Original consensus, networking, RPC, wallet, and WASM infrastructure by the Kaspa developers. Licensed under ISC.
+
+- **[XMRig](https://github.com/xmrig/xmrig)** — The high-performance RandomX CPU miner, forked and adapted for LMT-native stratum jobs under `tools/xmrig-lmt/xmrig-fork/`. Original work by the XMRig team. Licensed under GPL-3.0.
+
+- **[RandomX](https://github.com/tevador/RandomX)** — The Proof-of-Work algorithm used by Lapis Monetae for CPU-friendly mining. Integrated via the `randomx-rs` Rust crate. Created by tevador. Licensed under BSD-3-Clause.
+
 ## License
 
 ISC License. See [LICENSE](LICENSE) for details.
+
+The XMRig fork under `tools/xmrig-lmt/xmrig-fork/` is licensed under GPL-3.0.
+The RandomX algorithm is licensed under BSD-3-Clause.
 
 ---

@@ -1,12 +1,12 @@
 use std::sync::Arc;
 
-use kaspa_consensus_core::BlockHasher;
-use kaspa_database::prelude::CachePolicy;
-use kaspa_database::prelude::StoreError;
-use kaspa_database::prelude::DB;
-use kaspa_database::prelude::{BatchDbWriter, CachedDbAccess, DirectDbWriter};
-use kaspa_database::registry::DatabaseStorePrefixes;
-use kaspa_hashes::Hash;
+use lmt_consensus_core::BlockHasher;
+use lmt_database::prelude::CachePolicy;
+use lmt_database::prelude::StoreError;
+use lmt_database::prelude::DB;
+use lmt_database::prelude::{BatchDbWriter, CachedDbAccess, DirectDbWriter};
+use lmt_database::registry::DatabaseStorePrefixes;
+use lmt_hashes::Hash;
 use rocksdb::WriteBatch;
 
 pub trait PruningSamplesStoreReader {

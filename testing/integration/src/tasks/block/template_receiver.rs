@@ -3,12 +3,12 @@ use crate::{
     tasks::{Stopper, Task},
 };
 use async_trait::async_trait;
-use kaspa_addresses::Address;
-use kaspa_core::warn;
-use kaspa_grpc_client::GrpcClient;
-use kaspa_notify::{listener::ListenerId, scope::NewBlockTemplateScope};
-use kaspa_rpc_core::{api::rpc::RpcApi, GetBlockTemplateResponse, Notification};
-use kaspa_utils::{channel::Channel, triggers::SingleTrigger};
+use lmt_addresses::Address;
+use lmt_core::warn;
+use lmt_grpc_client::GrpcClient;
+use lmt_notify::{listener::ListenerId, scope::NewBlockTemplateScope};
+use lmt_rpc_core::{api::rpc::RpcApi, GetBlockTemplateResponse, Notification};
+use lmt_utils::{channel::Channel, triggers::SingleTrigger};
 use parking_lot::Mutex;
 use std::sync::Arc;
 use tokio::task::JoinHandle;

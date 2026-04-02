@@ -7,14 +7,14 @@ use async_trait::async_trait;
 pub use client_pool::ClientPool;
 use connection_event::ConnectionEvent;
 use futures::{future::FutureExt, pin_mut, select};
-use kaspa_core::{debug, error, trace};
-use kaspa_grpc_core::{
+use lmt_core::{debug, error, trace};
+use lmt_grpc_core::{
     channel::NotificationChannel,
-    ops::KaspadPayloadOps,
-    protowire::{kaspad_request, rpc_client::RpcClient, GetInfoRequestMessage, KaspadRequest, KaspadResponse},
+    ops::LmtdPayloadOps,
+    protowire::{lmtd_request, rpc_client::RpcClient, GetInfoRequestMessage, LmtdRequest, LmtdResponse},
     RPC_MAX_MESSAGE_SIZE,
 };
-use kaspa_notify::{
+use lmt_notify::{
     collector::{Collector, CollectorFrom},
     error::{Error as NotifyError, Result as NotifyResult},
     events::{EventArray, EventType, EVENT_TYPE_ARRAY},
@@ -27,7 +27,7 @@ use kaspa_notify::{
         UtxosChangedMutationPolicy,
     },
 };
-use kaspa_rpc_core::{
+use lmt_rpc_core::{
     api::rpc::RpcApi,
     error::RpcError,
     error::RpcResult,
@@ -35,8 +35,8 @@ use kaspa_rpc_core::{
     notify::{collector::RpcCoreConverter, connection::ChannelConnection, mode::NotificationMode},
     Notification,
 };
-use kaspa_utils::{channel::Channel, triggers::DuplexTrigger};
-use kaspa_utils_tower::{
+use lmt_utils::{channel::Channel, triggers::DuplexTrigger};
+use lmt_utils_tower::{
     counters::TowerConnectionCounters,
     middleware::{BodyExt, CountBytesBody, MapRequestBodyLayer, MapResponseBodyLayer, ServiceBuilder},
 };
@@ -233,7 +233,7 @@ impl GrpcClient {
 impl RpcApi for GrpcClient {
     // this example illustrates the body of the function created by the route!() macro
     // async fn submit_block_call(&self, request: SubmitBlockRequest) -> RpcResult<SubmitBlockResponse> {
-    //     self.inner.call(KaspadPayloadOps::SubmitBlock, request).await?.as_ref().try_into()
+    //     self.inner.call(LmtdPayloadOps::SubmitBlock, request).await?.as_ref().try_into()
     // }
 
     route!(ping_call, Ping);
@@ -358,8 +358,8 @@ pub const REQUEST_TIMEOUT_DURATION: u64 = 5_000;
 pub const TIMEOUT_MONITORING_INTERVAL: u64 = 10_000;
 pub const RECONNECT_INTERVAL: u64 = 2_000;
 
-type KaspadRequestSender = async_channel::Sender<KaspadRequest>;
-type KaspadRequestReceiver = async_channel::Receiver<KaspadRequest>;
+type LmtdRequestSender = async_channel::Sender<LmtdRequest>;
+type LmtdRequestReceiver = async_channel::Receiver<LmtdRequest>;
 
 #[derive(Debug, Default)]
 struct ServerFeatures {
@@ -373,7 +373,7 @@ struct ServerFeatures {
 ///
 /// Data flow:
 /// ```
-/// //   KaspadRequest -> request_send -> stream -> KaspadResponse
+/// //   LmtdRequest -> request_send -> stream -> LmtdResponse
 /// ```
 ///
 /// Execution flow:
@@ -410,8 +410,8 @@ struct Inner {
     notification_channel: NotificationChannel,
 
     // Sending to server
-    request_sender: KaspadRequestSender,
-    request_receiver: KaspadRequestReceiver,
+    request_sender: LmtdRequestSender,
+    request_receiver: LmtdRequestReceiver,
 
     // Receiving from server
     receiver_is_running: AtomicBool,
@@ -445,8 +445,8 @@ impl Inner {
     fn new(
         url: String,
         server_features: ServerFeatures,
-        request_sender: KaspadRequestSender,
-        request_receiver: KaspadRequestReceiver,
+        request_sender: LmtdRequestSender,
+        request_receiver: LmtdRequestReceiver,
         connection_event_sender: Option<Sender<ConnectionEvent>>,
         override_handle_stop_notify: bool,
         timeout_duration: u64,
@@ -520,11 +520,11 @@ impl Inner {
     #[allow(unused_variables)]
     async fn try_connect(
         url: String,
-        request_sender: KaspadRequestSender,
-        request_receiver: KaspadRequestReceiver,
+        request_sender: LmtdRequestSender,
+        request_receiver: LmtdRequestReceiver,
         request_timeout: u64,
         counters: Arc<TowerConnectionCounters>,
-    ) -> Result<(Streaming<KaspadResponse>, ServerFeatures)> {
+    ) -> Result<(Streaming<LmtdResponse>, ServerFeatures)> {
         // gRPC endpoint
         #[cfg(not(feature = "heap"))]
         let channel =
@@ -572,8 +572,8 @@ impl Inner {
             }
         };
 
-        // Actual KaspadRequest to KaspadResponse stream
-        let mut stream: Streaming<KaspadResponse> = client.message_stream(request_stream).await?.into_inner();
+        // Actual LmtdRequest to LmtdResponse stream
+        let mut stream: Streaming<LmtdResponse> = client.message_stream(request_stream).await?.into_inner();
 
         // Collect server capabilities as stated in GetInfoResponse
         let mut server_features = ServerFeatures::default();
@@ -681,11 +681,11 @@ impl Inner {
         self.resolver.clone()
     }
 
-    async fn call(&self, op: KaspadPayloadOps, request: impl Into<KaspadRequest>) -> Result<KaspadResponse> {
+    async fn call(&self, op: LmtdPayloadOps, request: impl Into<LmtdRequest>) -> Result<LmtdResponse> {
         // Calls are only allowed if the client is connected to the server
         if self.is_connected() {
             let id = u64::from_le_bytes(rand::random::<[u8; 8]>());
-            let mut request: KaspadRequest = request.into();
+            let mut request: LmtdRequest = request.into();
             request.id = id;
 
             trace!("GRPC client: resolver call: {:?}", request);
@@ -739,7 +739,7 @@ impl Inner {
     }
 
     /// Launch a task receiving and handling response messages sent by the server.
-    fn spawn_response_receiver_task(self: Arc<Self>, mut stream: Streaming<KaspadResponse>) {
+    fn spawn_response_receiver_task(self: Arc<Self>, mut stream: Streaming<LmtdResponse>) {
         // Note: self is a cloned Arc here so that it can be used in the spawned task.
 
         // The task can only be spawned once
@@ -855,7 +855,7 @@ impl Inner {
         });
     }
 
-    fn handle_response(&self, response: KaspadResponse) {
+    fn handle_response(&self, response: LmtdResponse) {
         if response.is_notification() {
             trace!("GRPC client: handle_response received a notification");
             match Notification::try_from(&response) {
@@ -915,7 +915,7 @@ impl Inner {
 
     /// Start sending notifications of some type to the client.
     async fn start_notify_to_client(&self, scope: Scope) -> RpcResult<()> {
-        let request = kaspad_request::Payload::from_notification_type(&scope, Command::Start);
+        let request = lmtd_request::Payload::from_notification_type(&scope, Command::Start);
         self.call((&request).into(), request).await?;
         Ok(())
     }
@@ -923,7 +923,7 @@ impl Inner {
     /// Stop sending notifications of some type to the client.
     async fn stop_notify_to_client(&self, scope: Scope) -> RpcResult<()> {
         if self.handle_stop_notify() {
-            let request = kaspad_request::Payload::from_notification_type(&scope, Command::Stop);
+            let request = lmtd_request::Payload::from_notification_type(&scope, Command::Stop);
             self.call((&request).into(), request).await?;
         }
         Ok(())

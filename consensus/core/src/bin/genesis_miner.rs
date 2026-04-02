@@ -1,9 +1,9 @@
-use kaspa_hashes::{Hash, ZERO_HASH};
-use kaspa_math::Uint256;
-use kaspa_muhash::EMPTY_MUHASH;
-use kaspa_utils::hex::ToHex;
+use lmt_hashes::{Hash, ZERO_HASH};
+use lmt_math::Uint256;
+use lmt_muhash::EMPTY_MUHASH;
+use lmt_utils::hex::ToHex;
 
-use kaspa_consensus_core::{
+use lmt_consensus_core::{
     config::bps::TenBps, header::Header, merkle::calc_hash_merkle_root, subnets::SUBNETWORK_ID_COINBASE, tx::Transaction, BlueWorkType,
 };
 

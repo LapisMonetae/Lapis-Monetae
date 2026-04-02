@@ -14,11 +14,11 @@ use crate::{
     model::{topological_index::TopologicalIndex, TransactionIdSet},
     Policy,
 };
-use kaspa_consensus_core::{
+use lmt_consensus_core::{
     block::TemplateTransactionSelector,
     tx::{MutableTransaction, TransactionId, TransactionOutpoint},
 };
-use kaspa_core::{debug, time::unix_now, trace};
+use lmt_core::{debug, time::unix_now, trace};
 use std::{
     collections::{hash_map::Keys, hash_set::Iter},
     iter::once,

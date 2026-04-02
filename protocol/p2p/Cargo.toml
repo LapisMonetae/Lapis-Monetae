@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-p2p-lib"
-description = "Kaspa p2p library"
+name = "lmt-p2p-lib"
+description = "Lapis Monetae p2p library"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -13,21 +13,21 @@ repository.workspace = true
 path = "./src/lib.rs"
 
 [[bin]]
-name = "kaspa_p2p_client"
+name = "lmt_p2p_client"
 path = "./src/bin/client.rs"
 
 [[bin]]
-name = "kaspa_p2p_server"
+name = "lmt_p2p_server"
 path = "./src/bin/server.rs"
 
 [dependencies]
-kaspa-core.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-mining-errors.workspace = true
-kaspa-hashes.workspace = true
-kaspa-math.workspace = true
-kaspa-utils.workspace = true
-kaspa-utils-tower.workspace = true
+lmt-core.workspace = true
+lmt-consensus-core.workspace = true
+lmt-mining-errors.workspace = true
+lmt-hashes.workspace = true
+lmt-math.workspace = true
+lmt-utils.workspace = true
+lmt-utils-tower.workspace = true
 
 borsh.workspace = true
 ctrlc.workspace = true

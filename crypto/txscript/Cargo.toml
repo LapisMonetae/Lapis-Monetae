@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-txscript"
-description = "Kaspa txscript engine library"
+name = "lmt-txscript"
+description = "Lapis Monetae txscript engine library"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -23,12 +23,12 @@ cfg-if.workspace = true
 hexplay.workspace = true
 indexmap.workspace = true
 itertools.workspace = true
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-txscript-errors.workspace = true
-kaspa-utils.workspace = true
-kaspa-wasm-core.workspace = true
+lmt-addresses.workspace = true
+lmt-consensus-core.workspace = true
+lmt-hashes.workspace = true
+lmt-txscript-errors.workspace = true
+lmt-utils.workspace = true
+lmt-wasm-core.workspace = true
 log.workspace = true
 parking_lot.workspace = true
 rand.workspace = true

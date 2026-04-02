@@ -1,4 +1,4 @@
 use crate::Notification;
 
-pub type ChannelConnection = kaspa_notify::connection::ChannelConnection<Notification>;
-pub use kaspa_notify::connection::ChannelType;
+pub type ChannelConnection = lmt_notify::connection::ChannelConnection<Notification>;
+pub use lmt_notify::connection::ChannelType;

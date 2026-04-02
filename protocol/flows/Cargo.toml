@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-p2p-flows"
-description = "Kaspa p2p flows"
+name = "lmt-p2p-flows"
+description = "Lapis Monetae p2p flows"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,20 +10,20 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-core.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-p2p-lib.workspace = true
-kaspa-p2p-mining.workspace = true
-kaspa-utils.workspace = true
-kaspa-utils-tower.workspace = true
-kaspa-hashes.workspace = true
-kaspa-muhash.workspace = true
-kaspa-connectionmanager.workspace = true
-kaspa-addressmanager.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-mining.workspace = true
-kaspa-notify.workspace = true
+lmt-core.workspace = true
+lmt-consensus-core.workspace = true
+lmt-consensus-notify.workspace = true
+lmt-p2p-lib.workspace = true
+lmt-p2p-mining.workspace = true
+lmt-utils.workspace = true
+lmt-utils-tower.workspace = true
+lmt-hashes.workspace = true
+lmt-muhash.workspace = true
+lmt-connectionmanager.workspace = true
+lmt-addressmanager.workspace = true
+lmt-consensusmanager.workspace = true
+lmt-mining.workspace = true
+lmt-notify.workspace = true
 
 async-trait.workspace = true
 futures = { workspace = true, features = ["alloc"] }

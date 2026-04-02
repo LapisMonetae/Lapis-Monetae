@@ -1,26 +1,26 @@
 use std::time::Duration;
 
-use crate::pb::{kaspad_message::Payload, ReadyMessage, VerackMessage, VersionMessage};
+use crate::pb::{lmtd_message::Payload, ReadyMessage, VerackMessage, VersionMessage};
 use crate::{common::ProtocolError, dequeue_with_timeout, make_message};
-use crate::{IncomingRoute, KaspadMessagePayloadType, Router};
-use kaspa_core::debug;
+use crate::{IncomingRoute, LmtdMessagePayloadType, Router};
+use lmt_core::debug;
 
-/// Implements the Kaspa peer-to-peer handshake protocol
-pub struct KaspadHandshake<'a> {
+/// Implements the Lapis Monetae peer-to-peer handshake protocol
+pub struct LmtdHandshake<'a> {
     router: &'a Router,
     version_receiver: IncomingRoute,
     verack_receiver: IncomingRoute,
     ready_receiver: IncomingRoute,
 }
 
-impl<'a> KaspadHandshake<'a> {
+impl<'a> LmtdHandshake<'a> {
     /// Builds the handshake object and subscribes to handshake messages
     pub fn new(router: &'a Router) -> Self {
         Self {
             router,
-            version_receiver: router.subscribe(vec![KaspadMessagePayloadType::Version]),
-            verack_receiver: router.subscribe(vec![KaspadMessagePayloadType::Verack]),
-            ready_receiver: router.subscribe(vec![KaspadMessagePayloadType::Ready]),
+            version_receiver: router.subscribe(vec![LmtdMessagePayloadType::Version]),
+            verack_receiver: router.subscribe(vec![LmtdMessagePayloadType::Verack]),
+            ready_receiver: router.subscribe(vec![LmtdMessagePayloadType::Ready]),
         }
     }
 

@@ -1,4 +1,4 @@
 use crate::notification::Notification;
-use kaspa_notify::root::Root;
+use lmt_notify::root::Root;
 
 pub type ConsensusNotificationRoot = Root<Notification>;

@@ -1,9 +1,9 @@
-const kaspa = require('../../../../nodejs/kaspa');
+const lmt = require('../../../../nodejs/lmt');
 const {
     Mnemonic,
-} = kaspa;
+} = lmt;
 
-kaspa.initConsolePanicHook();
+lmt.initConsolePanicHook();
 
 (async () => {
 

@@ -4,12 +4,12 @@ use super::collector::{CollectorFromConsensus, CollectorFromIndex};
 use crate::converter::feerate_estimate::{FeeEstimateConverter, FeeEstimateVerboseConverter};
 use crate::converter::{consensus::ConsensusConverter, index::IndexConverter, protocol::ProtocolConverter};
 use async_trait::async_trait;
-use kaspa_consensus_core::api::counters::ProcessingCounters;
-use kaspa_consensus_core::daa_score_timestamp::DaaScoreTimestamp;
-use kaspa_consensus_core::errors::block::RuleError;
-use kaspa_consensus_core::mass::{calc_storage_mass, UtxoCell};
-use kaspa_consensus_core::utxo::utxo_inquirer::UtxoInquirerError;
-use kaspa_consensus_core::{
+use lmt_consensus_core::api::counters::ProcessingCounters;
+use lmt_consensus_core::daa_score_timestamp::DaaScoreTimestamp;
+use lmt_consensus_core::errors::block::RuleError;
+use lmt_consensus_core::mass::{calc_storage_mass, UtxoCell};
+use lmt_consensus_core::utxo::utxo_inquirer::UtxoInquirerError;
+use lmt_consensus_core::{
     block::Block,
     coinbase::MinerData,
     config::Config,
@@ -17,33 +17,33 @@ use kaspa_consensus_core::{
     network::NetworkType,
     tx::{Transaction, COINBASE_TRANSACTION_INDEX},
 };
-use kaspa_consensus_notify::{
+use lmt_consensus_notify::{
     notifier::ConsensusNotifier,
     {connection::ConsensusChannelConnection, notification::Notification as ConsensusNotification},
 };
-use kaspa_consensusmanager::ConsensusManager;
-use kaspa_core::time::unix_now;
-use kaspa_core::{
+use lmt_consensusmanager::ConsensusManager;
+use lmt_core::time::unix_now;
+use lmt_core::{
     core::Core,
     debug,
-    kaspad_env::version,
+    lmtd_env::version,
     signals::Shutdown,
     task::service::{AsyncService, AsyncServiceError, AsyncServiceFuture},
     task::tick::TickService,
     trace, warn,
 };
-use kaspa_index_core::indexed_utxos::BalanceByScriptPublicKey;
-use kaspa_index_core::{
+use lmt_index_core::indexed_utxos::BalanceByScriptPublicKey;
+use lmt_index_core::{
     connection::IndexChannelConnection, indexed_utxos::UtxoSetByScriptPublicKey, notification::Notification as IndexNotification,
     notifier::IndexNotifier,
 };
-use kaspa_mining::feerate::FeeEstimateVerbose;
-use kaspa_mining::model::tx_query::TransactionQuery;
-use kaspa_mining::{manager::MiningManagerProxy, mempool::tx::Orphan};
-use kaspa_notify::listener::ListenerLifespan;
-use kaspa_notify::subscription::context::SubscriptionContext;
-use kaspa_notify::subscription::{MutationPolicies, UtxosChangedMutationPolicy};
-use kaspa_notify::{
+use lmt_mining::feerate::FeeEstimateVerbose;
+use lmt_mining::model::tx_query::TransactionQuery;
+use lmt_mining::{manager::MiningManagerProxy, mempool::tx::Orphan};
+use lmt_notify::listener::ListenerLifespan;
+use lmt_notify::subscription::context::SubscriptionContext;
+use lmt_notify::subscription::{MutationPolicies, UtxosChangedMutationPolicy};
+use lmt_notify::{
     collector::DynCollector,
     connection::ChannelType,
     events::{EventSwitches, EventType, EVENT_TYPE_ARRAY},
@@ -52,11 +52,11 @@ use kaspa_notify::{
     scope::Scope,
     subscriber::{Subscriber, SubscriptionManager},
 };
-use kaspa_p2p_flows::flow_context::FlowContext;
-use kaspa_p2p_lib::common::ProtocolError;
-use kaspa_p2p_mining::rule_engine::MiningRuleEngine;
-use kaspa_perf_monitor::{counters::CountersSnapshot, Monitor as PerfMonitor};
-use kaspa_rpc_core::{
+use lmt_p2p_flows::flow_context::FlowContext;
+use lmt_p2p_lib::common::ProtocolError;
+use lmt_p2p_mining::rule_engine::MiningRuleEngine;
+use lmt_perf_monitor::{counters::CountersSnapshot, Monitor as PerfMonitor};
+use lmt_rpc_core::{
     api::{
         connection::DynRpcConnection,
         ops::{RPC_API_REVISION, RPC_API_VERSION},
@@ -66,12 +66,12 @@ use kaspa_rpc_core::{
     notify::connection::ChannelConnection,
     Notification, RpcError, RpcResult,
 };
-use kaspa_txscript::{extract_script_pub_key_address, pay_to_address_script};
-use kaspa_utils::expiring_cache::ExpiringCache;
-use kaspa_utils::sysinfo::SystemInfo;
-use kaspa_utils::{channel::Channel, triggers::SingleTrigger};
-use kaspa_utils_tower::counters::TowerConnectionCounters;
-use kaspa_utxoindex::api::UtxoIndexProxy;
+use lmt_txscript::{extract_script_pub_key_address, pay_to_address_script};
+use lmt_utils::expiring_cache::ExpiringCache;
+use lmt_utils::sysinfo::SystemInfo;
+use lmt_utils::{channel::Channel, triggers::SingleTrigger};
+use lmt_utils_tower::counters::TowerConnectionCounters;
+use lmt_utxoindex::api::UtxoIndexProxy;
 use std::time::Duration;
 use std::{
     collections::HashMap,
@@ -82,7 +82,7 @@ use std::{
 use tokio::join;
 use workflow_rpc::server::WebSocketCounters as WrpcServerCounters;
 
-/// A service implementing the Rpc API at kaspa_rpc_core level.
+/// A service implementing the Rpc API at lmt_rpc_core level.
 ///
 /// Collects notifications from the consensus and forwards them to
 /// actual protocol-featured services. Thanks to the subscription pattern,
@@ -120,7 +120,7 @@ pub struct RpcCoreService {
     grpc_tower_counters: Arc<TowerConnectionCounters>,
     system_info: SystemInfo,
     fee_estimate_cache: ExpiringCache<RpcFeeEstimate>,
-    fee_estimate_verbose_cache: ExpiringCache<kaspa_mining::errors::MiningManagerResult<GetFeeEstimateExperimentalResponse>>,
+    fee_estimate_verbose_cache: ExpiringCache<lmt_mining::errors::MiningManagerResult<GetFeeEstimateExperimentalResponse>>,
     mining_rule_engine: Arc<MiningRuleEngine>,
 }
 
@@ -428,11 +428,11 @@ NOTE: This error usually indicates an RPC conversion error between the node and 
 
         // Make sure the pay address prefix matches the config network type
         if request.pay_address.prefix != self.config.prefix() {
-            return Err(kaspa_addresses::AddressError::InvalidPrefix(request.pay_address.prefix.to_string()))?;
+            return Err(lmt_addresses::AddressError::InvalidPrefix(request.pay_address.prefix.to_string()))?;
         }
 
         // Build block template
-        let script_public_key = kaspa_txscript::pay_to_address_script(&request.pay_address);
+        let script_public_key = lmt_txscript::pay_to_address_script(&request.pay_address);
         let extra_data = version().as_bytes().iter().chain(once(&(b'/'))).chain(&request.extra_data).cloned().collect::<Vec<_>>();
         let miner_data: MinerData = MinerData::new(script_public_key, extra_data);
         let session = self.consensus_manager.consensus().unguarded_session();
@@ -950,7 +950,7 @@ NOTE: This error usually indicates an RPC conversion error between the node and 
 
         // In the previous golang implementation the convention for virtual was the following const.
         // In the current implementation, consensus behaves the same when it gets a None instead.
-        const LEGACY_VIRTUAL: kaspa_hashes::Hash = kaspa_hashes::Hash::from_bytes([0xff; kaspa_hashes::HASH_SIZE]);
+        const LEGACY_VIRTUAL: lmt_hashes::Hash = lmt_hashes::Hash::from_bytes([0xff; lmt_hashes::HASH_SIZE]);
         let mut start_hash = request.start_hash;
         if let Some(start) = start_hash {
             if start == LEGACY_VIRTUAL {

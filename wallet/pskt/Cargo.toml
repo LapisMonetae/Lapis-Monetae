@@ -1,7 +1,7 @@
 [package]
-name = "kaspa-wallet-pskt"
-keywords = ["kaspa", "wallet", "pskt", "psbt", "bip-370"]
-description = "Partially Signed Kaspa Transaction"
+name = "lmt-wallet-pskt"
+keywords = ["lmt", "wallet", "pskt", "psbt", "bip-370"]
+description = "Partially Signed Lapis Monetae Transaction"
 categories = ["cryptography::cryptocurrencies"]
 rust-version.workspace = true
 version.workspace = true
@@ -15,17 +15,17 @@ include.workspace = true
 crate-type = ["cdylib", "lib"]
 
 [features]
-wasm32-sdk = ["kaspa-consensus-client/wasm32-sdk"]
-wasm32-types = ["kaspa-consensus-client/wasm32-types"]
+wasm32-sdk = ["lmt-consensus-client/wasm32-sdk"]
+wasm32-types = ["lmt-consensus-client/wasm32-types"]
 
 [dependencies]
-kaspa-addresses.workspace = true
-kaspa-bip32.workspace = true
-kaspa-consensus-client.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-txscript-errors.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
+lmt-addresses.workspace = true
+lmt-bip32.workspace = true
+lmt-consensus-client.workspace = true
+lmt-consensus-core.workspace = true
+lmt-txscript-errors.workspace = true
+lmt-txscript.workspace = true
+lmt-utils.workspace = true
 
 bincode.workspace = true
 derive_builder.workspace = true

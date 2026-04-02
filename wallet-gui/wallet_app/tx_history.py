@@ -10,7 +10,7 @@ from tkinter import filedialog, ttk
 
 ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;]*m")
 TXID_RE = re.compile(r"\b[a-fA-F0-9]{64}\b")
-AMOUNT_RE = re.compile(r"([+-]?\d+(?:\.\d+)?)\s+(?:LMT|KAS)\b")
+AMOUNT_RE = re.compile(r"([+-]?\d+(?:\.\d+)?)\s+(?:LMT|TLMT|SLMT|DLMT)\b")
 
 
 @dataclass

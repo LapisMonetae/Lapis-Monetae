@@ -2,7 +2,7 @@
 
 Modern desktop wallet launcher for Lapis Monetae, built in Python with Tkinter.
 
-This GUI wraps the existing project CLI (`kaspa-cli` / `lmt-cli`) and does not replace wallet core logic.
+This GUI wraps the existing project CLI (`lmt-cli` / `lmt-cli`) and does not replace wallet core logic.
 
 ## Features
 
@@ -43,7 +43,7 @@ This GUI wraps the existing project CLI (`kaspa-cli` / `lmt-cli`) and does not r
 
 - Python 3.10+
 - Local CLI binary available:
-  - via PATH (`kaspa-cli` or `lmt-cli`), or
+  - via PATH (`lmt-cli` or `lmt-cli`), or
   - manually selected from the GUI
 
 No extra pip dependencies are required.

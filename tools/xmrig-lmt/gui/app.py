@@ -59,8 +59,7 @@ _BECH32_CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
 _BECH32_MAP = {c: i for i, c in enumerate(_BECH32_CHARSET)}
 _BECH32_SET = frozenset(_BECH32_CHARSET)
 _GENERATORS = (0x98f2bc8e61, 0x79b76d99e2, 0xf33e5fb3c4, 0xae2eabe2a8, 0x1e4f43e470)
-_VALID_PREFIXES = ("lmt", "lmttest", "lmtsim", "lmtdev",
-                   "kaspa", "kaspatest", "kaspasim", "kaspadev")
+_VALID_PREFIXES = ("lmt", "lmttest", "lmtsim", "lmtdev")
 
 
 def _cashaddr_polymod(values: list[int]) -> int:
@@ -104,11 +103,11 @@ def validate_address_full(address: str) -> tuple[bool, str]:
 
 def _network_from_prefix(address: str) -> str:
     addr = address.strip().lower()
-    if addr.startswith(("lmttest:", "kaspatest:")):
+    if addr.startswith("lmttest:"):
         return "testnet"
-    if addr.startswith(("lmtsim:", "kaspasim:")):
+    if addr.startswith("lmtsim:"):
         return "simnet"
-    if addr.startswith(("lmtdev:", "kaspadev:")):
+    if addr.startswith("lmtdev:"):
         return "devnet"
     return "mainnet"
 

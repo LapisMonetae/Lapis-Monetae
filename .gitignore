@@ -82,6 +82,7 @@ coverage/
 # Local agent rules
 agent-rules.local.md
 README-LOCAL-PRUEBAS.md
+REFACTOR-TRACKING.local.md
 
 # Python cache artifacts
 __pycache__/
@@ -95,6 +96,15 @@ __pycache__/
 # Wallet GUI generated config/state
 wallet-gui/.wallet_gui_config.json
 **/.wallet_gui_config.json
+
+# .NET build artifacts
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.DotSettings.user
+**/publish/
 
 # Local mining build artifacts/deps (do not commit generated binaries)
 tools/xmrig-lmt/bridge/target/
@@ -112,3 +122,7 @@ tools/xmrig-lmt/gui/*.spec
 
 # Landing page
 landing/
+bin/
+obj/
+.vs/
+*.user

@@ -1,10 +1,10 @@
-use kaspa_consensus_core::config::params::TESTNET_PARAMS;
-use kaspa_consensus_core::{
+use lmt_consensus_core::config::params::TESTNET_PARAMS;
+use lmt_consensus_core::{
     hashing::sighash::{calc_schnorr_signature_hash, SigHashReusedValuesUnsync},
     tx::{TransactionId, TransactionOutpoint, UtxoEntry},
 };
-use kaspa_txscript::{multisig_redeem_script, opcodes::codes::OpData65, pay_to_script_hash_script, script_builder::ScriptBuilder};
-use kaspa_wallet_pskt::prelude::{
+use lmt_txscript::{multisig_redeem_script, opcodes::codes::OpData65, pay_to_script_hash_script, script_builder::ScriptBuilder};
+use lmt_wallet_pskt::prelude::{
     Combiner, Creator, Extractor, Finalizer, Inner, InputBuilder, SignInputOk, Signature, Signer, Updater, PSKT,
 };
 use secp256k1::{rand::thread_rng, Keypair};

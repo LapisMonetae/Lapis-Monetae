@@ -48,7 +48,7 @@ use crate::{
         window::WindowManager,
     },
 };
-use kaspa_consensus_core::{
+use lmt_consensus_core::{
     acceptance_data::AcceptanceData,
     api::args::{TransactionValidationArgs, TransactionValidationBatchArgs},
     block::{BlockTemplate, MutableBlock, TemplateBuildMode, TemplateTransactionSelector},
@@ -69,19 +69,19 @@ use kaspa_consensus_core::{
     },
     BlockHashSet, ChainPath,
 };
-use kaspa_consensus_notify::{
+use lmt_consensus_notify::{
     notification::{
         NewBlockTemplateNotification, Notification, SinkBlueScoreChangedNotification, UtxosChangedNotification,
         VirtualChainChangedNotification, VirtualDaaScoreChangedNotification,
     },
     root::ConsensusNotificationRoot,
 };
-use kaspa_consensusmanager::SessionLock;
-use kaspa_core::{debug, info, time::unix_now, trace, warn};
-use kaspa_database::prelude::{StoreError, StoreResultEmptyTuple, StoreResultExtensions};
-use kaspa_hashes::{Hash, ZERO_HASH};
-use kaspa_muhash::MuHash;
-use kaspa_notify::{events::EventType, notifier::Notify};
+use lmt_consensusmanager::SessionLock;
+use lmt_core::{debug, info, time::unix_now, trace, warn};
+use lmt_database::prelude::{StoreError, StoreResultEmptyTuple, StoreResultExtensions};
+use lmt_hashes::{Hash, ZERO_HASH};
+use lmt_muhash::MuHash;
+use lmt_notify::{events::EventType, notifier::Notify};
 use once_cell::unsync::Lazy;
 
 use super::{
@@ -90,8 +90,8 @@ use super::{
 };
 use crossbeam_channel::{Receiver as CrossbeamReceiver, Sender as CrossbeamSender};
 use itertools::Itertools;
-use kaspa_consensus_core::tx::ValidatedTransaction;
-use kaspa_utils::binary_heap::BinaryHeapExtensions;
+use lmt_consensus_core::tx::ValidatedTransaction;
+use lmt_utils::binary_heap::BinaryHeapExtensions;
 use parking_lot::{RwLock, RwLockUpgradableReadGuard};
 use rand::{seq::SliceRandom, Rng};
 use rayon::{

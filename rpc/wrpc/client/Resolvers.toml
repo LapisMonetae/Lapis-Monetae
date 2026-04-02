@@ -3,34 +3,34 @@ enable = false
 address = "http://127.0.0.1:8888"
 
 [[group]]
-template = "https://*.kaspa.stream"
+template = "https://*.lmt.stream"
 nodes = ["eric","maxim","sean","troy"]
 
 [[group]]
-template = "https://*.kaspa.red"
+template = "https://*.lmt.red"
 nodes = ["john", "mike", "paul", "alex"]
 
 [[group]]
-template = "https://*.kaspa.green"
+template = "https://*.lmt.green"
 nodes = ["jake", "mark", "adam", "liam"]
 
 [[group]]
-template = "https://*.kaspa.blue"
+template = "https://*.lmt.blue"
 nodes = ["noah", "ryan", "jack", "luke"]
 
 # [[group]]
 # enable = true
-# template = "https://*.kaspa-ng.org"
+# template = "https://*.lmt-ng.org"
 # nodes = ["cole", "ivan", "oscar", "zane"]
 
 # [[group]]
 # enable = true
-# template = "https://*.kaspa-ng.io"
+# template = "https://*.lmt-ng.io"
 # nodes = ["gary", "hugo", "finn", "evan"]
 
 # [[group]]
 # enable = true
-# template = "https://*.kaspa-ng.net"
+# template = "https://*.lmt-ng.net"
 # nodes = ["neil", "dave", "kyle", "toby"]
 
 # ---

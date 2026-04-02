@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-consensusmanager"
-description = "Kaspa consensus library"
+name = "lmt-consensusmanager"
+description = "Lapis Monetae consensus library"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -14,11 +14,11 @@ duration-string.workspace = true
 futures-util.workspace = true
 futures.workspace = true
 itertools.workspace = true
-kaspa-addresses.workspace=true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-core.workspace = true
-kaspa-utils.workspace = true
+lmt-addresses.workspace=true
+lmt-consensus-core.workspace = true
+lmt-consensus-notify.workspace = true
+lmt-core.workspace = true
+lmt-utils.workspace = true
 log.workspace = true
 parking_lot.workspace = true
 rand.workspace = true

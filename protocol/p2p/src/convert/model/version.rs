@@ -1,9 +1,9 @@
-use kaspa_consensus_core::subnets::SubnetworkId;
-use kaspa_core::{
-    kaspad_env::{name, version},
+use lmt_consensus_core::subnets::SubnetworkId;
+use lmt_core::{
+    lmtd_env::{name, version},
     time::unix_now,
 };
-use kaspa_utils::networking::{NetAddress, PeerId};
+use lmt_utils::networking::{NetAddress, PeerId};
 
 /// Maximum allowed length for the user agent field in a version message `VersionMessage`.
 pub const MAX_USER_AGENT_LEN: usize = 256;

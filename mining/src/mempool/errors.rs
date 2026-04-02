@@ -1,5 +1,5 @@
 /// Re-export errors
-pub use kaspa_mining_errors::mempool::*;
+pub use lmt_mining_errors::mempool::*;
 
 use crate::model::topological_index::TopologicalIndexError;
 

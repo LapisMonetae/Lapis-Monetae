@@ -1,0 +1,34 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Ported from Python wallet-gui color constants -->
+  <Color x:Key="BgColor">#1a1d2e</Color>
+  <Color x:Key="PanelColor">#232740</Color>
+  <Color x:Key="InputBgColor">#2a2f4a</Color>
+  <Color x:Key="TextBgColor">#1e2236</Color>
+  <Color x:Key="FgColor">#e8eaf0</Color>
+  <Color x:Key="MutedColor">#8b93a8</Color>
+  <Color x:Key="BlueColor">#3b82f6</Color>
+  <Color x:Key="BlueLightColor">#1e3a5f</Color>
+  <Color x:Key="BlueDarkColor">#2563eb</Color>
+  <Color x:Key="OrangeColor">#f59e0b</Color>
+  <Color x:Key="OrangeLightColor">#3d2e0a</Color>
+  <Color x:Key="SuccessColor">#22c55e</Color>
+  <Color x:Key="ErrorColor">#ef4444</Color>
+  <Color x:Key="BorderColor">#353a54</Color>
+  <Color x:Key="TealColor">#06b6d4</Color>
+  <Color x:Key="GroupBgColor">#1f2338</Color>
+
+  <SolidColorBrush x:Key="BgBrush" Color="{StaticResource BgColor}" />
+  <SolidColorBrush x:Key="PanelBrush" Color="{StaticResource PanelColor}" />
+  <SolidColorBrush x:Key="InputBgBrush" Color="{StaticResource InputBgColor}" />
+  <SolidColorBrush x:Key="FgBrush" Color="{StaticResource FgColor}" />
+  <SolidColorBrush x:Key="MutedBrush" Color="{StaticResource MutedColor}" />
+  <SolidColorBrush x:Key="BlueBrush" Color="{StaticResource BlueColor}" />
+  <SolidColorBrush x:Key="OrangeBrush" Color="{StaticResource OrangeColor}" />
+  <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
+  <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}" />
+  <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
+  <SolidColorBrush x:Key="TealBrush" Color="{StaticResource TealColor}" />
+
+</ResourceDictionary>

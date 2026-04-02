@@ -1,16 +1,16 @@
 use borsh::{BorshDeserialize, BorshSerialize};
-use kaspa_addresses::Address;
-use kaspa_consensus_core::tx::{
+use lmt_addresses::Address;
+use lmt_consensus_core::tx::{
     ScriptPublicKey, ScriptVec, TransactionId, TransactionIndexType, TransactionInput, TransactionOutpoint, TransactionOutput,
     UtxoEntry,
 };
-use kaspa_utils::{hex::ToHex, serde_bytes_fixed_ref};
+use lmt_utils::{hex::ToHex, serde_bytes_fixed_ref};
 use serde::{Deserialize, Serialize};
 use workflow_serializer::prelude::*;
 
 use crate::prelude::{RpcHash, RpcScriptClass, RpcSubnetworkId};
 
-/// Represents the ID of a Kaspa transaction
+/// Represents the ID of a Lapis Monetae transaction
 pub type RpcTransactionId = TransactionId;
 
 pub type RpcScriptVec = ScriptVec;
@@ -77,7 +77,7 @@ impl Deserializer for RpcUtxoEntry {
     }
 }
 
-/// Represents a Kaspa transaction outpoint
+/// Represents a Lapis Monetae transaction outpoint
 #[derive(Eq, Hash, PartialEq, Debug, Copy, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransactionOutpoint {
@@ -98,13 +98,13 @@ impl From<RpcTransactionOutpoint> for TransactionOutpoint {
     }
 }
 
-impl From<kaspa_consensus_client::TransactionOutpoint> for RpcTransactionOutpoint {
-    fn from(outpoint: kaspa_consensus_client::TransactionOutpoint) -> Self {
+impl From<lmt_consensus_client::TransactionOutpoint> for RpcTransactionOutpoint {
+    fn from(outpoint: lmt_consensus_client::TransactionOutpoint) -> Self {
         TransactionOutpoint::from(outpoint).into()
     }
 }
 
-impl From<RpcTransactionOutpoint> for kaspa_consensus_client::TransactionOutpoint {
+impl From<RpcTransactionOutpoint> for lmt_consensus_client::TransactionOutpoint {
     fn from(outpoint: RpcTransactionOutpoint) -> Self {
         TransactionOutpoint::from(outpoint).into()
     }
@@ -130,7 +130,7 @@ impl Deserializer for RpcTransactionOutpoint {
     }
 }
 
-/// Represents a Kaspa transaction input
+/// Represents a Lapis Monetae transaction input
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransactionInput {
@@ -198,7 +198,7 @@ impl Deserializer for RpcTransactionInput {
     }
 }
 
-/// Represent Kaspa transaction input verbose data
+/// Represent Lapis Monetae transaction input verbose data
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransactionInputVerboseData {}
@@ -217,7 +217,7 @@ impl Deserializer for RpcTransactionInputVerboseData {
     }
 }
 
-/// Represents a Kaspad transaction output
+/// Represents a Lapis Monetaed transaction output
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransactionOutput {
@@ -260,7 +260,7 @@ impl Deserializer for RpcTransactionOutput {
     }
 }
 
-/// Represent Kaspa transaction output verbose data
+/// Represent Lapis Monetae transaction output verbose data
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransactionOutputVerboseData {
@@ -288,7 +288,7 @@ impl Deserializer for RpcTransactionOutputVerboseData {
     }
 }
 
-/// Represents a Kaspa transaction
+/// Represents a Lapis Monetae transaction
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransaction {
@@ -354,7 +354,7 @@ impl Deserializer for RpcTransaction {
     }
 }
 
-/// Represent Kaspa transaction verbose data
+/// Represent Lapis Monetae transaction verbose data
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransactionVerboseData {

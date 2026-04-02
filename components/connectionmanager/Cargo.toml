@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-connectionmanager"
-description = "Kaspa connection manager"
+name = "lmt-connectionmanager"
+description = "Lapis Monetae connection manager"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -13,10 +13,10 @@ repository.workspace = true
 duration-string.workspace = true
 futures-util.workspace = true
 itertools.workspace = true
-kaspa-addressmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-p2p-lib.workspace = true
-kaspa-utils.workspace = true
+lmt-addressmanager.workspace = true
+lmt-core.workspace = true
+lmt-p2p-lib.workspace = true
+lmt-utils.workspace = true
 log.workspace = true
 parking_lot.workspace = true
 rand.workspace = true

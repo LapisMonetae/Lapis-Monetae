@@ -1,10 +1,10 @@
 <html>
     <head>
         <script type="module">
-            import * as kaspa from './kaspa-wallet/kaspa-wallet.js';
+            import * as lmt from './lmt-wallet/lmt-wallet.js';
             (async () => {
-                const wasm = await kaspa.default('./kaspa-wallet/kaspa-wallet_bg.wasm');
-                await wasm.load_kaspa_wallet_cli();
+                const wasm = await lmt.default('./lmt-wallet/lmt-wallet_bg.wasm');
+                await wasm.load_lmt_wallet_cli();
             })();
         </script>
         <style>

@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for Kaspad
+about: Suggest an idea for Lapis Monetaed
 title: ''
 labels: ''
 assignees: ''

@@ -6,9 +6,9 @@ const {
     PrivateKey,
     Generator,
     RpcClient,
-    kaspaToSompi,
+    lmtToSompi,
     initConsolePanicHook
-} = require('../../../../nodejs/kaspa');
+} = require('../../../../nodejs/lmt');
 
 initConsolePanicHook();
 
@@ -22,7 +22,7 @@ const { encoding, networkId } = require("../utils").parseArgs();
     const privateKey = new PrivateKey('b7e151628aed2a6abf7158809cf4f3c762e7160f38b4da56a784d9045190cfef');
 
     const sourceAddress = privateKey.toKeypair().toAddress(networkId);
-    console.info(`Full kaspa address: ${sourceAddress}`);
+    console.info(`Full lmt address: ${sourceAddress}`);
 
     const rpc = new RpcClient({
         url : "127.0.0.1",
@@ -71,8 +71,8 @@ const { encoding, networkId } = require("../utils").parseArgs();
         // transaction according to the supplied outputs.
         let generator = new Generator({
             entries,
-            outputs: [{ address : sourceAddress, amount : kaspaToSompi(0.2)}],
-            priorityFee: kaspaToSompi(0.0001),
+            outputs: [{ address : sourceAddress, amount : lmtToSompi(0.2)}],
+            priorityFee: lmtToSompi(0.0001),
             changeAddress: sourceAddress,
         });
 

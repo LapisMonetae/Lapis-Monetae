@@ -59,6 +59,11 @@ def load_config() -> dict[str, Any]:
 
 def save_config(config: dict[str, Any]) -> None:
     CONFIG_PATH.write_text(json.dumps(config, indent=2), encoding="utf-8")
+    if os.name != "nt":
+        try:
+            CONFIG_PATH.chmod(0o600)
+        except OSError:
+            pass
 
 
 def active_profile(config: dict[str, Any]) -> dict[str, Any]:
@@ -76,7 +81,7 @@ def resolve_cli_binary(config: dict[str, Any]) -> str | None:
         candidates.append(explicit)
     if env_bin:
         candidates.append(env_bin)
-    candidates.extend(["kaspa-cli", "lmt-cli", "kaspa-cli.exe", "lmt-cli.exe"])
+    candidates.extend(["lmt-cli", "lmt-cli.exe"])
 
     for candidate in candidates:
         if not candidate:

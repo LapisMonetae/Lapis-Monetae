@@ -1,8 +1,6 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use kaspa_consensus_core::subnets::SUBNETWORK_ID_COINBASE;
-use kaspa_consensus_core::tx::{
-    ScriptPublicKey, Transaction, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput,
-};
+use lmt_consensus_core::subnets::SUBNETWORK_ID_COINBASE;
+use lmt_consensus_core::tx::{ScriptPublicKey, Transaction, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput};
 use smallvec::smallvec;
 use std::time::{Duration, Instant};
 

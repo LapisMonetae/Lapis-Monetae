@@ -6,8 +6,8 @@ use std::{
     },
 };
 
-use kaspa_consensus_core::api::counters::ProcessingCountersSnapshot;
-use kaspa_core::{time::unix_now, trace, warn};
+use lmt_consensus_core::api::counters::ProcessingCountersSnapshot;
+use lmt_core::{time::unix_now, trace, warn};
 
 use crate::rule_engine::SNAPSHOT_INTERVAL;
 
@@ -119,8 +119,8 @@ mod tests {
     use std::sync::{atomic::AtomicBool, Arc};
 
     use crate::rules::{mining_rule::MiningRule, sync_rate_rule::SYNC_RATE_WINDOW_MAX_SIZE, ExtraData};
-    use kaspa_consensus_core::api::counters::ProcessingCountersSnapshot;
-    use kaspa_core::time::unix_now;
+    use lmt_consensus_core::api::counters::ProcessingCountersSnapshot;
+    use lmt_core::time::unix_now;
     use std::sync::atomic::*;
 
     use super::{SyncRateRule, SYNC_RATE_WINDOW_MIN_THRESHOLD};

@@ -7,9 +7,9 @@
 
 use crate::imports::*;
 use crate::result::Result;
-use kaspa_hashes as native;
-use kaspa_hashes::HasherBase;
-use kaspa_wasm_core::types::BinaryT;
+use lmt_hashes as native;
+use lmt_hashes::HasherBase;
+use lmt_wasm_core::types::BinaryT;
 
 /// @category Wallet SDK
 #[derive(Default, Clone)]

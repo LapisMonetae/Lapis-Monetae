@@ -1,6 +1,9 @@
 name: Tests
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches: [main]
 
 jobs:
   check:
@@ -123,11 +126,11 @@ jobs:
       - name: Run cargo doc tests
         run: cargo test --doc --release --workspace
 
-      - name: Run cargo test on kaspa-hashes without asm
-        run: cargo nextest run --release -p kaspa-hashes --features=no-asm --benches
+      - name: Run cargo test on lmt-hashes without asm
+        run: cargo nextest run --release -p lmt-hashes --features=no-asm --benches
 
-      - name: Run cargo doc tests with features=no-asm on kaspa-hashes
-        run: cargo test --doc --release -p kaspa-hashes --features=no-asm
+      - name: Run cargo doc tests with features=no-asm on lmt-hashes
+        run: cargo test --doc --release -p lmt-hashes --features=no-asm
 
       - name: Run cargo doc
         run: cargo doc --release --no-deps --workspace
@@ -273,14 +276,14 @@ jobs:
 
       # append here any new wasm32 crate not already covered by the existing checks
 
-      - name: Run cargo check of kaspa-wrpc-wasm for wasm32 target
-        run: cargo clippy -p kaspa-wrpc-wasm --target wasm32-unknown-unknown
+      - name: Run cargo check of lmt-wrpc-wasm for wasm32 target
+        run: cargo clippy -p lmt-wrpc-wasm --target wasm32-unknown-unknown
 
-      - name: Run cargo check of kaspa-wallet-cli-wasm for wasm32 target
-        run: cargo clippy -p kaspa-wallet-cli-wasm --target wasm32-unknown-unknown
+      - name: Run cargo check of lmt-wallet-cli-wasm for wasm32 target
+        run: cargo clippy -p lmt-wallet-cli-wasm --target wasm32-unknown-unknown
 
-      - name: Run cargo check of kaspa-wasm for wasm32 target
-        run: cargo clippy -p kaspa-wasm --target wasm32-unknown-unknown
+      - name: Run cargo check of lmt-wasm for wasm32 target
+        run: cargo clippy -p lmt-wasm --target wasm32-unknown-unknown
 
   build-wasm32:
     name: Build WASM32 SDK
@@ -355,13 +358,13 @@ jobs:
           cd wasm
           bash build-release
           popd
-          mv wasm/release/kaspa-wasm32-sdk.zip wasm/release/kaspa-wasm32-sdk-${{ env.SHORT_SHA }}.zip
+          mv wasm/release/lmt-wasm32-sdk.zip wasm/release/lmt-wasm32-sdk-${{ env.SHORT_SHA }}.zip
 
       - name: Upload WASM build to GitHub 
         uses: actions/upload-artifact@v4
         with: 
-          name: kaspa-wasm32-sdk-${{ env.SHORT_SHA }}.zip
-          path: wasm/release/kaspa-wasm32-sdk-${{ env.SHORT_SHA }}.zip
+          name: lmt-wasm32-sdk-${{ env.SHORT_SHA }}.zip
+          path: wasm/release/lmt-wasm32-sdk-${{ env.SHORT_SHA }}.zip
   build-release:
     name: Build Linux Release
     runs-on: ubuntu-latest
@@ -406,4 +409,4 @@ jobs:
           # Run build script for musl toolchain
           source musl-toolchain/build.sh
           # Build for musl
-          cargo --verbose build --bin kaspad --bin rothschild --bin kaspa-wallet --release --target x86_64-unknown-linux-musl
+          cargo --verbose build --bin lmtd --bin rothschild --bin lmt-wallet --release --target x86_64-unknown-linux-musl

@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-wallet-cli-wasm"
-description = "Kaspa CLI wallet for WASM"
+name = "lmt-wallet-cli-wasm"
+description = "Lapis Monetae CLI wallet for WASM"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -19,7 +19,7 @@ crate-type = ["cdylib", "lib"]
 async-trait.workspace = true
 getrandom_0_3.workspace = true
 js-sys.workspace = true
-kaspa-cli.workspace = true
+lmt-cli.workspace = true
 wasm-bindgen-futures.workspace = true
 wasm-bindgen.workspace = true
 workflow-log.workspace = true

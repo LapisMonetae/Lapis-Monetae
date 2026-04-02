@@ -1,10 +1,10 @@
-use kaspa_consensus_core::{
+use lmt_consensus_core::{
     tx::{TransactionOutpoint, UtxoEntry},
     utxo::utxo_diff::UtxoDiff,
     BlockHashSet, HashMapCustomHasher,
 };
-use kaspa_hashes::Hash;
-use kaspa_utils::hashmap::NestedHashMapExtensions;
+use lmt_hashes::Hash;
+use lmt_utils::hashmap::NestedHashMapExtensions;
 
 use crate::model::{CirculatingSupplyDiff, CompactUtxoEntry, UtxoChanges, UtxoSetByScriptPublicKey};
 

@@ -1,14 +1,14 @@
 use std::time::Duration;
 
 use super::IbdFlow;
-use kaspa_consensus_core::blockstatus::BlockStatus;
-use kaspa_consensusmanager::ConsensusProxy;
-use kaspa_core::{debug, warn};
-use kaspa_hashes::Hash;
-use kaspa_p2p_lib::{
+use lmt_consensus_core::blockstatus::BlockStatus;
+use lmt_consensusmanager::ConsensusProxy;
+use lmt_core::{debug, warn};
+use lmt_hashes::Hash;
+use lmt_p2p_lib::{
     common::{ProtocolError, DEFAULT_TIMEOUT},
     dequeue_with_timeout, make_message,
-    pb::{kaspad_message::Payload, RequestIbdChainBlockLocatorMessage},
+    pb::{lmtd_message::Payload, RequestIbdChainBlockLocatorMessage},
 };
 
 pub struct ChainNegotiationOutput {

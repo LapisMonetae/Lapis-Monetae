@@ -1,5 +1,5 @@
 use super::coinbase_mock::CoinbaseManagerMock;
-use kaspa_consensus_core::{
+use lmt_consensus_core::{
     api::{
         args::{TransactionValidationArgs, TransactionValidationBatchArgs},
         ConsensusApi,
@@ -18,8 +18,8 @@ use kaspa_consensus_core::{
     tx::{MutableTransaction, Transaction, TransactionId, TransactionOutpoint, UtxoEntry},
     utxo::utxo_collection::UtxoCollection,
 };
-use kaspa_core::time::unix_now;
-use kaspa_hashes::{Hash, ZERO_HASH};
+use lmt_core::time::unix_now;
+use lmt_hashes::{Hash, ZERO_HASH};
 
 use parking_lot::RwLock;
 use std::{collections::HashMap, sync::Arc};

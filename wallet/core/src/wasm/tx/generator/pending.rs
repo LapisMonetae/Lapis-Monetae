@@ -2,12 +2,12 @@ use crate::imports::*;
 use crate::result::Result;
 use crate::tx::generator as native;
 use crate::wasm::PrivateKeyArrayT;
-use kaspa_consensus_client::{numeric, string};
-use kaspa_consensus_client::{Transaction, TransactionT};
-use kaspa_consensus_core::hashing::wasm::SighashType;
-use kaspa_wallet_keys::privatekey::PrivateKey;
-use kaspa_wasm_core::types::{BinaryT, HexString};
-use kaspa_wrpc_wasm::RpcClient;
+use lmt_consensus_client::{numeric, string};
+use lmt_consensus_client::{Transaction, TransactionT};
+use lmt_consensus_core::hashing::wasm::SighashType;
+use lmt_wallet_keys::privatekey::PrivateKey;
+use lmt_wasm_core::types::{BinaryT, HexString};
+use lmt_wrpc_wasm::RpcClient;
 
 /// @category Wallet SDK
 #[wasm_bindgen(inspectable)]
@@ -129,10 +129,8 @@ impl PendingTransaction {
     /// raw private key bytes (encoded as `Uint8Array` or as hex strings)
     pub fn sign(&self, js_value: PrivateKeyArrayT, check_fully_signed: Option<bool>) -> Result<()> {
         if let Ok(keys) = js_value.dyn_into::<Array>() {
-            let keys = keys
-                .iter()
-                .map(PrivateKey::try_owned_from)
-                .collect::<std::result::Result<Vec<_>, kaspa_wallet_keys::error::Error>>()?;
+            let keys =
+                keys.iter().map(PrivateKey::try_owned_from).collect::<std::result::Result<Vec<_>, lmt_wallet_keys::error::Error>>()?;
             let mut keys = keys.iter().map(|key| key.secret_bytes()).collect::<Vec<_>>();
             self.inner.try_sign_with_keys(&keys, check_fully_signed)?;
             keys.zeroize();

@@ -1,12 +1,12 @@
 use std::ops::Deref;
 use std::sync::Arc;
 
-use kaspa_consensus_core::blockhash;
+use lmt_consensus_core::blockhash;
 use parking_lot::RwLock;
 
 use crate::model::stores::reachability::ReachabilityStoreReader;
 use crate::processes::reachability::{inquirer, Result};
-use kaspa_hashes::Hash;
+use lmt_hashes::Hash;
 
 pub trait ReachabilityService {
     /// Checks if `this` block is a chain ancestor of `queried` block (i.e., `this ∈ chain(queried) ∪ {queried}`).

@@ -1,15 +1,15 @@
 // @ts-ignore
 globalThis.WebSocket = require('websocket').w3cwebsocket; // W3C WebSocket module shim
 
-const kaspa = require('../../../../nodejs/kaspa');
+const lmt = require('../../../../nodejs/lmt');
 const { parseArgs } = require("../utils");
 const {
     RpcClient,
     Resolver,
     // RpcEventType
-} = kaspa;
+} = lmt;
 
-kaspa.initConsolePanicHook();
+lmt.initConsolePanicHook();
 
 const {
     networkId,

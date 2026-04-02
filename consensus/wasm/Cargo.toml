@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-consensus-wasm"
-description = "Kaspa consensus core WASM bindings"
+name = "lmt-consensus-wasm"
+description = "Lapis Monetae consensus core WASM bindings"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -14,12 +14,12 @@ wasm32-sdk = []
 wasm32-types = []
 
 [dependencies]
-kaspa-consensus-core.workspace = true
-kaspa-consensus-client.workspace = true
-kaspa-addresses.workspace = true
-kaspa-txscript.workspace = true
-kaspa-hashes.workspace = true
-kaspa-utils.workspace = true
+lmt-consensus-core.workspace = true
+lmt-consensus-client.workspace = true
+lmt-addresses.workspace = true
+lmt-txscript.workspace = true
+lmt-hashes.workspace = true
+lmt-utils.workspace = true
 
 cfg-if.workspace = true
 faster-hex.workspace = true

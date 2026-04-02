@@ -2,19 +2,19 @@ use std::{collections::HashMap, sync::Arc, time::Duration};
 
 use clap::{Arg, ArgAction, Command};
 use itertools::Itertools;
-use kaspa_addresses::{Address, Prefix, Version};
-use kaspa_consensus_core::{
+use lmt_addresses::{Address, Prefix, Version};
+use lmt_consensus_core::{
     config::params::TESTNET_PARAMS,
-    constants::{SOMPI_PER_KASPA, TX_VERSION},
+    constants::{SOMPI_PER_LMT, TX_VERSION},
     sign::sign,
     subnets::SUBNETWORK_ID_NATIVE,
     tx::{MutableTransaction, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry},
 };
-use kaspa_core::{info, kaspad_env::version, time::unix_now, warn};
-use kaspa_grpc_client::{ClientPool, GrpcClient};
-use kaspa_notify::subscription::context::SubscriptionContext;
-use kaspa_rpc_core::{api::rpc::RpcApi, notify::mode::NotificationMode, RpcUtxoEntry};
-use kaspa_txscript::pay_to_address_script;
+use lmt_core::{info, lmtd_env::version, time::unix_now, warn};
+use lmt_grpc_client::{ClientPool, GrpcClient};
+use lmt_notify::subscription::context::SubscriptionContext;
+use lmt_rpc_core::{api::rpc::RpcApi, notify::mode::NotificationMode, RpcUtxoEntry};
+use lmt_txscript::pay_to_address_script;
 use parking_lot::Mutex;
 use rand::RngCore;
 use rayon::prelude::*;
@@ -24,7 +24,7 @@ use secp256k1::{
 };
 use tokio::time::{interval, Instant, MissedTickBehavior};
 
-const DEFAULT_SEND_AMOUNT: u64 = 10 * SOMPI_PER_KASPA;
+const DEFAULT_SEND_AMOUNT: u64 = 10 * SOMPI_PER_LMT;
 const FEE_RATE: u64 = 10;
 const MILLIS_PER_TICK: u64 = 10;
 const ADDRESS_PREFIX: Prefix = Prefix::Testnet;
@@ -160,7 +160,7 @@ struct TxConfig {
 
 #[tokio::main]
 async fn main() {
-    kaspa_core::log::init_logger(None, "");
+    lmt_core::log::init_logger(None, "");
     let args = Args::parse();
     let stats = Arc::new(Mutex::new(Stats { num_txs: 0, since: unix_now(), num_utxos: 0, utxos_amount: 0, num_outs: 0 }));
     let subscription_context = SubscriptionContext::new();
@@ -187,19 +187,19 @@ async fn main() {
         Keypair::from_seckey_slice(secp256k1::SECP256K1, &private_key_bytes).unwrap()
     } else {
         let (sk, pk) = &secp256k1::generate_keypair(&mut thread_rng());
-        let kaspa_addr = Address::new(ADDRESS_PREFIX, ADDRESS_VERSION, &pk.x_only_public_key().0.serialize());
+        let lmt_addr = Address::new(ADDRESS_PREFIX, ADDRESS_VERSION, &pk.x_only_public_key().0.serialize());
         info!(
             "Generated private key {} and address {}. Send some funds to this address and rerun rothschild with `--private-key {}`",
             sk.display_secret(),
-            String::from(&kaspa_addr),
+            String::from(&lmt_addr),
             sk.display_secret()
         );
         return;
     };
 
-    let kaspa_addr = Address::new(ADDRESS_PREFIX, ADDRESS_VERSION, &schnorr_key.x_only_public_key().0.serialize());
+    let lmt_addr = Address::new(ADDRESS_PREFIX, ADDRESS_VERSION, &schnorr_key.x_only_public_key().0.serialize());
 
-    let kaspa_to_addr = args.addr.as_ref().map_or_else(|| kaspa_addr.clone(), |addr_str| Address::try_from(addr_str.clone()).unwrap());
+    let lmt_to_addr = args.addr.as_ref().map_or_else(|| lmt_addr.clone(), |addr_str| Address::try_from(addr_str.clone()).unwrap());
 
     (args.payload_size <= 20000).then_some(()).expect("payload-size can be max 20000");
 
@@ -212,10 +212,10 @@ async fn main() {
         \tprivate key: {}\n\
         \tfrom address: {}",
         schnorr_key.display_secret(),
-        String::from(&kaspa_addr)
+        String::from(&lmt_addr)
     );
     if args.addr.is_some() {
-        log_message.push_str(&format!("\n\tto address: {}", String::from(&kaspa_to_addr)));
+        log_message.push_str(&format!("\n\tto address: {}", String::from(&lmt_to_addr)));
     }
     if args.priority_fee != 0 {
         log_message.push_str(&format!(
@@ -298,7 +298,7 @@ async fn main() {
     let target_tps = args.tps.min(if args.unleashed { u64::MAX } else { 100 });
     let should_tick_per_second = target_tps * MILLIS_PER_TICK / 1000 == 0;
     let avg_txs_per_tick = if should_tick_per_second { target_tps } else { target_tps * MILLIS_PER_TICK / 1000 };
-    let mut utxos = refresh_utxos(&rpc_client, kaspa_addr.clone(), &mut pending, coinbase_maturity).await;
+    let mut utxos = refresh_utxos(&rpc_client, lmt_addr.clone(), &mut pending, coinbase_maturity).await;
     let mut ticker = interval(Duration::from_millis(if should_tick_per_second { 1000 } else { MILLIS_PER_TICK }));
     ticker.set_missed_tick_behavior(MissedTickBehavior::Delay);
 
@@ -326,7 +326,7 @@ async fn main() {
         let has_funds = maybe_send_tx(
             txs_to_send,
             &tx_sender,
-            kaspa_to_addr.clone(),
+            lmt_to_addr.clone(),
             &mut utxos,
             &mut pending,
             schnorr_key,
@@ -342,7 +342,7 @@ async fn main() {
         if !has_funds || now - last_refresh > 60_000 {
             info!("Refetching UTXO set");
             tokio::time::sleep(Duration::from_millis(100)).await; // We don't want this operation to be too frequent since its heavy on the node, so we wait some time before executing it.
-            utxos = refresh_utxos(&rpc_client, kaspa_addr.clone(), &mut pending, coinbase_maturity).await;
+            utxos = refresh_utxos(&rpc_client, lmt_addr.clone(), &mut pending, coinbase_maturity).await;
             last_refresh = unix_now();
             next_available_utxo_index = 0;
             pause_if_mempool_is_full(&rpc_client).await;
@@ -383,20 +383,20 @@ async fn pause_if_mempool_is_full(rpc_client: &GrpcClient) {
 
 async fn refresh_utxos(
     rpc_client: &GrpcClient,
-    kaspa_addr: Address,
+    lmt_addr: Address,
     pending: &mut HashMap<TransactionOutpoint, Instant>,
     coinbase_maturity: u64,
 ) -> Vec<(TransactionOutpoint, UtxoEntry)> {
-    populate_pending_outpoints_from_mempool(rpc_client, kaspa_addr.clone(), pending).await;
-    fetch_spendable_utxos(rpc_client, kaspa_addr, coinbase_maturity, pending).await
+    populate_pending_outpoints_from_mempool(rpc_client, lmt_addr.clone(), pending).await;
+    fetch_spendable_utxos(rpc_client, lmt_addr, coinbase_maturity, pending).await
 }
 
 async fn populate_pending_outpoints_from_mempool(
     rpc_client: &GrpcClient,
-    kaspa_addr: Address,
+    lmt_addr: Address,
     pending_outpoints: &mut HashMap<TransactionOutpoint, Instant>,
 ) {
-    let entries = rpc_client.get_mempool_entries_by_addresses(vec![kaspa_addr], true, false).await.unwrap();
+    let entries = rpc_client.get_mempool_entries_by_addresses(vec![lmt_addr], true, false).await.unwrap();
     let now = Instant::now();
 
     for entry in entries {
@@ -410,11 +410,11 @@ async fn populate_pending_outpoints_from_mempool(
 
 async fn fetch_spendable_utxos(
     rpc_client: &GrpcClient,
-    kaspa_addr: Address,
+    lmt_addr: Address,
     coinbase_maturity: u64,
     pending: &mut HashMap<TransactionOutpoint, Instant>,
 ) -> Vec<(TransactionOutpoint, UtxoEntry)> {
-    let resp = rpc_client.get_utxos_by_addresses(vec![kaspa_addr]).await.unwrap();
+    let resp = rpc_client.get_utxos_by_addresses(vec![lmt_addr]).await.unwrap();
     let dag_info = rpc_client.get_block_dag_info().await.unwrap();
 
     let mut utxos = resp.into_iter()
@@ -441,7 +441,7 @@ fn is_utxo_spendable(entry: &RpcUtxoEntry, virtual_daa_score: u64, coinbase_matu
 async fn maybe_send_tx(
     txs_to_send: u64,
     tx_sender: &async_channel::Sender<ClientPoolArg>,
-    kaspa_addr: Address,
+    lmt_addr: Address,
     utxos: &mut [(TransactionOutpoint, UtxoEntry)],
     pending: &mut HashMap<TransactionOutpoint, Instant>,
     schnorr_key: Keypair,
@@ -483,7 +483,7 @@ async fn maybe_send_tx(
         .into_par_iter()
         .map(|utxo_option| {
             if let Some((selected_utxos, selected_amount)) = utxo_option {
-                let tx = generate_tx(schnorr_key, &selected_utxos, selected_amount, num_outs, &kaspa_addr, tx_config.payload_size);
+                let tx = generate_tx(schnorr_key, &selected_utxos, selected_amount, num_outs, &lmt_addr, tx_config.payload_size);
 
                 return Some((tx, selected_utxos.len(), selected_utxos.into_iter().map(|(_, entry)| entry.amount).sum::<u64>()));
             }
@@ -527,10 +527,10 @@ fn generate_tx(
     utxos: &[(TransactionOutpoint, UtxoEntry)],
     send_amount: u64,
     num_outs: u64,
-    kaspa_addr: &Address,
+    lmt_addr: &Address,
     payload_size: usize,
 ) -> Transaction {
-    let script_public_key = pay_to_address_script(kaspa_addr);
+    let script_public_key = pay_to_address_script(lmt_addr);
     let inputs = utxos
         .iter()
         .map(|(op, _)| TransactionInput { previous_outpoint: *op, signature_script: vec![], sequence: 0, sig_op_count: 1 })

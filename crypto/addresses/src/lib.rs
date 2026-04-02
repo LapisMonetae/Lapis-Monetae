@@ -1,7 +1,7 @@
 //!
-//! Kaspa [`Address`] implementation.
+//! Lapis Monetae [`Address`] implementation.
 //!
-//! In it's string form, the Kaspa [`Address`] is represented by a `bech32`-encoded
+//! In it's string form, the Lapis Monetae [`Address`] is represented by a `bech32`-encoded
 //! address string combined with a network type.  The `bech32` string encoding is
 //! comprised of a public key, the public key version and the resulting checksum.
 //!
@@ -62,17 +62,17 @@ impl From<workflow_wasm::error::Error> for AddressError {
     }
 }
 
-/// Address prefix identifying the network type this address belongs to (such as `kaspa`, `kaspatest`, `kaspasim`, `kaspadev`).
+/// Address prefix identifying the network type this address belongs to (such as `lmt`, `lmttest`, `lmtsim`, `lmtdev`).
 #[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Debug, Hash, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 #[borsh(use_discriminant = true)]
 pub enum Prefix {
-    #[serde(rename = "kaspa")]
+    #[serde(rename = "lmt")]
     Mainnet,
-    #[serde(rename = "kaspatest")]
+    #[serde(rename = "lmttest")]
     Testnet,
-    #[serde(rename = "kaspasim")]
+    #[serde(rename = "lmtsim")]
     Simnet,
-    #[serde(rename = "kaspadev")]
+    #[serde(rename = "lmtdev")]
     Devnet,
     #[cfg(test)]
     A,
@@ -128,7 +128,7 @@ impl TryFrom<&str> for Prefix {
 }
 
 ///
-///  Kaspa `Address` version (`PubKey`, `PubKey ECDSA`, `ScriptHash`)
+///  Lapis Monetae `Address` version (`PubKey`, `PubKey ECDSA`, `ScriptHash`)
 ///
 /// @category Address
 #[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Debug, Hash, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
@@ -199,7 +199,7 @@ pub const PAYLOAD_VECTOR_SIZE: usize = 36;
 /// Used as the underlying type for address payload, optimized for the largest version length (33).
 pub type PayloadVec = SmallVec<[u8; PAYLOAD_VECTOR_SIZE]>;
 
-/// Kaspa [`Address`] struct that serializes to and from an address format string: `kaspa:qz0s...t8cv`.
+/// Lapis Monetae [`Address`] struct that serializes to and from an address format string: `lmt:qz0s...t8cv`.
 ///
 /// @category Address
 #[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Hash, CastFromJs)]

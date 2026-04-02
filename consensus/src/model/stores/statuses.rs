@@ -1,13 +1,13 @@
-use kaspa_consensus_core::{blockstatus::BlockStatus, BlockHasher};
-use kaspa_database::registry::DatabaseStorePrefixes;
+use lmt_consensus_core::{blockstatus::BlockStatus, BlockHasher};
+use lmt_database::registry::DatabaseStorePrefixes;
 use parking_lot::{RwLock, RwLockWriteGuard};
 use rocksdb::WriteBatch;
 use std::sync::Arc;
 
-use kaspa_database::prelude::{BatchDbWriter, CachedDbAccess, DirectDbWriter};
-use kaspa_database::prelude::{CachePolicy, DB};
-use kaspa_database::prelude::{StoreError, StoreResult};
-use kaspa_hashes::Hash;
+use lmt_database::prelude::{BatchDbWriter, CachedDbAccess, DirectDbWriter};
+use lmt_database::prelude::{CachePolicy, DB};
+use lmt_database::prelude::{StoreError, StoreResult};
+use lmt_hashes::Hash;
 
 /// Reader API for `StatusesStore`.
 pub trait StatusesStoreReader {

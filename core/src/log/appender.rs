@@ -93,7 +93,14 @@ impl Encode for CrescendoEncoder {
         if record.target() == self.keyword {
             // Hack: override log level to debug so that inner encoder does not reset the style
             // (note that we use the custom pattern with CRND so this change isn't visible)
-            let record = record.to_builder().level(log::Level::Debug).build();
+            let record = log::Record::builder()
+                .args(*record.args())
+                .level(log::Level::Debug)
+                .target(record.target())
+                .module_path(record.module_path())
+                .file(record.file())
+                .line(record.line())
+                .build();
             w.set_style(Style::new().text(Color::Cyan))?;
             self.crescendo_encoder.encode(w, &record)?;
             w.set_style(&Style::new())?;

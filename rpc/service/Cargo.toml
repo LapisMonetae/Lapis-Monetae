@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-rpc-service"
-description = "Kaspa RPC service"
+name = "lmt-rpc-service"
+description = "Lapis Monetae RPC service"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,25 +10,25 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-index-core.workspace = true
-kaspa-math.workspace = true
-kaspa-mining.workspace = true
-kaspa-notify.workspace = true
-kaspa-p2p-flows.workspace = true
-kaspa-p2p-lib.workspace = true
-kaspa-p2p-mining.workspace = true
-kaspa-perf-monitor.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
-kaspa-utils-tower.workspace = true
-kaspa-utxoindex.workspace = true
+lmt-addresses.workspace = true
+lmt-consensus-core.workspace = true
+lmt-consensus-notify.workspace = true
+lmt-consensusmanager.workspace = true
+lmt-core.workspace = true
+lmt-hashes.workspace = true
+lmt-index-core.workspace = true
+lmt-math.workspace = true
+lmt-mining.workspace = true
+lmt-notify.workspace = true
+lmt-p2p-flows.workspace = true
+lmt-p2p-lib.workspace = true
+lmt-p2p-mining.workspace = true
+lmt-perf-monitor.workspace = true
+lmt-rpc-core.workspace = true
+lmt-txscript.workspace = true
+lmt-utils.workspace = true
+lmt-utils-tower.workspace = true
+lmt-utxoindex.workspace = true
 
 async-trait.workspace = true
 log.workspace = true

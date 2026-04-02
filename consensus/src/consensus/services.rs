@@ -17,8 +17,8 @@ use crate::{
     },
 };
 use itertools::Itertools;
-use kaspa_consensus_core::mass::MassCalculator;
-use kaspa_txscript::caches::TxScriptCacheCounters;
+use lmt_consensus_core::mass::MassCalculator;
+use lmt_txscript::caches::TxScriptCacheCounters;
 use std::sync::{atomic::AtomicBool, Arc};
 
 pub type DbGhostdagManager =

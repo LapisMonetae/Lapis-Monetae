@@ -12,7 +12,7 @@
 #![allow(non_snake_case)]
 
 use borsh::{BorshDeserialize, BorshSerialize};
-use kaspa_addresses::Prefix;
+use lmt_addresses::Prefix;
 use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::Deref;
@@ -41,7 +41,7 @@ pub enum NetworkType {
 impl NetworkType {
     pub fn default_rpc_port(&self) -> u16 {
         match self {
-            // LMT ports (avoid collisions with Kaspa defaults)
+            // LMT ports (avoid collisions with Lapis Monetae defaults)
             NetworkType::Mainnet => 26110,
             NetworkType::Testnet => 26210,
             NetworkType::Simnet => 26510,
@@ -189,7 +189,7 @@ impl From<NetworkIdError> for JsValue {
 }
 
 ///
-/// NetworkId is a unique identifier for a kaspa network instance.
+/// NetworkId is a unique identifier for a Lapis Monetae network instance.
 /// It is composed of a network type and an optional suffix.
 ///
 /// @category Consensus

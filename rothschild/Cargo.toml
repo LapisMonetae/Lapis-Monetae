@@ -1,6 +1,6 @@
 [package]
 name = "rothschild"
-description = "Kaspa Transaction Generator"
+description = "Lapis Monetae Transaction Generator"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,14 +10,14 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-grpc-client.workspace = true
-kaspa-notify.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
+lmt-addresses.workspace = true
+lmt-consensus-core.workspace = true
+lmt-core.workspace = true
+lmt-grpc-client.workspace = true
+lmt-notify.workspace = true
+lmt-rpc-core.workspace = true
+lmt-txscript.workspace = true
+lmt-utils.workspace = true
 
 async-channel.workspace = true
 clap.workspace = true

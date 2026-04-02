@@ -9,7 +9,7 @@ use crate::wasm::api::keydata::PrvKeyDataVariantKind;
 use crate::wasm::tx::fees::IFees;
 use crate::wasm::tx::GeneratorSummary;
 use js_sys::Array;
-use kaspa_wallet_macros::declare_typescript_wasm_interface as declare;
+use lmt_wallet_macros::declare_typescript_wasm_interface as declare;
 use serde_wasm_bindgen::from_value;
 use workflow_wasm::serde::to_value;
 
@@ -380,7 +380,7 @@ declare! {
      * 
      * If filename is not supplied, the filename will be derived from the wallet title.
      * If both wallet title and filename are not supplied, the wallet will be create
-     * with the default filename `kaspa`.
+     * with the default filename `lmt`.
      * 
      * @category Wallet API
      */
@@ -1054,7 +1054,7 @@ declare! {
         paymentSecret?:string;
     } | {
         walletSecret: string;
-        type: "kaspa-keypair-standard";
+        type: "lmt-keypair-standard";
         accountName:string;
         prvKeyDataId:string;
         paymentSecret?:string;
@@ -1100,7 +1100,7 @@ try_from! (args: IAccountsCreateRequest, AccountsCreateRequest, {
             }
         }
         _ => {
-            return Err(Error::custom("only BIP32/kaspa-keypair-standard accounts are currently supported"));
+            return Err(Error::custom("only BIP32/lmt-keypair-standard accounts are currently supported"));
         }
     };
 

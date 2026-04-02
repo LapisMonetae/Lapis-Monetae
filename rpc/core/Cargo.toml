@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-rpc-core"
-description = "Kaspa RPC core"
+name = "lmt-rpc-core"
+description = "Lapis Monetae RPC core"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -11,25 +11,25 @@ repository.workspace = true
 
 [features]
 wasm32-sdk = [
-    "kaspa-consensus-client/wasm32-sdk",
-    "kaspa-consensus-wasm/wasm32-sdk"
+    "lmt-consensus-client/wasm32-sdk",
+    "lmt-consensus-wasm/wasm32-sdk"
 ]
 
 [dependencies]
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-client.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensus-wasm.workspace = true
-kaspa-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-index-core.workspace = true
-kaspa-math.workspace = true
-kaspa-mining-errors.workspace = true
-kaspa-notify.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
-kaspa-rpc-macros.workspace = true
+lmt-addresses.workspace = true
+lmt-consensus-core.workspace = true
+lmt-consensus-client.workspace = true
+lmt-consensus-notify.workspace = true
+lmt-consensus-wasm.workspace = true
+lmt-core.workspace = true
+lmt-hashes.workspace = true
+lmt-index-core.workspace = true
+lmt-math.workspace = true
+lmt-mining-errors.workspace = true
+lmt-notify.workspace = true
+lmt-txscript.workspace = true
+lmt-utils.workspace = true
+lmt-rpc-macros.workspace = true
 
 async-channel.workspace = true
 async-trait.workspace = true

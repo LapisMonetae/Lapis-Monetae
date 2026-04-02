@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-mining"
-description = "Kaspa mining"
+name = "lmt-mining"
+description = "Lapis Monetae mining"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,15 +10,15 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-mining-errors.workspace = true
-kaspa-muhash.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
+lmt-addresses.workspace = true
+lmt-consensus-core.workspace = true
+lmt-consensusmanager.workspace = true
+lmt-core.workspace = true
+lmt-hashes.workspace = true
+lmt-mining-errors.workspace = true
+lmt-muhash.workspace = true
+lmt-txscript.workspace = true
+lmt-utils.workspace = true
 
 futures-util.workspace = true
 itertools.workspace = true
@@ -32,7 +32,7 @@ thiserror.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros", "signal"] }
 
 [dev-dependencies]
-kaspa-txscript.workspace = true
+lmt-txscript.workspace = true
 criterion.workspace = true
 secp256k1.workspace = true
 

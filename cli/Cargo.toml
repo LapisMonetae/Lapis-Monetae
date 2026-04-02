@@ -1,7 +1,7 @@
 [package]
-name = "kaspa-cli"
+name = "lmt-cli"
 description = "LMT CLI"
-keywords = ["kaspa", "wallet", "cli", "rpc"]
+keywords = ["lmt", "wallet", "cli", "rpc"]
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -20,7 +20,7 @@ include = [
 default = []
 
 [lib]
-name = "kaspa_cli_lib"
+name = "lmt_cli_lib"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
@@ -34,18 +34,18 @@ faster-hex.workspace = true
 futures.workspace = true
 js-sys.workspace = true
 hex.workspace = true
-kaspa-addresses.workspace = true
-kaspa-bip32.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-daemon.workspace = true
-kaspa-metrics-core.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-utils.workspace = true
-kaspa-wallet-core.workspace = true
-kaspa-wallet-keys.workspace = true
-kaspa-wallet-pskt.workspace = true
-kaspa-wrpc-client.workspace = true
+lmt-addresses.workspace = true
+lmt-bip32.workspace = true
+lmt-consensus-core.workspace = true
+lmt-core.workspace = true
+lmt-daemon.workspace = true
+lmt-metrics-core.workspace = true
+lmt-rpc-core.workspace = true
+lmt-utils.workspace = true
+lmt-wallet-core.workspace = true
+lmt-wallet-keys.workspace = true
+lmt-wallet-pskt.workspace = true
+lmt-wrpc-client.workspace = true
 nw-sys.workspace = true
 pad.workspace = true
 regex.workspace = true

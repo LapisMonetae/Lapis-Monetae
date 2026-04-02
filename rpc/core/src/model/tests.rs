@@ -2,16 +2,16 @@
 mod mockery {
 
     use crate::{model::*, RpcScriptClass};
-    use kaspa_addresses::{Prefix, Version};
-    use kaspa_consensus_core::api::BlockCount;
-    use kaspa_consensus_core::network::NetworkType;
-    use kaspa_consensus_core::subnets::SubnetworkId;
-    use kaspa_consensus_core::tx::ScriptPublicKey;
-    use kaspa_hashes::Hash;
-    use kaspa_math::Uint192;
-    use kaspa_notify::subscription::Command;
-    use kaspa_rpc_macros::test_wrpc_serializer as test;
-    use kaspa_utils::networking::{ContextualNetAddress, IpAddress, NetAddress};
+    use lmt_addresses::{Prefix, Version};
+    use lmt_consensus_core::api::BlockCount;
+    use lmt_consensus_core::network::NetworkType;
+    use lmt_consensus_core::subnets::SubnetworkId;
+    use lmt_consensus_core::tx::ScriptPublicKey;
+    use lmt_hashes::Hash;
+    use lmt_math::Uint192;
+    use lmt_notify::subscription::Command;
+    use lmt_rpc_macros::test_wrpc_serializer as test;
+    use lmt_utils::networking::{ContextualNetAddress, IpAddress, NetAddress};
     use rand::Rng;
     use std::net::{IpAddr, Ipv4Addr};
     use std::sync::Arc;

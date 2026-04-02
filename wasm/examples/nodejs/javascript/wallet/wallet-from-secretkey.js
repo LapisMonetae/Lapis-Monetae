@@ -4,14 +4,14 @@ globalThis.WebSocket = require('websocket').w3cwebsocket; // W3C WebSocket modul
 
 const path = require('path');
 const fs = require('fs');
-const kaspa = require('../../../../nodejs/kaspa-dev');
+const lmt = require('../../../../nodejs/lmt-dev');
 const {
     Wallet, setDefaultStorageFolder,
     AccountKind, Mnemonic, Resolver,
-    kaspaToSompi,
-    sompiToKaspaString,
+    lmtToSompi,
+    sompiToLapis MonetaeString,
     Address
-} = kaspa;
+} = lmt;
 
 let storageFolder = path.join(__dirname, '../../../data/wallets').normalize();
 if (!fs.existsSync(storageFolder)) {
@@ -79,7 +79,7 @@ setDefaultStorageFolder(storageFolder);
             list.push({
                 Id: tx.id,
                 Type: tx.data.type,
-                Value: sompiToKaspaString(value(tx)||0)
+                Value: sompiToLapis MonetaeString(value(tx)||0)
             });
             //console.log("tx.data", tx.id, tx.data)
         });
@@ -134,9 +134,9 @@ setDefaultStorageFolder(storageFolder);
                         let b = balance[id];
                         list.push({
                             Account: id.substring(0, 5)+"...",
-                            Mature: sompiToKaspaString(b.mature),
-                            Pending: sompiToKaspaString(b.pending),
-                            Outgoing: sompiToKaspaString(b.outgoing),
+                            Mature: sompiToLapis MonetaeString(b.mature),
+                            Pending: sompiToLapis MonetaeString(b.pending),
+                            Outgoing: sompiToLapis MonetaeString(b.outgoing),
                             MatureUtxo: b.matureUtxoCount,
                             PendingUtxo: b.pendingUtxoCount,
                             StasisUtxo: b.stasisUtxoCount
@@ -183,7 +183,7 @@ setDefaultStorageFolder(storageFolder);
 
         let account = await wallet.accountsCreate({
             walletSecret,
-            type:"kaspa-keypair-standard",
+            type:"lmt-keypair-standard",
             accountName:"Account-B",
             prvKeyDataId: prvKeyData.prvKeyDataId,
         });
@@ -254,16 +254,16 @@ setDefaultStorageFolder(storageFolder);
         // });
         // console.log("sweepResult", sweepResult)
 
-        // Send kaspa to address
+        // Send lmt to address
         let sendResult = await wallet.accountsSend({
             walletSecret,
             // @ts-ignore
             accountId: firstAccount.accountId,
-            priorityFeeSompi: kaspaToSompi("0.001"),
+            priorityFeeSompi: lmtToSompi("0.001"),
             destination:[{
                 // @ts-ignore
                 address: firstAccount.changeAddress,
-                amount: kaspaToSompi("1.567")
+                amount: lmtToSompi("1.567")
             }]
         });
         console.log("sendResult", sendResult);
@@ -271,12 +271,12 @@ setDefaultStorageFolder(storageFolder);
         // @ts-ignore
         log_transactions(firstAccount.accountId)
 
-        // Transfer kaspa between accounts
+        // Transfer lmt between accounts
         let transferResult = await wallet.accountsTransfer({
             walletSecret,
             sourceAccountId: firstAccount.accountId,
             destinationAccountId: firstAccount.accountId,
-            transferAmountSompi: kaspaToSompi("2.456"),
+            transferAmountSompi: lmtToSompi("2.456"),
         });
         console.log("transferResult", transferResult);
 

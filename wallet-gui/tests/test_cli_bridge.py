@@ -75,7 +75,7 @@ class TestIsWalletOpenFromOutput:
 class TestParseNodeRichInfo:
     def test_basic_parsing(self) -> None:
         dag_output = (
-            'GetBlockDagInfoResponse { network_name: "kaspa-mainnet", '
+            'GetBlockDagInfoResponse { network_name: "lmt-mainnet", '
             'block_count: 12345, header_count: 12346, '
             'tip_hashes: ["aabbccdd11223344aabbccdd11223344aabbccdd11223344aabbccdd11223344"], '
             'difficulty: 1.234e+10, '
@@ -89,7 +89,7 @@ class TestParseNodeRichInfo:
         assert ri.block_count == "12345"
         assert ri.header_count == "12346"
         assert ri.difficulty == "1.234e+10"
-        assert ri.network_name == "kaspa-mainnet"
+        assert ri.network_name == "lmt-mainnet"
         assert ri.latency_ms == 42.5
         assert "aabbccdd" in ri.tip_hash
 

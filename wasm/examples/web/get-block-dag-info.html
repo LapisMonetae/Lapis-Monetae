@@ -5,11 +5,11 @@
         <script type="module">
             import { log, stringify, currentNetwork } from './resources/utils.js';
 
-            import * as kaspa from '../../web/kaspa-rpc/kaspa.js';
-            let { Resolver, RpcClient, Encoding } = kaspa;
+            import * as lmt from '../../web/lmt-rpc/lmt.js';
+            let { Resolver, RpcClient, Encoding } = lmt;
 
             (async () => {
-                await kaspa.default('../../web/kaspa-rpc/kaspa_bg.wasm');
+                await lmt.default('../../web/lmt-rpc/lmt_bg.wasm');
 
                 let networkId = currentNetwork();
                 log(`Connecting to LMT network...`);

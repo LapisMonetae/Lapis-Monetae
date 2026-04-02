@@ -1,9 +1,9 @@
 use crate::model::*;
 use borsh::{BorshDeserialize, BorshSerialize};
-use kaspa_consensus_core::api::stats::BlockCount;
-use kaspa_core::debug;
-use kaspa_notify::subscription::{context::SubscriptionContext, single::UtxosChangedSubscription, Command};
-use kaspa_utils::hex::ToHex;
+use lmt_consensus_core::api::stats::BlockCount;
+use lmt_core::debug;
+use lmt_notify::subscription::{context::SubscriptionContext, single::UtxosChangedSubscription, Command};
+use lmt_utils::hex::ToHex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::{
@@ -119,7 +119,7 @@ impl Deserializer for SubmitBlockResponse {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GetBlockTemplateRequest {
-    /// Which kaspa address should the coinbase block reward transaction pay into
+    /// Which lmt address should the coinbase block reward transaction pay into
     pub pay_address: RpcAddress,
     // TODO: replace with hex serialization
     pub extra_data: RpcExtraData,
@@ -155,9 +155,9 @@ impl Deserializer for GetBlockTemplateRequest {
 pub struct GetBlockTemplateResponse {
     pub block: RpcRawBlock,
 
-    /// Whether kaspad thinks that it's synced.
-    /// Callers are discouraged (but not forbidden) from solving blocks when kaspad is not synced.
-    /// That is because when kaspad isn't in sync with the rest of the network there's a high
+    /// Whether lmtd thinks that it's synced.
+    /// Callers are discouraged (but not forbidden) from solving blocks when lmtd is not synced.
+    /// That is because when lmtd isn't in sync with the rest of the network there's a high
     /// chance the block will never be accepted, thus the solving effort would have been wasted.
     pub is_synced: bool,
 }
@@ -3053,7 +3053,7 @@ impl Deserializer for FinalityConflictResolvedNotification {
 //
 // If `addresses` is empty, the notifications will start or stop for all addresses.
 //
-// This call is only available when this kaspad was started with `--utxoindex`
+// This call is only available when this lmtd was started with `--utxoindex`
 //
 // See: UtxosChangedNotification
 #[derive(Clone, Debug, Serialize, Deserialize)]

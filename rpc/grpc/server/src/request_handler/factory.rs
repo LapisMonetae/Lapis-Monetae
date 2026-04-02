@@ -3,7 +3,7 @@ use std::sync::Arc;
 use super::{
     handler::RequestHandler,
     handler_trait::Handler,
-    interface::{Interface, KaspadMethod, KaspadRoutingPolicy},
+    interface::{Interface, LmtdMethod, LmtdRoutingPolicy},
     method::Method,
 };
 use crate::{
@@ -11,17 +11,17 @@ use crate::{
     connection_handler::ServerContext,
     error::GrpcServerError,
 };
-use kaspa_grpc_core::protowire::{kaspad_request::Payload, *};
-use kaspa_grpc_core::{ops::KaspadPayloadOps, protowire::NotifyFinalityConflictResponseMessage};
-use kaspa_notify::{scope::FinalityConflictResolvedScope, subscriber::SubscriptionManager};
-use kaspa_rpc_core::{SubmitBlockRejectReason, SubmitBlockReport, SubmitBlockResponse};
-use kaspa_rpc_macros::build_grpc_server_interface;
+use lmt_grpc_core::protowire::{lmtd_request::Payload, *};
+use lmt_grpc_core::{ops::LmtdPayloadOps, protowire::NotifyFinalityConflictResponseMessage};
+use lmt_notify::{scope::FinalityConflictResolvedScope, subscriber::SubscriptionManager};
+use lmt_rpc_core::{SubmitBlockRejectReason, SubmitBlockReport, SubmitBlockResponse};
+use lmt_rpc_macros::build_grpc_server_interface;
 
 pub struct Factory {}
 
 impl Factory {
     pub fn new_handler(
-        rpc_op: KaspadPayloadOps,
+        rpc_op: LmtdPayloadOps,
         incoming_route: IncomingRoute,
         server_context: ServerContext,
         interface: &Interface,
@@ -32,14 +32,14 @@ impl Factory {
 
     pub fn new_interface(server_ctx: ServerContext, network_bps: u64) -> Interface {
         // The array as last argument in the macro call below must exactly match the full set of
-        // KaspadPayloadOps variants.
+        // LmtdPayloadOps variants.
         let mut interface = build_grpc_server_interface!(
             server_ctx.clone(),
             ServerContext,
             Connection,
-            KaspadRequest,
-            KaspadResponse,
-            KaspadPayloadOps,
+            LmtdRequest,
+            LmtdResponse,
+            LmtdPayloadOps,
             [
                 SubmitBlock,
                 GetBlockTemplate,
@@ -97,11 +97,11 @@ impl Factory {
 
         // Manually reimplementing the NotifyFinalityConflictRequest method so subscription
         // gets mirrored to FinalityConflictResolved notifications as well.
-        let method: KaspadMethod = Method::new(|server_ctx: ServerContext, connection: Connection, request: KaspadRequest| {
+        let method: LmtdMethod = Method::new(|server_ctx: ServerContext, connection: Connection, request: LmtdRequest| {
             Box::pin(async move {
-                let mut response: KaspadResponse = match request.payload {
+                let mut response: LmtdResponse = match request.payload {
                     Some(Payload::NotifyFinalityConflictRequest(ref request)) => {
-                        match kaspa_rpc_core::NotifyFinalityConflictRequest::try_from(request) {
+                        match lmt_rpc_core::NotifyFinalityConflictRequest::try_from(request) {
                             Ok(request) => {
                                 let listener_id = connection.get_or_register_listener_id()?;
                                 let command = request.command;
@@ -134,15 +134,15 @@ impl Factory {
                 Ok(response)
             })
         });
-        interface.replace_method(KaspadPayloadOps::NotifyFinalityConflict, method);
+        interface.replace_method(LmtdPayloadOps::NotifyFinalityConflict, method);
 
         // Methods with special properties
         let network_bps = network_bps as usize;
         interface.set_method_properties(
-            KaspadPayloadOps::SubmitBlock,
+            LmtdPayloadOps::SubmitBlock,
             network_bps,
             10.max(network_bps * 2),
-            KaspadRoutingPolicy::DropIfFull(Arc::new(Box::new(|_: &KaspadRequest| {
+            LmtdRoutingPolicy::DropIfFull(Arc::new(Box::new(|_: &LmtdRequest| {
                 Ok(Ok(SubmitBlockResponse { report: SubmitBlockReport::Reject(SubmitBlockRejectReason::RouteIsFull) }).into())
             }))),
         );

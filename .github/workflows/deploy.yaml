@@ -60,13 +60,13 @@ jobs:
           cd $GITHUB_WORKSPACE
           
           # Build for musl
-          cargo --verbose build --bin kaspad --bin rothschild --bin kaspa-wallet --release --target x86_64-unknown-linux-musl
+          cargo --verbose build --bin lmtd --bin rothschild --bin lmt-wallet --release --target x86_64-unknown-linux-musl
           mkdir bin || true
-          cp target/x86_64-unknown-linux-musl/release/kaspad bin/
+          cp target/x86_64-unknown-linux-musl/release/lmtd bin/
           cp target/x86_64-unknown-linux-musl/release/rothschild bin/
-          cp target/x86_64-unknown-linux-musl/release/kaspa-wallet bin/
-          archive="bin/rusty-kaspa-${{ github.event.release.tag_name }}-linux-amd64.zip"
-          asset_name="rusty-kaspa-${{ github.event.release.tag_name }}-linux-amd64.zip"
+          cp target/x86_64-unknown-linux-musl/release/lmt-wallet bin/
+          archive="bin/lapis-monetae-${{ github.event.release.tag_name }}-linux-amd64.zip"
+          asset_name="lapis-monetae-${{ github.event.release.tag_name }}-linux-amd64.zip"
           zip -r "${archive}" ./bin/*
           echo "archive=${archive}" >> $GITHUB_ENV
           echo "asset_name=${asset_name}" >> $GITHUB_ENV
@@ -75,15 +75,15 @@ jobs:
         if: runner.os == 'Windows'
         shell: bash
         run: |
-          cargo build --bin kaspad --release
+          cargo build --bin lmtd --release
           cargo build --bin rothschild --release
-          cargo build --bin kaspa-wallet --release
+          cargo build --bin lmt-wallet --release
           mkdir bin || true
-          cp target/release/kaspad.exe bin/
+          cp target/release/lmtd.exe bin/
           cp target/release/rothschild.exe bin/
-          cp target/release/kaspa-wallet.exe bin/
-          archive="bin/rusty-kaspa-${{ github.event.release.tag_name }}-win64.zip"
-          asset_name="rusty-kaspa-${{ github.event.release.tag_name }}-win64.zip"
+          cp target/release/lmt-wallet.exe bin/
+          archive="bin/lapis-monetae-${{ github.event.release.tag_name }}-win64.zip"
+          asset_name="lapis-monetae-${{ github.event.release.tag_name }}-win64.zip"
           powershell "Compress-Archive bin/* \"${archive}\""
           echo "archive=${archive}" >> $GITHUB_ENV
           echo "asset_name=${asset_name}" >> $GITHUB_ENV
@@ -91,15 +91,15 @@ jobs:
       - name: Build on MacOS
         if: runner.os == 'macOS'
         run: |
-          cargo build --bin kaspad --release
+          cargo build --bin lmtd --release
           cargo build --bin rothschild --release
-          cargo build --bin kaspa-wallet --release
+          cargo build --bin lmt-wallet --release
           mkdir bin || true
-          cp target/release/kaspad bin/
+          cp target/release/lmtd bin/
           cp target/release/rothschild bin/
-          cp target/release/kaspa-wallet bin/
-          archive="bin/rusty-kaspa-${{ github.event.release.tag_name }}-osx.zip"
-          asset_name="rusty-kaspa-${{ github.event.release.tag_name }}-osx.zip"
+          cp target/release/lmt-wallet bin/
+          archive="bin/lapis-monetae-${{ github.event.release.tag_name }}-osx.zip"
+          asset_name="lapis-monetae-${{ github.event.release.tag_name }}-osx.zip"
           zip -r "${archive}" ./bin/*
           echo "archive=${archive}" >> $GITHUB_ENV
           echo "asset_name=${asset_name}" >> $GITHUB_ENV
@@ -182,10 +182,10 @@ jobs:
         run: |
           cd wasm
           bash build-release
-          mv release/kaspa-wasm32-sdk.zip ../kaspa-wasm32-sdk-${{ github.event.release.tag_name }}.zip
+          mv release/lmt-wasm32-sdk.zip ../lmt-wasm32-sdk-${{ github.event.release.tag_name }}.zip
 
-          archive="kaspa-wasm32-sdk-${{ github.event.release.tag_name }}.zip"
-          asset_name="kaspa-wasm32-sdk-${{ github.event.release.tag_name }}.zip"
+          archive="lmt-wasm32-sdk-${{ github.event.release.tag_name }}.zip"
+          asset_name="lmt-wasm32-sdk-${{ github.event.release.tag_name }}.zip"
           echo "archive=${archive}" >> $GITHUB_ENV
           echo "asset_name=${asset_name}" >> $GITHUB_ENV
 

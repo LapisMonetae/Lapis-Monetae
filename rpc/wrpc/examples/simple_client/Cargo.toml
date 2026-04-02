@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-wrpc-simple-client-example"
-description = "Kaspa wRPC simple client example"
+name = "lmt-wrpc-simple-client-example"
+description = "Lapis Monetae wRPC simple client example"
 publish = false
 rust-version.workspace = true
 version.workspace = true
@@ -12,8 +12,8 @@ repository.workspace = true
 
 [dependencies]
 futures.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-wrpc-client.workspace = true
+lmt-rpc-core.workspace = true
+lmt-wrpc-client.workspace = true
 tokio.workspace = true
 
 

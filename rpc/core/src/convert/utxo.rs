@@ -2,9 +2,9 @@
 
 use crate::RpcUtxoEntry;
 use crate::RpcUtxosByAddressesEntry;
-use kaspa_addresses::Prefix;
-use kaspa_index_core::indexed_utxos::UtxoSetByScriptPublicKey;
-use kaspa_txscript::extract_script_pub_key_address;
+use lmt_addresses::Prefix;
+use lmt_index_core::indexed_utxos::UtxoSetByScriptPublicKey;
+use lmt_txscript::extract_script_pub_key_address;
 
 // ----------------------------------------------------------------------------
 // index to rpc_core

@@ -1,14 +1,14 @@
 use std::sync::Arc;
 
-use kaspa_addressmanager::NetAddress;
-use kaspa_connectionmanager::ConnectionManager;
-use kaspa_core::{
+use lmt_addressmanager::NetAddress;
+use lmt_connectionmanager::ConnectionManager;
+use lmt_core::{
     task::service::{AsyncService, AsyncServiceFuture},
     trace,
 };
-use kaspa_p2p_lib::Adaptor;
-use kaspa_utils::triggers::SingleTrigger;
-use kaspa_utils_tower::counters::TowerConnectionCounters;
+use lmt_p2p_lib::Adaptor;
+use lmt_utils::triggers::SingleTrigger;
+use lmt_utils_tower::counters::TowerConnectionCounters;
 
 use crate::flow_context::FlowContext;
 

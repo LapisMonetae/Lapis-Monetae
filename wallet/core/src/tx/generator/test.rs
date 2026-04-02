@@ -4,12 +4,12 @@ use crate::error::Error;
 use crate::result::Result;
 use crate::tx::{Fees, MassCalculator, PaymentDestination};
 use crate::utxo::UtxoEntryReference;
-use crate::{tx::PaymentOutputs, utils::kaspa_to_sompi};
-use kaspa_addresses::{Address, Prefix, Version};
-use kaspa_consensus_core::config::params::Params;
-use kaspa_consensus_core::mass::UtxoCell;
-use kaspa_consensus_core::network::{NetworkId, NetworkType};
-use kaspa_consensus_core::tx::Transaction;
+use crate::{tx::PaymentOutputs, utils::lmt_to_sompi};
+use lmt_addresses::{Address, Prefix, Version};
+use lmt_consensus_core::config::params::Params;
+use lmt_consensus_core::mass::UtxoCell;
+use lmt_consensus_core::network::{NetworkId, NetworkType};
+use lmt_consensus_core::tx::Transaction;
 use rand::prelude::*;
 use std::cell::RefCell;
 use std::fmt::Debug;
@@ -25,24 +25,24 @@ const DISPLAY_EXPECTED: bool = true;
 pub(crate) struct Sompi(u64);
 
 #[derive(Clone, Copy)]
-struct Kaspa(f64);
+struct Lmt(f64);
 
-impl Debug for Kaspa {
+impl Debug for Lmt {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let sompi: Sompi = self.into();
         write!(f, "{}", sompi.0)
     }
 }
 
-impl From<Kaspa> for Sompi {
-    fn from(kaspa: Kaspa) -> Self {
-        Sompi(kaspa_to_sompi(kaspa.0))
+impl From<Lmt> for Sompi {
+    fn from(lmt: Lmt) -> Self {
+        Sompi(lmt_to_sompi(lmt.0))
     }
 }
 
-impl From<&Kaspa> for Sompi {
-    fn from(kaspa: &Kaspa) -> Self {
-        Sompi(kaspa_to_sompi(kaspa.0))
+impl From<&Lmt> for Sompi {
+    fn from(lmt: &Lmt) -> Self {
+        Sompi(lmt_to_sompi(lmt.0))
     }
 }
 
@@ -415,7 +415,7 @@ where
     let mut values = head.to_vec();
     values.extend(tail);
 
-    let utxo_entries: Vec<UtxoEntryReference> = values.into_iter().map(kaspa_to_sompi).map(UtxoEntryReference::simulated).collect();
+    let utxo_entries: Vec<UtxoEntryReference> = values.into_iter().map(lmt_to_sompi).map(UtxoEntryReference::simulated).collect();
     let multiplexer = None;
     let sig_op_count = 1;
     let minimum_signatures = 1;
@@ -487,7 +487,7 @@ fn test_generator_sweep_two_utxos() -> Result<()> {
         .fetch(&Expected {
             is_final: true,
             input_count: 2,
-            aggregate_input_value: Kaspa(20.0),
+            aggregate_input_value: Lmt(20.0),
             output_count: 1,
             priority_fees: FeesExpected::None,
         })
@@ -502,7 +502,7 @@ fn test_generator_sweep_two_utxos_with_priority_fees_rejection() -> Result<()> {
         &[10.0, 10.0],
         &[],
         None,
-        Fees::sender(Kaspa(5.0)),
+        Fees::sender(Lmt(5.0)),
         change_address,
         PaymentDestination::Change,
     );
@@ -515,18 +515,11 @@ fn test_generator_sweep_two_utxos_with_priority_fees_rejection() -> Result<()> {
 
 #[test]
 fn test_generator_compound_200k_10kas_transactions() -> Result<()> {
-    generator(
-        test_network_id(),
-        &[10.0; 200_000],
-        &[],
-        None,
-        Fees::sender(Kaspa(5.0)),
-        [(output_address, Kaspa(190_000.0))].as_slice(),
-    )
-    .unwrap()
-    .harness()
-    .validate()
-    .finalize();
+    generator(test_network_id(), &[10.0; 200_000], &[], None, Fees::sender(Lmt(5.0)), [(output_address, Lmt(190_000.0))].as_slice())
+        .unwrap()
+        .harness()
+        .validate()
+        .finalize();
 
     Ok(())
 }
@@ -539,7 +532,7 @@ fn test_generator_fee_rate_compound_200k_10kas_transactions() -> Result<()> {
         &[],
         Some(100.0),
         Fees::sender(Sompi(0)),
-        [(output_address, Kaspa(190_000.0))].as_slice(),
+        [(output_address, Lmt(190_000.0))].as_slice(),
     )
     .unwrap()
     .harness()
@@ -554,8 +547,8 @@ fn test_generator_compound_100k_random_transactions() -> Result<()> {
     let mut rng = StdRng::seed_from_u64(0);
     let inputs: Vec<f64> = (0..100_000).map(|_| rng.gen_range(0.001..10.0)).collect();
     let total = inputs.iter().sum::<f64>();
-    let outputs = [(output_address, Kaspa(total - 10.0))];
-    generator(test_network_id(), &inputs, &[], None, Fees::sender(Kaspa(5.0)), outputs.as_slice())
+    let outputs = [(output_address, Lmt(total - 10.0))];
+    generator(test_network_id(), &inputs, &[], None, Fees::sender(Lmt(5.0)), outputs.as_slice())
         .unwrap()
         .harness()
         .validate()
@@ -569,9 +562,9 @@ fn test_generator_random_outputs() -> Result<()> {
     let mut rng = StdRng::seed_from_u64(0);
     let outputs: Vec<f64> = (0..30).map(|_| rng.gen_range(1.0..10.0)).collect();
     let total = outputs.iter().sum::<f64>();
-    let outputs: Vec<_> = outputs.into_iter().map(|v| (output_address, Kaspa(v))).collect();
+    let outputs: Vec<_> = outputs.into_iter().map(|v| (output_address, Lmt(v))).collect();
 
-    generator(test_network_id(), &[total + 100.0], &[], None, Fees::sender(Kaspa(5.0)), outputs.as_slice())
+    generator(test_network_id(), &[total + 100.0], &[], None, Fees::sender(Lmt(5.0)), outputs.as_slice())
         .unwrap()
         .harness()
         .validate()
@@ -587,17 +580,17 @@ fn test_generator_dust_1_1() -> Result<()> {
         &[10.0; 20],
         &[],
         None,
-        Fees::sender(Kaspa(5.0)),
-        [(output_address, Kaspa(1.0)), (output_address, Kaspa(1.0))].as_slice(),
+        Fees::sender(Lmt(5.0)),
+        [(output_address, Lmt(1.0)), (output_address, Lmt(1.0))].as_slice(),
     )
     .unwrap()
     .harness()
     .fetch(&Expected {
         is_final: true,
         input_count: 4,
-        aggregate_input_value: Kaspa(40.0),
+        aggregate_input_value: Lmt(40.0),
         output_count: 3,
-        priority_fees: FeesExpected::sender(Kaspa(5.0)),
+        priority_fees: FeesExpected::sender(Lmt(5.0)),
     })
     .finalize();
 
@@ -611,17 +604,17 @@ fn test_generator_inputs_2_outputs_2_fees_exclude() -> Result<()> {
         &[10.0; 2],
         &[],
         None,
-        Fees::sender(Kaspa(5.0)),
-        [(output_address, Kaspa(10.0)), (output_address, Kaspa(1.0))].as_slice(),
+        Fees::sender(Lmt(5.0)),
+        [(output_address, Lmt(10.0)), (output_address, Lmt(1.0))].as_slice(),
     )
     .unwrap()
     .harness()
     .fetch(&Expected {
         is_final: true,
         input_count: 2,
-        aggregate_input_value: Kaspa(20.0),
+        aggregate_input_value: Lmt(20.0),
         output_count: 3,
-        priority_fees: FeesExpected::sender(Kaspa(5.0)),
+        priority_fees: FeesExpected::sender(Lmt(5.0)),
     })
     .finalize();
 
@@ -630,21 +623,21 @@ fn test_generator_inputs_2_outputs_2_fees_exclude() -> Result<()> {
 
 #[test]
 fn test_generator_inputs_100_outputs_1_fees_exclude_success() -> Result<()> {
-    // generator(test_network_id(), &[10.0; 100], &[], Fees::sender(Kaspa(5.0)), [(output_address, Kaspa(990.0))].as_slice())
-    generator(test_network_id(), &[10.0; 100], &[], None, Fees::sender(Kaspa(0.0)), [(output_address, Kaspa(990.0))].as_slice())
+    // generator(test_network_id(), &[10.0; 100], &[], Fees::sender(Lmt(5.0)), [(output_address, Lmt(990.0))].as_slice())
+    generator(test_network_id(), &[10.0; 100], &[], None, Fees::sender(Lmt(0.0)), [(output_address, Lmt(990.0))].as_slice())
         .unwrap()
         .harness()
         .fetch(&Expected {
             is_final: false,
             input_count: 88,
-            aggregate_input_value: Kaspa(880.0),
+            aggregate_input_value: Lmt(880.0),
             output_count: 1,
             priority_fees: FeesExpected::None,
         })
         .fetch(&Expected {
             is_final: false,
             input_count: 12,
-            aggregate_input_value: Kaspa(120.0),
+            aggregate_input_value: Lmt(120.0),
             output_count: 1,
             priority_fees: FeesExpected::None,
         })
@@ -653,8 +646,8 @@ fn test_generator_inputs_100_outputs_1_fees_exclude_success() -> Result<()> {
             input_count: 2,
             aggregate_input_value: Sompi(999_99886576),
             output_count: 2,
-            // priority_fees: FeesExpected::sender(Kaspa(5.0)),
-            priority_fees: FeesExpected::sender(Kaspa(0.0)),
+            // priority_fees: FeesExpected::sender(Lmt(5.0)),
+            priority_fees: FeesExpected::sender(Lmt(0.0)),
         })
         .finalize();
 
@@ -668,23 +661,23 @@ fn test_generator_inputs_100_outputs_1_fees_include_success() -> Result<()> {
         &[1.0; 100],
         &[],
         None,
-        Fees::receiver(Kaspa(5.0)),
-        // [(output_address, Kaspa(100.0))].as_slice(),
-        [(output_address, Kaspa(100.0))].as_slice(),
+        Fees::receiver(Lmt(5.0)),
+        // [(output_address, Lmt(100.0))].as_slice(),
+        [(output_address, Lmt(100.0))].as_slice(),
     )
     .unwrap()
     .harness()
     .fetch(&Expected {
         is_final: false,
         input_count: 88,
-        aggregate_input_value: Kaspa(88.0),
+        aggregate_input_value: Lmt(88.0),
         output_count: 1,
         priority_fees: FeesExpected::None,
     })
     .fetch(&Expected {
         is_final: false,
         input_count: 12,
-        aggregate_input_value: Kaspa(12.0),
+        aggregate_input_value: Lmt(12.0),
         output_count: 1,
         priority_fees: FeesExpected::None,
     })
@@ -693,7 +686,7 @@ fn test_generator_inputs_100_outputs_1_fees_include_success() -> Result<()> {
         input_count: 2,
         aggregate_input_value: Sompi(99_99886576),
         output_count: 1,
-        priority_fees: FeesExpected::receiver(Kaspa(5.0)),
+        priority_fees: FeesExpected::receiver(Lmt(5.0)),
     })
     .finalize();
 
@@ -702,13 +695,13 @@ fn test_generator_inputs_100_outputs_1_fees_include_success() -> Result<()> {
 
 #[test]
 fn test_generator_inputs_100_outputs_1_fees_exclude_insufficient_funds() -> Result<()> {
-    generator(test_network_id(), &[10.0; 100], &[], None, Fees::sender(Kaspa(5.0)), [(output_address, Kaspa(1000.0))].as_slice())
+    generator(test_network_id(), &[10.0; 100], &[], None, Fees::sender(Lmt(5.0)), [(output_address, Lmt(1000.0))].as_slice())
         .unwrap()
         .harness()
         .fetch(&Expected {
             is_final: false,
             input_count: 88,
-            aggregate_input_value: Kaspa(880.0),
+            aggregate_input_value: Lmt(880.0),
             output_count: 1,
             priority_fees: FeesExpected::None,
         })
@@ -719,7 +712,7 @@ fn test_generator_inputs_100_outputs_1_fees_exclude_insufficient_funds() -> Resu
 
 #[test]
 fn test_generator_inputs_1k_outputs_2_fees_exclude() -> Result<()> {
-    generator(test_network_id(), &[10.0; 1_000], &[], None, Fees::sender(Kaspa(5.0)), [(output_address, Kaspa(9_000.0))].as_slice())
+    generator(test_network_id(), &[10.0; 1_000], &[], None, Fees::sender(Lmt(5.0)), [(output_address, Lmt(9_000.0))].as_slice())
         .unwrap()
         .harness()
         .drain(
@@ -727,7 +720,7 @@ fn test_generator_inputs_1k_outputs_2_fees_exclude() -> Result<()> {
             &Expected {
                 is_final: false,
                 input_count: 88,
-                aggregate_input_value: Kaspa(880.0),
+                aggregate_input_value: Lmt(880.0),
                 output_count: 1,
                 priority_fees: FeesExpected::None,
             },
@@ -735,7 +728,7 @@ fn test_generator_inputs_1k_outputs_2_fees_exclude() -> Result<()> {
         .fetch(&Expected {
             is_final: false,
             input_count: 21,
-            aggregate_input_value: Kaspa(210.0),
+            aggregate_input_value: Lmt(210.0),
             output_count: 1,
             priority_fees: FeesExpected::None,
         })
@@ -744,7 +737,7 @@ fn test_generator_inputs_1k_outputs_2_fees_exclude() -> Result<()> {
             input_count: 11,
             aggregate_input_value: Sompi(9009_98981896),
             output_count: 2,
-            priority_fees: FeesExpected::receiver(Kaspa(5.0)),
+            priority_fees: FeesExpected::receiver(Lmt(5.0)),
         })
         .finalize();
 
@@ -759,8 +752,8 @@ fn test_generator_inputs_32k_outputs_2_fees_exclude() -> Result<()> {
         &[f; 32_747],
         &[],
         None,
-        Fees::sender(Kaspa(10_000.0)),
-        [(output_address, Kaspa(f * 32_747.0 - 10_001.0))].as_slice(),
+        Fees::sender(Lmt(10_000.0)),
+        [(output_address, Lmt(f * 32_747.0 - 10_001.0))].as_slice(),
     )
     .unwrap()
     .harness()
@@ -780,7 +773,7 @@ fn test_generator_inputs_250k_outputs_2_sweep() -> Result<()> {
 
 #[test]
 fn test_generator_fan_out_1() -> Result<()> {
-    use kaspa_consensus_core::mass::calc_storage_mass;
+    use lmt_consensus_core::mass::calc_storage_mass;
 
     let network_id = test_network_id();
     let consensus_params = Params::from(network_id);
@@ -797,10 +790,10 @@ fn test_generator_fan_out_1() -> Result<()> {
     // generator(test_network_id(), &[
     //     1.00000000,
     //     87.23579967,
-    // ], &[], None, Fees::sender(Kaspa(1.0)), [
-    //     (output_address, Kaspa(0.20000000)),
-    //     (output_address, Kaspa(0.25000000)),
-    //     (output_address, Kaspa(0.21000000)),
+    // ], &[], None, Fees::sender(Lmt(1.0)), [
+    //     (output_address, Lmt(0.20000000)),
+    //     (output_address, Lmt(0.25000000)),
+    //     (output_address, Lmt(0.21000000)),
     // ].as_slice())
     //     .unwrap()
     //     .harness()
@@ -808,9 +801,9 @@ fn test_generator_fan_out_1() -> Result<()> {
     //     .fetch(&Expected {
     //         is_final: true,
     //         input_count: 2,
-    //         aggregate_input_value: Kaspa(1.00000000 + 87.23579967),
+    //         aggregate_input_value: Lmt(1.00000000 + 87.23579967),
     //         output_count: 4,
-    //         priority_fees: FeesExpected::receiver(Kaspa(1.0)),
+    //         priority_fees: FeesExpected::receiver(Lmt(1.0)),
     //         // priority_fees: FeesExpected::None,
     //     })
     //     .finalize();

@@ -9,11 +9,11 @@ pub const LOCK_TIME_THRESHOLD: u64 = 500_000_000_000;
 /// MAX_SCRIPT_PUBLIC_KEY_VERSION is the current latest supported public key script version.
 pub const MAX_SCRIPT_PUBLIC_KEY_VERSION: u16 = 0;
 
-/// SompiPerKaspa is the number of sompi in one kaspa (1 KAS).
-pub const SOMPI_PER_KASPA: u64 = 100_000_000;
+/// SompiPerLmt is the number of sompi in one Lapis Monetae (1 LMT).
+pub const SOMPI_PER_LMT: u64 = 100_000_000;
 
-/// The parameter for scaling inverse KAS value to mass units (KIP-0009)
-pub const STORAGE_MASS_PARAMETER: u64 = SOMPI_PER_KASPA * 10_000;
+/// The parameter for scaling inverse LMT value to mass units (KIP-0009)
+pub const STORAGE_MASS_PARAMETER: u64 = SOMPI_PER_LMT * 10_000;
 
 /// The parameter defining how much mass per byte to charge for when calculating
 /// transient storage mass. Since normally the block mass limit is 500_000, this limits
@@ -22,7 +22,7 @@ pub const TRANSIENT_BYTE_TO_MASS_FACTOR: u64 = 4;
 
 /// MaxSompi is the maximum transaction amount allowed in sompi.
 /// Set to 100,000,000 LMT total supply in base units.
-pub const MAX_SOMPI: u64 = 100_000_000 * SOMPI_PER_KASPA;
+pub const MAX_SOMPI: u64 = 100_000_000 * SOMPI_PER_LMT;
 
 // MAX_TX_IN_SEQUENCE_NUM is the maximum sequence number the sequence field
 // of a transaction input can be.

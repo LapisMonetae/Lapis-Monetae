@@ -1,12 +1,12 @@
 use std::sync::Arc;
 
-use kaspa_consensus_core::{header::Header, BlockHasher, BlockLevel};
-use kaspa_database::prelude::{BatchDbWriter, CachedDbAccess};
-use kaspa_database::prelude::{CachePolicy, DB};
-use kaspa_database::prelude::{StoreError, StoreResult};
-use kaspa_database::registry::DatabaseStorePrefixes;
-use kaspa_hashes::Hash;
-use kaspa_utils::mem_size::MemSizeEstimator;
+use lmt_consensus_core::{header::Header, BlockHasher, BlockLevel};
+use lmt_database::prelude::{BatchDbWriter, CachedDbAccess};
+use lmt_database::prelude::{CachePolicy, DB};
+use lmt_database::prelude::{StoreError, StoreResult};
+use lmt_database::registry::DatabaseStorePrefixes;
+use lmt_hashes::Hash;
+use lmt_utils::mem_size::MemSizeEstimator;
 use rocksdb::WriteBatch;
 use serde::{Deserialize, Serialize};
 

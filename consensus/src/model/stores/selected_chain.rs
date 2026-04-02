@@ -1,15 +1,15 @@
-use kaspa_consensus_core::blockstatus::BlockStatus;
-use kaspa_consensus_core::ChainPath;
-use kaspa_database::registry::DatabaseStorePrefixes;
+use lmt_consensus_core::blockstatus::BlockStatus;
+use lmt_consensus_core::ChainPath;
+use lmt_database::registry::DatabaseStorePrefixes;
 use parking_lot::RwLockWriteGuard;
 use rocksdb::WriteBatch;
 
 use std::sync::Arc;
 
-use kaspa_database::prelude::{BatchDbWriter, CachePolicy, CachedDbAccess, DbWriter};
-use kaspa_database::prelude::{CachedDbItem, DB};
-use kaspa_database::prelude::{StoreError, StoreResult};
-use kaspa_hashes::Hash;
+use lmt_database::prelude::{BatchDbWriter, CachePolicy, CachedDbAccess, DbWriter};
+use lmt_database::prelude::{CachedDbItem, DB};
+use lmt_database::prelude::{StoreError, StoreResult};
+use lmt_hashes::Hash;
 
 use super::U64Key;
 

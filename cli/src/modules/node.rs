@@ -1,5 +1,5 @@
 use crate::imports::*;
-use kaspa_daemon::KaspadConfig;
+use lmt_daemon::LmtdConfig;
 use workflow_core::task::sleep;
 use workflow_node::process;
 pub use workflow_node::process::Event;
@@ -7,7 +7,7 @@ use workflow_store::fs;
 
 #[derive(Describe, Debug, Clone, Serialize, Deserialize, Hash, Eq, PartialEq, Ord, PartialOrd)]
 #[serde(rename_all = "lowercase")]
-pub enum KaspadSettings {
+pub enum LmtdSettings {
     #[describe("Binary location")]
     Location,
     #[describe("Mute logs")]
@@ -15,16 +15,16 @@ pub enum KaspadSettings {
 }
 
 #[async_trait]
-impl DefaultSettings for KaspadSettings {
+impl DefaultSettings for LmtdSettings {
     async fn defaults() -> Vec<(Self, Value)> {
         let mut settings = vec![(Self::Mute, to_value(true).unwrap())];
 
         let root = nw_sys::app::folder();
         let mut binaries = Vec::new();
-        if let Ok(mut found) = kaspa_daemon::locate_binaries(&root, "lmtd").await {
+        if let Ok(mut found) = lmt_daemon::locate_binaries(&root, "lmtd").await {
             binaries.append(&mut found);
         }
-        if let Ok(mut found) = kaspa_daemon::locate_binaries(&root, "kaspad").await {
+        if let Ok(mut found) = lmt_daemon::locate_binaries(&root, "lmtd").await {
             binaries.append(&mut found);
         }
         if !binaries.is_empty() {
@@ -38,7 +38,7 @@ impl DefaultSettings for KaspadSettings {
 }
 
 pub struct Node {
-    settings: SettingsStore<KaspadSettings>,
+    settings: SettingsStore<LmtdSettings>,
     mute: Arc<AtomicBool>,
     is_running: Arc<AtomicBool>,
 }
@@ -56,8 +56,8 @@ impl Default for Node {
 #[async_trait]
 impl Handler for Node {
     fn verb(&self, ctx: &Arc<dyn Context>) -> Option<&'static str> {
-        if let Ok(ctx) = ctx.clone().downcast_arc::<KaspaCli>() {
-            ctx.daemons().clone().kaspad.as_ref().map(|_| "node")
+        if let Ok(ctx) = ctx.clone().downcast_arc::<LmtCli>() {
+            ctx.daemons().clone().lmtd.as_ref().map(|_| "node")
         } else {
             None
         }
@@ -69,14 +69,14 @@ impl Handler for Node {
 
     async fn start(self: Arc<Self>, _ctx: &Arc<dyn Context>) -> cli::Result<()> {
         self.settings.try_load().await.ok();
-        if let Some(mute) = self.settings.get(KaspadSettings::Mute) {
+        if let Some(mute) = self.settings.get(LmtdSettings::Mute) {
             self.mute.store(mute, Ordering::Relaxed);
         }
         Ok(())
     }
 
     async fn handle(self: Arc<Self>, ctx: &Arc<dyn Context>, argv: Vec<String>, cmd: &str) -> cli::Result<()> {
-        let ctx = ctx.clone().downcast_arc::<KaspaCli>()?;
+        let ctx = ctx.clone().downcast_arc::<LmtCli>()?;
         self.main(ctx, argv, cmd).await.map_err(|e| e.into())
     }
 }
@@ -86,24 +86,24 @@ impl Node {
         self.is_running.load(Ordering::SeqCst)
     }
 
-    async fn create_config(&self, ctx: &Arc<KaspaCli>) -> Result<KaspadConfig> {
+    async fn create_config(&self, ctx: &Arc<LmtCli>) -> Result<LmtdConfig> {
         let location: String = self
             .settings
-            .get(KaspadSettings::Location)
+            .get(LmtdSettings::Location)
             .ok_or_else(|| Error::Custom("No node binary specified, please use `node select` to select a binary.".into()))?;
         let network_id = ctx.wallet().network_id()?;
         // disabled for prompt update (until progress events are implemented)
         // let mute = self.mute.load(Ordering::SeqCst);
         let mute = false;
-        let config = KaspadConfig::new(location.as_str(), network_id, mute);
+        let config = LmtdConfig::new(location.as_str(), network_id, mute);
         Ok(config)
     }
 
-    async fn main(self: Arc<Self>, ctx: Arc<KaspaCli>, mut argv: Vec<String>, cmd: &str) -> Result<()> {
+    async fn main(self: Arc<Self>, ctx: Arc<LmtCli>, mut argv: Vec<String>, cmd: &str) -> Result<()> {
         if argv.is_empty() {
             return self.display_help(ctx, argv).await;
         }
-        let kaspad = ctx.daemons().kaspad();
+        let lmtd = ctx.daemons().lmtd();
         match argv.remove(0).as_str() {
             "start" => {
                 let mute = self.mute.load(Ordering::SeqCst);
@@ -115,8 +115,8 @@ impl Node {
 
                 let wrpc_client = ctx.wallet().try_wrpc_client().ok_or(Error::custom("Unable to start node with non-wRPC client"))?;
 
-                kaspad.configure(self.create_config(&ctx).await?).await?;
-                kaspad.start().await?;
+                lmtd.configure(self.create_config(&ctx).await?).await?;
+                lmtd.start().await?;
 
                 // temporary setup for auto-connect
                 let url = ctx.wallet().settings().get(WalletSettings::Server);
@@ -145,14 +145,14 @@ impl Node {
                 }
             }
             "stop" => {
-                kaspad.stop().await?;
+                lmtd.stop().await?;
             }
             "restart" => {
-                kaspad.configure(self.create_config(&ctx).await?).await?;
-                kaspad.restart().await?;
+                lmtd.configure(self.create_config(&ctx).await?).await?;
+                lmtd.restart().await?;
             }
             "kill" => {
-                kaspad.kill().await?;
+                lmtd.kill().await?;
             }
             "mute" | "logs" => {
                 let mute = !self.mute.load(Ordering::SeqCst);
@@ -162,11 +162,11 @@ impl Node {
                 } else {
                     tprintln!(ctx, "{}", style("node is unmuted").dim());
                 }
-                // kaspad.mute(mute).await?;
-                self.settings.set(KaspadSettings::Mute, mute).await?;
+                // lmtd.mute(mute).await?;
+                self.settings.set(LmtdSettings::Mute, mute).await?;
             }
             "status" => {
-                let status = kaspad.status().await?;
+                let status = lmtd.status().await?;
                 tprintln!(ctx, "{}", status);
             }
             "select" => {
@@ -175,8 +175,8 @@ impl Node {
                 self.select(ctx, path.is_not_empty().then_some(path)).await?;
             }
             "version" => {
-                kaspad.configure(self.create_config(&ctx).await?).await?;
-                let version = kaspad.version().await?;
+                lmtd.configure(self.create_config(&ctx).await?).await?;
+                let version = lmtd.version().await?;
                 tprintln!(ctx, "{}", version);
             }
             v => {
@@ -189,10 +189,10 @@ impl Node {
         Ok(())
     }
 
-    async fn display_help(self: Arc<Self>, ctx: Arc<KaspaCli>, _argv: Vec<String>) -> Result<()> {
+    async fn display_help(self: Arc<Self>, ctx: Arc<LmtCli>, _argv: Vec<String>) -> Result<()> {
         ctx.term().help(
             &[
-                ("select", "Select node executable (lmtd/kaspad) location"),
+                ("select", "Select node executable (lmtd) location"),
                 ("version", "Display node executable version"),
                 ("start", "Start the local Lapis Monetae (LMT) node instance"),
                 ("stop", "Stop the local Lapis Monetae (LMT) node instance"),
@@ -207,21 +207,21 @@ impl Node {
         Ok(())
     }
 
-    async fn select(self: Arc<Self>, ctx: Arc<KaspaCli>, path: Option<String>) -> Result<()> {
+    async fn select(self: Arc<Self>, ctx: Arc<LmtCli>, path: Option<String>) -> Result<()> {
         let root = nw_sys::app::folder();
 
         match path {
             None => {
-                let mut binaries = kaspa_daemon::locate_binaries(root.as_str(), "lmtd").await?;
-                binaries.extend(kaspa_daemon::locate_binaries(root.as_str(), "kaspad").await?);
+                let mut binaries = lmt_daemon::locate_binaries(root.as_str(), "lmtd").await?;
+                binaries.extend(lmt_daemon::locate_binaries(root.as_str(), "lmtd").await?);
 
                 if binaries.is_empty() {
                     tprintln!(ctx, "No node binaries found");
                 } else {
                     let binaries = binaries.iter().map(|p| p.display().to_string()).collect::<Vec<_>>();
-                    if let Some(selection) = ctx.term().select("Please select a node binary (lmtd/kaspad)", &binaries).await? {
+                    if let Some(selection) = ctx.term().select("Please select a node binary (lmtd)", &binaries).await? {
                         tprintln!(ctx, "selecting: {}", selection);
-                        self.settings.set(KaspadSettings::Location, selection.as_str()).await?;
+                        self.settings.set(LmtdSettings::Location, selection.as_str()).await?;
                     } else {
                         tprintln!(ctx, "no selection is made");
                     }
@@ -232,7 +232,7 @@ impl Node {
                     let version = process::version(&path).await?;
                     tprintln!(ctx, "detected binary version: {}", version);
                     tprintln!(ctx, "selecting: {path}");
-                    self.settings.set(KaspadSettings::Location, path.as_str()).await?;
+                    self.settings.set(LmtdSettings::Location, path.as_str()).await?;
                 } else {
                     twarnln!(ctx, "destination binary not found, please specify full path including the binary name");
                     twarnln!(ctx, "example: 'node select /home/user/testnet/lmtd'");
@@ -244,7 +244,7 @@ impl Node {
         Ok(())
     }
 
-    pub async fn handle_event(&self, ctx: &Arc<KaspaCli>, event: Event) -> Result<()> {
+    pub async fn handle_event(&self, ctx: &Arc<LmtCli>, event: Event) -> Result<()> {
         let term = ctx.term();
 
         match event {

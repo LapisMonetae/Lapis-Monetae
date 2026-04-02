@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-grpc-core"
-description = "Kaspa gRPC core"
+name = "lmt-grpc-core"
+description = "Lapis Monetae gRPC core"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,12 +10,12 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-notify.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-utils.workspace = true
+lmt-addresses.workspace = true
+lmt-consensus-core.workspace = true
+lmt-core.workspace = true
+lmt-notify.workspace = true
+lmt-rpc-core.workspace = true
+lmt-utils.workspace = true
 
 async-channel.workspace = true
 async-stream.workspace = true

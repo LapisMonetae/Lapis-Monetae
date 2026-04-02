@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-utxoindex"
-description = "Kaspa UTXO index"
+name = "lmt-utxoindex"
+description = "Lapis Monetae UTXO index"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -11,13 +11,13 @@ repository.workspace = true
 
 [dependencies]
 futures.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-database.workspace = true
-kaspa-hashes.workspace = true
-kaspa-index-core.workspace = true
-kaspa-utils.workspace = true
+lmt-consensus-core.workspace = true
+lmt-consensusmanager.workspace = true
+lmt-core.workspace = true
+lmt-database.workspace = true
+lmt-hashes.workspace = true
+lmt-index-core.workspace = true
+lmt-utils.workspace = true
 log.workspace = true
 parking_lot.workspace = true
 rocksdb.workspace = true
@@ -25,7 +25,7 @@ serde.workspace = true
 thiserror.workspace = true
 
 [dev-dependencies]
-kaspa-consensus.workspace = true
+lmt-consensus.workspace = true
 rand = { workspace = true, features = ["small_rng"] }
 
 [lints]

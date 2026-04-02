@@ -75,7 +75,7 @@ export LD_x86_64_unknown_linux_musl=$LD
 
 # Set environment variables for static linking
 export OPENSSL_STATIC=true
-export RUSTFLAGS="-C link-arg=-static"
+export RUSTFLAGS="-C link-arg=-static -C link-arg=-Wl,--allow-multiple-definition"
 
 # We specify the compiler that will invoke linker
 export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=$CC

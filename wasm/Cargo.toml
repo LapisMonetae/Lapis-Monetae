@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-wasm"
-description = "KASPA WASM bindings"
+name = "lmt-wasm"
+description = "LMT WASM bindings"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -18,21 +18,21 @@ crate-type = ["cdylib"]
 cfg-if.workspace = true
 getrandom_0_3.workspace = true
 js-sys.workspace = true
-kaspa-addresses.workspace = true
-kaspa-bip32.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-wasm.workspace = true
-kaspa-core.workspace = true
-kaspa-math.workspace = true
-kaspa-pow = { workspace = true, optional = true }
-kaspa-txscript.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-utils.workspace = true
-kaspa-wasm-core.workspace = true
-kaspa-wallet-core.workspace = true
-kaspa-wallet-keys.workspace = true
-kaspa-wrpc-client.workspace = true
-kaspa-wrpc-wasm.workspace = true
+lmt-addresses.workspace = true
+lmt-bip32.workspace = true
+lmt-consensus-core.workspace = true
+lmt-consensus-wasm.workspace = true
+lmt-core.workspace = true
+lmt-math.workspace = true
+lmt-pow = { workspace = true, optional = true }
+lmt-txscript.workspace = true
+lmt-rpc-core.workspace = true
+lmt-utils.workspace = true
+lmt-wasm-core.workspace = true
+lmt-wallet-core.workspace = true
+lmt-wallet-keys.workspace = true
+lmt-wrpc-client.workspace = true
+lmt-wrpc-wasm.workspace = true
 num.workspace = true
 wasm-bindgen.workspace = true
 workflow-log.workspace = true
@@ -41,22 +41,22 @@ workflow-wasm.workspace = true
 
 [features] 
 wasm32-sdk = [
-    "kaspa-wallet-core/wasm32-sdk",
-    "dep:kaspa-pow",
-    "kaspa-pow/wasm32-sdk",
-    "kaspa-txscript/wasm32-sdk",
+    "lmt-wallet-core/wasm32-sdk",
+    "dep:lmt-pow",
+    "lmt-pow/wasm32-sdk",
+    "lmt-txscript/wasm32-sdk",
 ]
 wasm32-core = [
-    "kaspa-wallet-core/wasm32-core",
-    "dep:kaspa-pow",
-    "kaspa-pow/wasm32-sdk",
-    "kaspa-txscript/wasm32-sdk",
+    "lmt-wallet-core/wasm32-core",
+    "dep:lmt-pow",
+    "lmt-pow/wasm32-sdk",
+    "lmt-txscript/wasm32-sdk",
 ]
 wasm32-rpc = [
-    "kaspa-consensus-core/wasm32-sdk",
-    "kaspa-consensus-wasm/wasm32-sdk",
-    "kaspa-wrpc-client/wasm32-sdk",
-    "kaspa-wrpc-wasm/wasm32-sdk",
+    "lmt-consensus-core/wasm32-sdk",
+    "lmt-consensus-wasm/wasm32-sdk",
+    "lmt-wrpc-client/wasm32-sdk",
+    "lmt-wrpc-wasm/wasm32-sdk",
 ]
 wasm32-keygen = []
 default = []
@@ -66,8 +66,8 @@ targets = ["wasm32-unknown-unknown"]
 
 [package.metadata.emanate.wasm]
 targets = [
-    { target = "nodejs", out-dir = "nodejs/kaspa" },
-    { target = "web", out-dir = "web/kaspa" }
+    { target = "nodejs", out-dir = "nodejs/lmt" },
+    { target = "web", out-dir = "web/lmt" }
 ]
 folder = "setup"
 

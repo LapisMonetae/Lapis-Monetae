@@ -17,15 +17,15 @@ use crate::{
     },
 };
 use itertools::Itertools;
-use kaspa_addresses::Address;
-use kaspa_alloc::init_allocator_with_default_settings;
-use kaspa_consensus::params::Params;
-use kaspa_consensus_core::network::{NetworkId, NetworkType};
-use kaspa_core::{info, task::tick::TickService, trace};
-use kaspa_math::Uint256;
-use kaspa_notify::scope::VirtualDaaScoreChangedScope;
-use kaspa_rpc_core::api::rpc::RpcApi;
-use kaspa_txscript::pay_to_address_script;
+use lmt_addresses::Address;
+use lmt_alloc::init_allocator_with_default_settings;
+use lmt_consensus::params::Params;
+use lmt_consensus_core::network::{NetworkId, NetworkType};
+use lmt_core::{info, task::tick::TickService, trace};
+use lmt_math::Uint256;
+use lmt_notify::scope::VirtualDaaScoreChangedScope;
+use lmt_rpc_core::api::rpc::RpcApi;
+use lmt_txscript::pay_to_address_script;
 use rand::thread_rng;
 use std::{sync::Arc, time::Duration};
 
@@ -66,20 +66,20 @@ fn create_client_addresses(index: usize, network_id: &NetworkId) -> Vec<Address>
         max_address.max(WALLET_ADDRESSES) - WALLET_ADDRESSES
     };
     (min_address..max_address)
-        .map(|x| Address::new((*network_id).into(), kaspa_addresses::Version::PubKey, &Uint256::from_u64(x as u64).to_le_bytes()))
+        .map(|x| Address::new((*network_id).into(), lmt_addresses::Version::PubKey, &Uint256::from_u64(x as u64).to_le_bytes()))
         .collect_vec()
 }
 
-/// `cargo test --package kaspa-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::utxos_changed_subscriptions_sanity_check --exact --nocapture --ignored`
+/// `cargo test --package lmt-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::utxos_changed_subscriptions_sanity_check --exact --nocapture --ignored`
 #[tokio::test]
 #[ignore = "bmk"]
 async fn utxos_changed_subscriptions_sanity_check() {
     init_allocator_with_default_settings();
-    kaspa_core::log::try_init_logger(
-        "INFO, kaspa_core::time=debug, kaspa_rpc_core=debug, kaspa_grpc_client=debug, kaspa_notify=info, kaspa_notify::address::tracker=debug, kaspa_notify::listener=debug, kaspa_notify::subscription::single=debug, kaspa_mining::monitor=debug, kaspa_testing_integration::subscribe_benchmarks=trace",
+    lmt_core::log::try_init_logger(
+        "INFO, lmt_core::time=debug, lmt_rpc_core=debug, lmt_grpc_client=debug, lmt_notify=info, lmt_notify::address::tracker=debug, lmt_notify::listener=debug, lmt_notify::subscription::single=debug, lmt_mining::monitor=debug, lmt_testing_integration::subscribe_benchmarks=trace",
     );
     // As we log the panic, we want to set it up after the logger
-    kaspa_core::panic::configure_panic();
+    lmt_core::panic::configure_panic();
 
     let (prealloc_sk, _) = secp256k1::generate_keypair(&mut thread_rng());
     let args = ArgsBuilder::simnet(TX_LEVEL_WIDTH as u64 * CONTRACT_FACTOR, PREALLOC_AMOUNT)
@@ -114,17 +114,17 @@ async fn utxos_changed_subscriptions_sanity_check() {
     //
     // Fold-up
     //
-    kaspa_core::info!("Signal the daemon to shutdown");
+    lmt_core::info!("Signal the daemon to shutdown");
     client.shutdown().await.unwrap();
-    kaspa_core::warn!("Disconnect the main client");
+    lmt_core::warn!("Disconnect the main client");
     client.disconnect().await.unwrap();
     drop(client);
 
-    kaspa_core::warn!("Waiting for the daemon to exit...");
+    lmt_core::warn!("Waiting for the daemon to exit...");
     daemon_process.wait().await.expect("failed to wait for the daemon process");
 }
 
-/// `cargo test --package kaspa-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_daemon --exact --nocapture --ignored -- --rpc=16610 --p2p=16611 --private-key=a2760251adb5b6e8d4514d23397f1631893e168c33f92ff8a7a24f397d355d62 --max-tracked-addresses=1000000 --utxoindex`
+/// `cargo test --package lmt-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_daemon --exact --nocapture --ignored -- --rpc=16610 --p2p=16611 --private-key=a2760251adb5b6e8d4514d23397f1631893e168c33f92ff8a7a24f397d355d62 --max-tracked-addresses=1000000 --utxoindex`
 ///
 /// This test is designed to be run as a child process, with the parent process eventually shutting it down.
 /// Do not run it directly.
@@ -132,11 +132,11 @@ async fn utxos_changed_subscriptions_sanity_check() {
 #[ignore = "bmk"]
 async fn bench_utxos_changed_subscriptions_daemon() {
     init_allocator_with_default_settings();
-    kaspa_core::log::try_init_logger(
-        "INFO, kaspa_core::core=trace, kaspa_core::time=debug, kaspa_rpc_core=debug, kaspa_grpc_client=debug, kaspa_notify=info, kaspa_notify::address::tracker=debug, kaspa_notify::listener=debug, kaspa_notify::subscription::single=debug, kaspa_mining::monitor=debug, kaspa_testing_integration::subscribe_benchmarks=trace",
+    lmt_core::log::try_init_logger(
+        "INFO, lmt_core::core=trace, lmt_core::time=debug, lmt_rpc_core=debug, lmt_grpc_client=debug, lmt_notify=info, lmt_notify::address::tracker=debug, lmt_notify::listener=debug, lmt_notify::subscription::single=debug, lmt_mining::monitor=debug, lmt_testing_integration::subscribe_benchmarks=trace",
     );
     // As we log the panic, we want to set it up after the logger
-    kaspa_core::panic::configure_panic();
+    lmt_core::panic::configure_panic();
 
     let daemon_args = DaemonArgs::from_env_args();
     let args = ArgsBuilder::simnet(TX_LEVEL_WIDTH as u64 * CONTRACT_FACTOR, PREALLOC_AMOUNT).apply_daemon_args(&daemon_args).build();
@@ -159,11 +159,11 @@ async fn bench_utxos_changed_subscriptions_daemon() {
 
 async fn utxos_changed_subscriptions_client(address_cycle_seconds: u64, address_max_cycles: usize) {
     init_allocator_with_default_settings();
-    kaspa_core::log::try_init_logger(
-        "INFO, kaspa_core::time=debug, kaspa_rpc_core=debug, kaspa_grpc_client=debug, kaspa_notify=info, kaspa_notify::address::tracker=debug, kaspa_notify::listener=debug, kaspa_notify::subscription::single=debug, kaspa_mining::monitor=debug, kaspa_testing_integration::subscribe_benchmarks=trace",
+    lmt_core::log::try_init_logger(
+        "INFO, lmt_core::time=debug, lmt_rpc_core=debug, lmt_grpc_client=debug, lmt_notify=info, lmt_notify::address::tracker=debug, lmt_notify::listener=debug, lmt_notify::subscription::single=debug, lmt_mining::monitor=debug, lmt_testing_integration::subscribe_benchmarks=trace",
     );
     // As we log the panic, we want to set it up after the logger
-    kaspa_core::panic::configure_panic();
+    lmt_core::panic::configure_panic();
 
     assert!(address_cycle_seconds >= 60);
     if TX_COUNT < TX_LEVEL_WIDTH {
@@ -175,7 +175,7 @@ async fn utxos_changed_subscriptions_client(address_cycle_seconds: u64, address_
     //
     let (prealloc_sk, prealloc_pk) = secp256k1::generate_keypair(&mut thread_rng());
     let prealloc_address =
-        Address::new(NetworkType::Simnet.into(), kaspa_addresses::Version::PubKey, &prealloc_pk.x_only_public_key().0.serialize());
+        Address::new(NetworkType::Simnet.into(), lmt_addresses::Version::PubKey, &prealloc_pk.x_only_public_key().0.serialize());
     let schnorr_key = secp256k1::Keypair::from_secret_key(secp256k1::SECP256K1, &prealloc_sk);
     let spk = pay_to_address_script(&prealloc_address);
 
@@ -273,17 +273,17 @@ async fn utxos_changed_subscriptions_client(address_cycle_seconds: u64, address_
     //
     // Fold-up
     //
-    kaspa_core::info!("Signal the daemon to shutdown");
+    lmt_core::info!("Signal the daemon to shutdown");
     client.shutdown().await.unwrap();
-    kaspa_core::warn!("Disconnect the main client");
+    lmt_core::warn!("Disconnect the main client");
     client.disconnect().await.unwrap();
     drop(client);
 
-    kaspa_core::warn!("Waiting for the daemon to exit...");
+    lmt_core::warn!("Waiting for the daemon to exit...");
     daemon_process.wait().await.expect("failed to wait for the daemon process");
 }
 
-/// `cargo test --package kaspa-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_footprint_a --exact --nocapture --ignored`
+/// `cargo test --package lmt-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_footprint_a --exact --nocapture --ignored`
 #[tokio::test]
 #[ignore = "bmk"]
 async fn bench_utxos_changed_subscriptions_footprint_a() {
@@ -291,7 +291,7 @@ async fn bench_utxos_changed_subscriptions_footprint_a() {
     utxos_changed_subscriptions_client(1200, 0).await;
 }
 
-/// `cargo test --package kaspa-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_footprint_b --exact --nocapture --ignored`
+/// `cargo test --package lmt-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_footprint_b --exact --nocapture --ignored`
 #[tokio::test]
 #[ignore = "bmk"]
 async fn bench_utxos_changed_subscriptions_footprint_b() {
@@ -299,7 +299,7 @@ async fn bench_utxos_changed_subscriptions_footprint_b() {
     utxos_changed_subscriptions_client(60, 1).await;
 }
 
-/// `cargo test --package kaspa-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_footprint_c --exact --nocapture --ignored`
+/// `cargo test --package lmt-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_footprint_c --exact --nocapture --ignored`
 #[tokio::test]
 #[ignore = "bmk"]
 async fn bench_utxos_changed_subscriptions_footprint_c() {
@@ -307,7 +307,7 @@ async fn bench_utxos_changed_subscriptions_footprint_c() {
     utxos_changed_subscriptions_client(7200, usize::MAX).await;
 }
 
-/// `cargo test --package kaspa-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_footprint_d --exact --nocapture --ignored`
+/// `cargo test --package lmt-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_footprint_d --exact --nocapture --ignored`
 #[tokio::test]
 #[ignore = "bmk"]
 async fn bench_utxos_changed_subscriptions_footprint_d() {
@@ -315,7 +315,7 @@ async fn bench_utxos_changed_subscriptions_footprint_d() {
     utxos_changed_subscriptions_client(1800, usize::MAX).await;
 }
 
-/// `cargo test --package kaspa-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_footprint_e --exact --nocapture --ignored`
+/// `cargo test --package lmt-testing-integration --lib --features devnet-prealloc -- subscribe_benchmarks::bench_utxos_changed_subscriptions_footprint_e --exact --nocapture --ignored`
 #[tokio::test]
 #[ignore = "bmk"]
 async fn bench_utxos_changed_subscriptions_footprint_e() {

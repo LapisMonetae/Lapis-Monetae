@@ -8,8 +8,8 @@ use crate::{
     network::{NetworkId, NetworkType},
     BlockLevel, KType,
 };
-use kaspa_addresses::Prefix;
-use kaspa_math::Uint256;
+use lmt_addresses::Prefix;
+use lmt_math::Uint256;
 use std::cmp::min;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -241,7 +241,7 @@ pub struct Params {
     pub mass_per_sig_op: u64,
     pub max_block_mass: u64,
 
-    /// The parameter for scaling inverse KAS value to mass units (KIP-0009)
+    /// The parameter for scaling inverse LMT value to mass units (KIP-0009)
     pub storage_mass_parameter: u64,
 
     /// DAA score after which the pre-deflationary period switches to the deflationary period
@@ -381,7 +381,7 @@ impl Params {
     }
 
     /// Returns the depth at which the anticone of a chain block is final (i.e., is a permanently closed set).
-    /// Based on the analysis at <https://github.com/kaspanet/docs/blob/main/Reference/prunality/Prunality.pdf>
+    /// Based on the analysis at <https://github.com/lmtnet/docs/blob/main/Reference/prunality/Prunality.pdf>
     /// and on the decomposition of merge depth (rule R-I therein) from finality depth (φ)
     pub fn anticone_finalization_depth(&self) -> ForkedParam<u64> {
         let prior_anticone_finalization_depth = self.prior_finality_depth
@@ -493,7 +493,7 @@ pub const MAINNET_PARAMS: Params = Params {
     coinbase_payload_script_public_key_max_len: 150,
     max_coinbase_payload_len: 204,
 
-    // This is technically a soft fork from the Go implementation since kaspad's consensus doesn't
+    // This is technically a soft fork from the Go implementation since lmtd's consensus doesn't
     // check these rules, but in practice it's enforced by the network layer that limits the message
     // size to 1 GB.
     // These values should be lowered to more reasonable amounts on the next planned HF/SF.
@@ -510,12 +510,10 @@ pub const MAINNET_PARAMS: Params = Params {
     storage_mass_parameter: STORAGE_MASS_PARAMETER,
 
     // deflationary_phase_daa_score is the DAA score after which the pre-deflationary period
-    // switches to the deflationary period. This number is calculated as follows:
-    // We define a year as 365.25 days
-    // Half a year in seconds = 365.25 / 2 * 24 * 60 * 60 = 15778800
-    // The network was down for three days shortly after launch
-    // Three days in seconds = 3 * 24 * 60 * 60 = 259200
-    deflationary_phase_daa_score: 15778800 - 259200,
+    // switches to the deflationary period.
+    // Half a year at 1 BPS = 365.25 / 2 * 24 * 60 * 60 = 15,778,800
+    // First ~6 months: flat 500 LMT per block. After: gradual decrease over ~35 years.
+    deflationary_phase_daa_score: 15778800,
     pre_deflationary_phase_base_subsidy: 50000000000,
     prior_coinbase_maturity: 100,
     skip_proof_of_work: false,
@@ -523,8 +521,9 @@ pub const MAINNET_PARAMS: Params = Params {
     pruning_proof_m: 1000,
 
     crescendo: CRESCENDO,
-    // Roughly 2025-05-05 1500 UTC
-    crescendo_activation: ForkActivation::new(110_165_000),
+    // Crescendo activates at DAA 15,000,000 (~6 months at 1 BPS).
+    // Transitions the network from 1 BPS to 10 BPS.
+    crescendo_activation: ForkActivation::new(15_000_000),
 };
 
 pub const TESTNET_PARAMS: Params = Params {
@@ -551,7 +550,7 @@ pub const TESTNET_PARAMS: Params = Params {
     coinbase_payload_script_public_key_max_len: 150,
     max_coinbase_payload_len: 204,
 
-    // This is technically a soft fork from the Go implementation since kaspad's consensus doesn't
+    // This is technically a soft fork from the Go implementation since lmtd's consensus doesn't
     // check these rules, but in practice it's enforced by the network layer that limits the message
     // size to 1 GB.
     // These values should be lowered to more reasonable amounts on the next planned HF/SF.
@@ -568,11 +567,7 @@ pub const TESTNET_PARAMS: Params = Params {
     storage_mass_parameter: STORAGE_MASS_PARAMETER,
     // deflationary_phase_daa_score is the DAA score after which the pre-deflationary period
     // switches to the deflationary period. This number is calculated as follows:
-    // We define a year as 365.25 days
-    // Half a year in seconds = 365.25 / 2 * 24 * 60 * 60 = 15778800
-    // The network was down for three days shortly after launch
-    // Three days in seconds = 3 * 24 * 60 * 60 = 259200
-    deflationary_phase_daa_score: 15778800 - 259200,
+    deflationary_phase_daa_score: 15778800,
     pre_deflationary_phase_base_subsidy: 50000000000,
     prior_coinbase_maturity: 100,
     skip_proof_of_work: false,
@@ -580,8 +575,8 @@ pub const TESTNET_PARAMS: Params = Params {
     pruning_proof_m: 1000,
 
     crescendo: CRESCENDO,
-    // 18:30 UTC, March 6, 2025
-    crescendo_activation: ForkActivation::new(88_657_000),
+    // Testnet Crescendo activates earlier (~3 months) for testing
+    crescendo_activation: ForkActivation::new(7_500_000),
 };
 
 pub const SIMNET_PARAMS: Params = Params {
@@ -652,7 +647,7 @@ pub const DEVNET_PARAMS: Params = Params {
     coinbase_payload_script_public_key_max_len: 150,
     max_coinbase_payload_len: 204,
 
-    // This is technically a soft fork from the Go implementation since kaspad's consensus doesn't
+    // This is technically a soft fork from the Go implementation since lmtd's consensus doesn't
     // check these rules, but in practice it's enforced by the network layer that limits the message
     // size to 1 GB.
     // These values should be lowered to more reasonable amounts on the next planned HF/SF.

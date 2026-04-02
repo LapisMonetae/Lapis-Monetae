@@ -7,11 +7,11 @@
 
 use crate::imports::*;
 // use futures::pin_mut;
-use kaspa_notify::{
+use lmt_notify::{
     listener::ListenerId,
     scope::{Scope, UtxosChangedScope, VirtualDaaScoreChangedScope},
 };
-use kaspa_rpc_core::{
+use lmt_rpc_core::{
     api::{
         ctl::{RpcCtl, RpcState},
         ops::{RPC_API_REVISION, RPC_API_VERSION},
@@ -19,7 +19,7 @@ use kaspa_rpc_core::{
     message::UtxosChangedNotification,
     GetServerInfoResponse, RpcFeeEstimate,
 };
-use kaspa_wrpc_client::KaspaRpcClient;
+use lmt_wrpc_client::LmtRpcClient;
 use workflow_core::channel::{Channel, DuplexChannel, Sender};
 use workflow_core::task::spawn;
 
@@ -27,7 +27,7 @@ use crate::events::Events;
 use crate::result::Result;
 use crate::utxo::{Maturity, OutgoingTransaction, PendingUtxoEntryReference, SyncMonitor, UtxoContext, UtxoEntryId};
 use crate::wallet::WalletBusMessage;
-use kaspa_rpc_core::{
+use lmt_rpc_core::{
     notify::connection::{ChannelConnection, ChannelType},
     Notification,
 };
@@ -133,8 +133,8 @@ impl UtxoProcessor {
         self.rpc_ctl().descriptor()
     }
 
-    pub fn rpc_client(&self) -> Option<Arc<KaspaRpcClient>> {
-        self.rpc_api().clone().downcast_arc::<KaspaRpcClient>().ok()
+    pub fn rpc_client(&self) -> Option<Arc<LmtRpcClient>> {
+        self.rpc_api().clone().downcast_arc::<LmtRpcClient>().ok()
     }
 
     pub async fn bind_rpc(&self, rpc: Option<Rpc>) -> Result<()> {
@@ -528,7 +528,7 @@ impl UtxoProcessor {
 
         self.inner.current_daa_score.store(virtual_daa_score, Ordering::SeqCst);
 
-        log_trace!("Connected to kaspad: '{server_version}' on '{server_network_id}';  SYNC: {is_synced}  DAA: {virtual_daa_score}");
+        log_trace!("Connected to lmtd: '{server_version}' on '{server_network_id}';  SYNC: {is_synced}  DAA: {virtual_daa_score}");
         self.notify(Events::ServerStatus { server_version, is_synced, network_id, url: self.rpc_url() }).await?;
 
         Ok(is_synced)

@@ -2,7 +2,7 @@ use crate::imports::NetworkParams;
 use crate::result::Result;
 use crate::wasm::api::message::INetworkParams;
 use js_sys::BigInt;
-use kaspa_consensus_core::network::{NetworkIdT, NetworkType, NetworkTypeT};
+use lmt_consensus_core::network::{NetworkIdT, NetworkType, NetworkTypeT};
 use wasm_bindgen::prelude::*;
 use workflow_wasm::prelude::*;
 
@@ -10,16 +10,16 @@ use workflow_wasm::prelude::*;
 extern "C" {
     #[wasm_bindgen(typescript_type = "bigint | number | HexString")]
     #[derive(Clone, Debug)]
-    pub type ISompiToKaspa;
+    pub type ISompiToLmt;
 }
 
 /// Convert an LMT string to Sompi represented by bigint.
 /// This function provides correct precision handling and
 /// can be used to parse user input.
 /// @category Wallet SDK
-#[wasm_bindgen(js_name = "kaspaToSompi")]
-pub fn kaspa_to_sompi(kaspa: String) -> Option<BigInt> {
-    crate::utils::try_kaspa_str_to_sompi(kaspa).ok().flatten().map(Into::into)
+#[wasm_bindgen(js_name = "lmtToSompi")]
+pub fn lmt_to_sompi(lmt: String) -> Option<BigInt> {
+    crate::utils::try_lmt_str_to_sompi(lmt).ok().flatten().map(Into::into)
 }
 
 ///
@@ -27,24 +27,24 @@ pub fn kaspa_to_sompi(kaspa: String) -> Option<BigInt> {
 ///
 /// @category Wallet SDK
 ///
-#[wasm_bindgen(js_name = "sompiToKaspaString")]
-pub fn sompi_to_kaspa_string(sompi: ISompiToKaspa) -> Result<String> {
+#[wasm_bindgen(js_name = "sompiToLmtString")]
+pub fn sompi_to_lmt_string(sompi: ISompiToLmt) -> Result<String> {
     let sompi = sompi.try_as_u64()?;
-    Ok(crate::utils::sompi_to_kaspa_string(sompi))
+    Ok(crate::utils::sompi_to_lmt_string(sompi))
 }
 
 ///
 /// Format a Sompi amount to a string representation of the amount in LMT with a suffix
-/// based on the network type (e.g. `KAS` for mainnet, `TKAS` for testnet,
-/// `SKAS` for simnet, `DKAS` for devnet).
+/// based on the network type (e.g. `LMT` for mainnet, `TLMT` for testnet,
+/// `SLMT` for simnet, `DLMT` for devnet).
 ///
 /// @category Wallet SDK
 ///
-#[wasm_bindgen(js_name = "sompiToKaspaStringWithSuffix")]
-pub fn sompi_to_kaspa_string_with_suffix(sompi: ISompiToKaspa, network: &NetworkTypeT) -> Result<String> {
+#[wasm_bindgen(js_name = "sompiToLmtStringWithSuffix")]
+pub fn sompi_to_lmt_string_with_suffix(sompi: ISompiToLmt, network: &NetworkTypeT) -> Result<String> {
     let sompi = sompi.try_as_u64()?;
     let network_type = NetworkType::try_from(network)?;
-    Ok(crate::utils::sompi_to_kaspa_string_with_suffix(sompi, &network_type))
+    Ok(crate::utils::sompi_to_lmt_string_with_suffix(sompi, &network_type))
 }
 
 #[wasm_bindgen(js_name = "getNetworkParams")]

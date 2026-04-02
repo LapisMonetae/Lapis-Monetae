@@ -3,12 +3,12 @@
   "active_profile": "default",
   "profiles": {
     "default": {
-      "cli_path": "C:/Users/Cadaritre/Documents/LAPIS MONETAE/target/release/kaspa-wallet.exe",
+      "cli_path": "",
       "network": "mainnet",
       "last_wallet": "",
       "contacts": [],
       "session_timeout_minutes": 0,
-      "auto_lock_on_timeout": false
+      "auto_lock_on_timeout": true
     }
   }
 }

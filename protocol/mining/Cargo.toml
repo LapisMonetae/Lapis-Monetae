@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-p2p-mining"
-description = "Kaspa p2p mining"
+name = "lmt-p2p-mining"
+description = "Lapis Monetae p2p mining"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,15 +10,15 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-core.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-mining-errors.workspace = true
-kaspa-hashes.workspace = true
-kaspa-math.workspace = true
-kaspa-p2p-lib.workspace = true
-kaspa-utils.workspace = true
-kaspa-utils-tower.workspace = true
+lmt-core.workspace = true
+lmt-consensus-core.workspace = true
+lmt-consensusmanager.workspace = true
+lmt-mining-errors.workspace = true
+lmt-hashes.workspace = true
+lmt-math.workspace = true
+lmt-p2p-lib.workspace = true
+lmt-utils.workspace = true
+lmt-utils-tower.workspace = true
 log.workspace = true
 tokio.workspace = true
 

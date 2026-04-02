@@ -3,75 +3,75 @@
 //!
 
 use async_channel::unbounded;
-use kaspa_alloc::init_allocator_with_default_settings;
-use kaspa_consensus::config::genesis::GENESIS;
-use kaspa_consensus::config::{Config, ConfigBuilder};
-use kaspa_consensus::consensus::factory::Factory as ConsensusFactory;
-use kaspa_consensus::consensus::test_consensus::{TestConsensus, TestConsensusFactory};
-use kaspa_consensus::model::stores::block_transactions::{
+use lmt_alloc::init_allocator_with_default_settings;
+use lmt_consensus::config::genesis::GENESIS;
+use lmt_consensus::config::{Config, ConfigBuilder};
+use lmt_consensus::consensus::factory::Factory as ConsensusFactory;
+use lmt_consensus::consensus::test_consensus::{TestConsensus, TestConsensusFactory};
+use lmt_consensus::model::stores::block_transactions::{
     BlockTransactionsStore, BlockTransactionsStoreReader, DbBlockTransactionsStore,
 };
-use kaspa_consensus::model::stores::ghostdag::{GhostdagStoreReader, KType as GhostdagKType};
-use kaspa_consensus::model::stores::headers::HeaderStoreReader;
-use kaspa_consensus::model::stores::reachability::DbReachabilityStore;
-use kaspa_consensus::model::stores::relations::DbRelationsStore;
-use kaspa_consensus::model::stores::selected_chain::SelectedChainStoreReader;
-use kaspa_consensus::params::{
+use lmt_consensus::model::stores::ghostdag::{GhostdagStoreReader, KType as GhostdagKType};
+use lmt_consensus::model::stores::headers::HeaderStoreReader;
+use lmt_consensus::model::stores::reachability::DbReachabilityStore;
+use lmt_consensus::model::stores::relations::DbRelationsStore;
+use lmt_consensus::model::stores::selected_chain::SelectedChainStoreReader;
+use lmt_consensus::params::{
     ForkActivation, Params, CRESCENDO, DEVNET_PARAMS, MAINNET_PARAMS, MAX_DIFFICULTY_TARGET, MAX_DIFFICULTY_TARGET_AS_F64,
 };
-use kaspa_consensus::pipeline::monitor::ConsensusMonitor;
-use kaspa_consensus::pipeline::ProcessingCounters;
-use kaspa_consensus::processes::reachability::tests::{DagBlock, DagBuilder, StoreValidationExtensions};
-use kaspa_consensus::processes::window::{WindowManager, WindowType};
-use kaspa_consensus_core::api::args::TransactionValidationArgs;
-use kaspa_consensus_core::api::{BlockValidationFutures, ConsensusApi};
-use kaspa_consensus_core::block::Block;
-use kaspa_consensus_core::blockhash::new_unique;
-use kaspa_consensus_core::blockstatus::BlockStatus;
-use kaspa_consensus_core::coinbase::MinerData;
-use kaspa_consensus_core::constants::{BLOCK_VERSION, SOMPI_PER_KASPA, STORAGE_MASS_PARAMETER, TRANSIENT_BYTE_TO_MASS_FACTOR};
-use kaspa_consensus_core::errors::block::{BlockProcessResult, RuleError};
-use kaspa_consensus_core::header::Header;
-use kaspa_consensus_core::mining_rules::MiningRules;
-use kaspa_consensus_core::network::{NetworkId, NetworkType::Mainnet};
-use kaspa_consensus_core::subnets::SubnetworkId;
-use kaspa_consensus_core::trusted::{ExternalGhostdagData, TrustedBlock};
-use kaspa_consensus_core::tx::{
+use lmt_consensus::pipeline::monitor::ConsensusMonitor;
+use lmt_consensus::pipeline::ProcessingCounters;
+use lmt_consensus::processes::reachability::tests::{DagBlock, DagBuilder, StoreValidationExtensions};
+use lmt_consensus::processes::window::{WindowManager, WindowType};
+use lmt_consensus_core::api::args::TransactionValidationArgs;
+use lmt_consensus_core::api::{BlockValidationFutures, ConsensusApi};
+use lmt_consensus_core::block::Block;
+use lmt_consensus_core::blockhash::new_unique;
+use lmt_consensus_core::blockstatus::BlockStatus;
+use lmt_consensus_core::coinbase::MinerData;
+use lmt_consensus_core::constants::{BLOCK_VERSION, SOMPI_PER_LMT, STORAGE_MASS_PARAMETER, TRANSIENT_BYTE_TO_MASS_FACTOR};
+use lmt_consensus_core::errors::block::{BlockProcessResult, RuleError};
+use lmt_consensus_core::header::Header;
+use lmt_consensus_core::mining_rules::MiningRules;
+use lmt_consensus_core::network::{NetworkId, NetworkType::Mainnet};
+use lmt_consensus_core::subnets::SubnetworkId;
+use lmt_consensus_core::trusted::{ExternalGhostdagData, TrustedBlock};
+use lmt_consensus_core::tx::{
     MutableTransaction, ScriptPublicKey, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry,
 };
-use kaspa_consensus_core::{blockhash, hashing, BlockHashMap, BlueWorkType};
-use kaspa_consensus_notify::root::ConsensusNotificationRoot;
-use kaspa_consensus_notify::service::NotifyService;
-use kaspa_consensusmanager::ConsensusManager;
-use kaspa_core::task::tick::TickService;
-use kaspa_core::time::unix_now;
-use kaspa_database::utils::get_kaspa_tempdir;
-use kaspa_hashes::Hash;
-use kaspa_utils::arc::ArcExtensions;
+use lmt_consensus_core::{blockhash, hashing, BlockHashMap, BlueWorkType};
+use lmt_consensus_notify::root::ConsensusNotificationRoot;
+use lmt_consensus_notify::service::NotifyService;
+use lmt_consensusmanager::ConsensusManager;
+use lmt_core::task::tick::TickService;
+use lmt_core::time::unix_now;
+use lmt_database::utils::get_lmt_tempdir;
+use lmt_hashes::Hash;
+use lmt_utils::arc::ArcExtensions;
 
 use crate::common;
 use flate2::read::GzDecoder;
 use futures_util::future::try_join_all;
 use itertools::Itertools;
-use kaspa_consensus_core::errors::tx::TxRuleError;
-use kaspa_consensus_core::hashing::sighash::calc_schnorr_signature_hash;
-use kaspa_consensus_core::merkle::calc_hash_merkle_root;
-use kaspa_consensus_core::muhash::MuHashExtensions;
-use kaspa_core::core::Core;
-use kaspa_core::signals::Shutdown;
-use kaspa_core::task::runtime::AsyncRuntime;
-use kaspa_core::{assert_match, info};
-use kaspa_database::create_temp_db;
-use kaspa_database::prelude::{CachePolicy, ConnBuilder};
-use kaspa_index_processor::service::IndexService;
-use kaspa_math::Uint256;
-use kaspa_muhash::MuHash;
-use kaspa_notify::subscription::context::SubscriptionContext;
-use kaspa_txscript::caches::TxScriptCacheCounters;
-use kaspa_txscript::opcodes::codes::OpTrue;
-use kaspa_txscript::script_builder::ScriptBuilderResult;
-use kaspa_utxoindex::api::{UtxoIndexApi, UtxoIndexProxy};
-use kaspa_utxoindex::UtxoIndex;
+use lmt_consensus_core::errors::tx::TxRuleError;
+use lmt_consensus_core::hashing::sighash::calc_schnorr_signature_hash;
+use lmt_consensus_core::merkle::calc_hash_merkle_root;
+use lmt_consensus_core::muhash::MuHashExtensions;
+use lmt_core::core::Core;
+use lmt_core::signals::Shutdown;
+use lmt_core::task::runtime::AsyncRuntime;
+use lmt_core::{assert_match, info};
+use lmt_database::create_temp_db;
+use lmt_database::prelude::{CachePolicy, ConnBuilder};
+use lmt_index_processor::service::IndexService;
+use lmt_math::Uint256;
+use lmt_muhash::MuHash;
+use lmt_notify::subscription::context::SubscriptionContext;
+use lmt_txscript::caches::TxScriptCacheCounters;
+use lmt_txscript::opcodes::codes::OpTrue;
+use lmt_txscript::script_builder::ScriptBuilderResult;
+use lmt_utxoindex::api::{UtxoIndexApi, UtxoIndexProxy};
+use lmt_utxoindex::UtxoIndex;
 use serde::{Deserialize, Serialize};
 use std::cmp::{max, Ordering};
 use std::collections::HashSet;
@@ -787,7 +787,7 @@ struct RPCUTXOEntry {
 
 #[allow(non_snake_case)]
 #[derive(Deserialize, Debug)]
-struct KaspadGoParams {
+struct LmtdGoParams {
     K: GhostdagKType,
     TimestampDeviationTolerance: u64,
     TargetTimePerBlock: u64,
@@ -809,7 +809,7 @@ struct KaspadGoParams {
     PruningProofM: u64,
 }
 
-impl KaspadGoParams {
+impl LmtdGoParams {
     fn into_params(self) -> Params {
         let finality_depth = self.FinalityDuration / self.TargetTimePerBlock;
         Params {
@@ -923,13 +923,13 @@ fn gzip_file_lines(path: &Path) -> impl Iterator<Item = String> {
 }
 
 async fn json_test(file_path: &str, concurrency: bool, legacy_fixture_compat: bool) {
-    kaspa_core::log::try_init_logger("info");
+    lmt_core::log::try_init_logger("info");
     let main_path = Path::new(file_path);
     let proof_exists = common::file_exists(&main_path.join("proof.json.gz"));
 
     let mut lines = gzip_file_lines(&main_path.join("blocks.json.gz"));
     let first_line = lines.next().unwrap();
-    let go_params_res: Result<KaspadGoParams, _> = serde_json::from_str(&first_line);
+    let go_params_res: Result<LmtdGoParams, _> = serde_json::from_str(&first_line);
     let mut params = if let Ok(go_params) = go_params_res {
         let mut params = go_params.into_params();
         if !proof_exists {
@@ -1464,7 +1464,7 @@ async fn difficulty_test() {
         },
     ];
 
-    kaspa_core::log::try_init_logger("info");
+    lmt_core::log::try_init_logger("info");
     for test in tests.iter().filter(|x| x.enabled) {
         let consensus = TestConsensus::new(&test.config);
         let wait_handles = consensus.init();
@@ -1680,7 +1680,7 @@ async fn difficulty_test() {
 #[tokio::test]
 async fn selected_chain_test() {
     init_allocator_with_default_settings();
-    kaspa_core::log::try_init_logger("info");
+    lmt_core::log::try_init_logger("info");
 
     let config = ConfigBuilder::new(MAINNET_PARAMS)
         .skip_proof_of_work()
@@ -1751,12 +1751,12 @@ async fn staging_consensus_test() {
     init_allocator_with_default_settings();
     let config = ConfigBuilder::new(MAINNET_PARAMS).build();
 
-    let db_tempdir = get_kaspa_tempdir();
+    let db_tempdir = get_lmt_tempdir();
     let db_path = db_tempdir.path().to_owned();
     let consensus_db_dir = db_path.join("consensus");
     let meta_db_dir = db_path.join("meta");
 
-    let meta_db = kaspa_database::prelude::ConnBuilder::default().with_db_path(meta_db_dir).with_files_limit(5).build().unwrap();
+    let meta_db = lmt_database::prelude::ConnBuilder::default().with_db_path(meta_db_dir).with_files_limit(5).build().unwrap();
 
     let (notification_send, _notification_recv) = unbounded();
     let notification_root = Arc::new(ConsensusNotificationRoot::new(notification_send));
@@ -1793,10 +1793,10 @@ async fn staging_consensus_test() {
 /// Uses OpInputSpk opcode as an example
 #[tokio::test]
 async fn run_kip10_activation_test() {
-    use kaspa_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
-    use kaspa_txscript::opcodes::codes::{Op0, OpTxInputSpk};
-    use kaspa_txscript::pay_to_script_hash_script;
-    use kaspa_txscript::script_builder::ScriptBuilder;
+    use lmt_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
+    use lmt_txscript::opcodes::codes::{Op0, OpTxInputSpk};
+    use lmt_txscript::pay_to_script_hash_script;
+    use lmt_txscript::script_builder::ScriptBuilder;
 
     // KIP-10 activates at DAA score 3 in this test
     const KIP10_ACTIVATION_DAA_SCORE: u64 = 3;
@@ -1814,7 +1814,7 @@ async fn run_kip10_activation_test() {
     // Set up initial UTXO with our test script
     let initial_utxo_collection = [(
         TransactionOutpoint::new(1.into(), 0),
-        UtxoEntry { amount: SOMPI_PER_KASPA, script_public_key: spk.clone(), block_daa_score: 0, is_coinbase: false },
+        UtxoEntry { amount: SOMPI_PER_LMT, script_public_key: spk.clone(), block_daa_score: 0, is_coinbase: false },
     )];
 
     // Initialize consensus with KIP-10 activation point
@@ -1954,7 +1954,7 @@ async fn payload_test() {
 
 #[tokio::test]
 async fn payload_activation_test() {
-    use kaspa_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
+    use lmt_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
 
     // Set payload activation at DAA score 3 for this test
     const PAYLOAD_ACTIVATION_DAA_SCORE: u64 = 3;
@@ -1965,7 +1965,7 @@ async fn payload_activation_test() {
     let initial_utxo_collection = [(
         TransactionOutpoint::new(1.into(), 0),
         UtxoEntry {
-            amount: SOMPI_PER_KASPA,
+            amount: SOMPI_PER_LMT,
             script_public_key: ScriptPublicKey::from_vec(0, vec![OpTrue]),
             block_daa_score: 0,
             is_coinbase: false,
@@ -2064,10 +2064,10 @@ async fn payload_activation_test() {
 
 #[tokio::test]
 async fn runtime_sig_op_counting_test() {
-    use kaspa_consensus_core::{
+    use lmt_consensus_core::{
         hashing::sighash::SigHashReusedValuesUnsync, hashing::sighash_type::SIG_HASH_ALL, subnets::SUBNETWORK_ID_NATIVE,
     };
-    use kaspa_txscript::{opcodes::codes::*, script_builder::ScriptBuilder};
+    use lmt_txscript::{opcodes::codes::*, script_builder::ScriptBuilder};
 
     // Runtime sig op counting activates at DAA score 3
     const RUNTIME_SIGOP_ACTIVATION_DAA_SCORE: u64 = 3;
@@ -2098,12 +2098,12 @@ async fn runtime_sig_op_counting_test() {
     }()
     .unwrap();
 
-    let script_pub_key = kaspa_txscript::pay_to_script_hash_script(&redeem_script);
+    let script_pub_key = lmt_txscript::pay_to_script_hash_script(&redeem_script);
 
     // Set up initial UTXO with P2SH script
     let initial_utxo_collection = [(
         TransactionOutpoint::new(1.into(), 0),
-        UtxoEntry { amount: SOMPI_PER_KASPA, script_public_key: script_pub_key.clone(), block_daa_score: 0, is_coinbase: false },
+        UtxoEntry { amount: SOMPI_PER_LMT, script_public_key: script_pub_key.clone(), block_daa_score: 0, is_coinbase: false },
     )];
 
     let config = ConfigBuilder::new(DEVNET_PARAMS)

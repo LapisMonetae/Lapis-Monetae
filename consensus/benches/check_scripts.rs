@@ -1,15 +1,15 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion, SamplingMode};
-use kaspa_addresses::{Address, Prefix, Version};
-use kaspa_consensus::processes::transaction_validator::tx_validation_in_utxo_context::{
+use lmt_addresses::{Address, Prefix, Version};
+use lmt_consensus::processes::transaction_validator::tx_validation_in_utxo_context::{
     check_scripts_par_iter, check_scripts_par_iter_pool, check_scripts_sequential,
 };
-use kaspa_consensus_core::hashing::sighash::{calc_schnorr_signature_hash, SigHashReusedValuesUnsync};
-use kaspa_consensus_core::hashing::sighash_type::SIG_HASH_ALL;
-use kaspa_consensus_core::subnets::SubnetworkId;
-use kaspa_consensus_core::tx::{MutableTransaction, Transaction, TransactionInput, TransactionOutpoint, UtxoEntry};
-use kaspa_txscript::caches::Cache;
-use kaspa_txscript::pay_to_address_script;
-use kaspa_utils::iter::parallelism_in_power_steps;
+use lmt_consensus_core::hashing::sighash::{calc_schnorr_signature_hash, SigHashReusedValuesUnsync};
+use lmt_consensus_core::hashing::sighash_type::SIG_HASH_ALL;
+use lmt_consensus_core::subnets::SubnetworkId;
+use lmt_consensus_core::tx::{MutableTransaction, Transaction, TransactionInput, TransactionOutpoint, UtxoEntry};
+use lmt_txscript::caches::Cache;
+use lmt_txscript::pay_to_address_script;
+use lmt_utils::iter::parallelism_in_power_steps;
 use rand::{thread_rng, Rng};
 use secp256k1::Keypair;
 
@@ -18,7 +18,7 @@ fn mock_tx_with_payload(inputs_count: usize, non_uniq_signatures: usize, payload
     thread_rng().fill(&mut payload[..]);
 
     let reused_values = SigHashReusedValuesUnsync::new();
-    let dummy_prev_out = TransactionOutpoint::new(kaspa_hashes::Hash::from_u64_word(1), 1);
+    let dummy_prev_out = TransactionOutpoint::new(lmt_hashes::Hash::from_u64_word(1), 1);
     let mut tx = Transaction::new(
         0,
         vec![],

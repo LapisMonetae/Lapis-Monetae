@@ -26,13 +26,13 @@ use crate::storage::local::interface::LocalStore;
 use crate::storage::local::Storage;
 use crate::wallet::keydata::PrvKeyDataVariantKind;
 use crate::wallet::maps::ActiveAccountMap;
-use kaspa_bip32::{ExtendedKey, Language, Mnemonic, Prefix as KeyPrefix, WordCount};
-use kaspa_notify::{
+use lmt_bip32::{ExtendedKey, Language, Mnemonic, Prefix as KeyPrefix, WordCount};
+use lmt_notify::{
     listener::ListenerId,
     scope::{Scope, VirtualDaaScoreChangedScope},
 };
-use kaspa_wallet_keys::xpub::NetworkTaggedXpub;
-use kaspa_wrpc_client::{KaspaRpcClient, Resolver, WrpcEncoding};
+use lmt_wallet_keys::xpub::NetworkTaggedXpub;
+use lmt_wrpc_client::{LmtRpcClient, Resolver, WrpcEncoding};
 use workflow_core::task::spawn;
 
 pub type WalletGuard<'l> = AsyncMutexGuard<'l, ()>;
@@ -143,7 +143,7 @@ impl Wallet {
 
     pub fn try_with_wrpc(store: Arc<dyn Interface>, resolver: Option<Resolver>, network_id: Option<NetworkId>) -> Result<Wallet> {
         let rpc_client =
-            Arc::new(KaspaRpcClient::new_with_args(WrpcEncoding::Borsh, Some("wrpc://127.0.0.1:17110"), resolver, network_id, None)?);
+            Arc::new(LmtRpcClient::new_with_args(WrpcEncoding::Borsh, Some("wrpc://127.0.0.1:17110"), resolver, network_id, None)?);
 
         let rpc_ctl = rpc_client.ctl().clone();
         let rpc_api: Arc<DynRpcApi> = rpc_client;
@@ -518,12 +518,12 @@ impl Wallet {
         Ok(self.get_prv_key_info(account).await?.map(|info| info.is_encrypted()))
     }
 
-    pub fn try_wrpc_client(&self) -> Option<Arc<KaspaRpcClient>> {
-        self.try_rpc_api().and_then(|api| api.clone().downcast_arc::<KaspaRpcClient>().ok())
+    pub fn try_wrpc_client(&self) -> Option<Arc<LmtRpcClient>> {
+        self.try_rpc_api().and_then(|api| api.clone().downcast_arc::<LmtRpcClient>().ok())
     }
 
-    pub fn wrpc_client(&self) -> Arc<KaspaRpcClient> {
-        self.try_rpc_api().and_then(|api| api.clone().downcast_arc::<KaspaRpcClient>().ok()).unwrap()
+    pub fn wrpc_client(&self) -> Arc<LmtRpcClient> {
+        self.try_rpc_api().and_then(|api| api.clone().downcast_arc::<LmtRpcClient>().ok()).unwrap()
     }
 
     pub fn rpc_api(&self) -> Arc<DynRpcApi> {
@@ -654,7 +654,7 @@ impl Wallet {
         self.utxo_processor().network_id()
     }
 
-    pub fn address_prefix(&self) -> Result<kaspa_addresses::Prefix> {
+    pub fn address_prefix(&self) -> Result<lmt_addresses::Prefix> {
         Ok(self.network_id()?.into())
     }
 
@@ -1359,7 +1359,7 @@ impl Wallet {
     //     Ok(Box::pin(stream))
     // }
 
-    pub async fn import_kaspawallet_golang_single_v1<T: AsRef<[u8]>>(
+    pub async fn import_lmt_wallet_golang_single_v1<T: AsRef<[u8]>>(
         self: &Arc<Wallet>,
         import_secret: &Secret,
         wallet_secret: &Secret,
@@ -1372,8 +1372,8 @@ impl Wallet {
         let mnemonic = decrypt_mnemonic(SingleWalletFileV1::<T>::NUM_THREADS, file.encrypted_mnemonic, import_secret.as_ref())?;
         let mnemonic = Mnemonic::new(mnemonic.trim(), Language::English)?;
         let prv_key_data = storage::PrvKeyData::try_new_from_mnemonic(mnemonic.clone(), None, self.store().encryption_kind()?)?;
-        let prefix = file.xpublic_key.split_at(kaspa_bip32::Prefix::LENGTH).0;
-        let prefix = kaspa_bip32::Prefix::try_from(prefix)?;
+        let prefix = file.xpublic_key.split_at(lmt_bip32::Prefix::LENGTH).0;
+        let prefix = lmt_bip32::Prefix::try_from(prefix)?;
 
         if prv_key_data.create_xpub(None, BIP32_ACCOUNT_KIND.into(), 0).await?.to_string(Some(prefix)) != file.xpublic_key {
             return Err(Custom("imported xpub does not equal derived one".to_owned()));
@@ -1381,7 +1381,7 @@ impl Wallet {
         self.import_with_mnemonic(wallet_secret, None, mnemonic, BIP32_ACCOUNT_KIND.into()).await
     }
 
-    pub async fn import_kaspawallet_golang_single_v0<T: AsRef<[u8]>>(
+    pub async fn import_lmt_wallet_golang_single_v0<T: AsRef<[u8]>>(
         self: &Arc<Wallet>,
         import_secret: &Secret,
         wallet_secret: &Secret,
@@ -1394,15 +1394,15 @@ impl Wallet {
         let mnemonic = decrypt_mnemonic(file.num_threads, file.encrypted_mnemonic, import_secret.as_ref())?;
         let mnemonic = Mnemonic::new(mnemonic.trim(), Language::English)?;
         let prv_key_data = storage::PrvKeyData::try_new_from_mnemonic(mnemonic.clone(), None, self.store().encryption_kind()?)?;
-        let prefix = file.xpublic_key.split_at(kaspa_bip32::Prefix::LENGTH).0;
-        let prefix = kaspa_bip32::Prefix::try_from(prefix)?;
+        let prefix = file.xpublic_key.split_at(lmt_bip32::Prefix::LENGTH).0;
+        let prefix = lmt_bip32::Prefix::try_from(prefix)?;
         if prv_key_data.create_xpub(None, BIP32_ACCOUNT_KIND.into(), 0).await.unwrap().to_string(Some(prefix)) != file.xpublic_key {
             return Err(Custom("imported xpub does not equal derived one".to_owned()));
         }
         self.import_with_mnemonic(wallet_secret, None, mnemonic, BIP32_ACCOUNT_KIND.into()).await
     }
 
-    pub async fn import_kaspawallet_golang_multisig_v0<T: AsRef<[u8]>>(
+    pub async fn import_lmt_wallet_golang_multisig_v0<T: AsRef<[u8]>>(
         self: &Arc<Wallet>,
         import_secret: &Secret,
         wallet_secret: &Secret,
@@ -1415,8 +1415,8 @@ impl Wallet {
         let Some(first_pub_key) = file.xpublic_keys.first() else {
             return Err(Error::Custom("no public keys".to_owned()));
         };
-        let prefix = first_pub_key.split_at(kaspa_bip32::Prefix::LENGTH).0;
-        let prefix = kaspa_bip32::Prefix::try_from(prefix)?;
+        let prefix = first_pub_key.split_at(lmt_bip32::Prefix::LENGTH).0;
+        let prefix = lmt_bip32::Prefix::try_from(prefix)?;
 
         let mnemonics_and_secrets: Vec<(Mnemonic, Option<Secret>)> = file
             .encrypted_mnemonics
@@ -1443,7 +1443,7 @@ impl Wallet {
         self.import_multisig_with_mnemonic(wallet_secret, mnemonics_and_secrets, file.required_signatures, additional_pub_keys).await
     }
 
-    pub async fn import_kaspawallet_golang_multisig_v1<T: AsRef<[u8]>>(
+    pub async fn import_lmt_wallet_golang_multisig_v1<T: AsRef<[u8]>>(
         self: &Arc<Wallet>,
         import_secret: &Secret,
         wallet_secret: &Secret,
@@ -1456,8 +1456,8 @@ impl Wallet {
         let Some(first_pub_key) = file.xpublic_keys.first() else {
             return Err(Error::Custom("no public keys".to_owned()));
         };
-        let prefix = first_pub_key.split_at(kaspa_bip32::Prefix::LENGTH).0;
-        let prefix = kaspa_bip32::Prefix::try_from(prefix)?;
+        let prefix = first_pub_key.split_at(lmt_bip32::Prefix::LENGTH).0;
+        let prefix = lmt_bip32::Prefix::try_from(prefix)?;
 
         let mnemonics_and_secrets: Vec<(Mnemonic, Option<Secret>)> = file
             .encrypted_mnemonics
@@ -1471,7 +1471,7 @@ impl Wallet {
 
         let mut all_pub_keys = file.xpublic_keys;
         all_pub_keys.sort_unstable_by(|left, right| {
-            left.split_at(kaspa_bip32::Prefix::LENGTH).1.cmp(right.split_at(kaspa_bip32::Prefix::LENGTH).1)
+            left.split_at(lmt_bip32::Prefix::LENGTH).1.cmp(right.split_at(lmt_bip32::Prefix::LENGTH).1)
         });
 
         let mut pubkeys_from_mnemonics = Vec::with_capacity(mnemonics_and_secrets.len());
@@ -1481,7 +1481,7 @@ impl Wallet {
             pubkeys_from_mnemonics.push(xpub_key);
         }
         pubkeys_from_mnemonics.sort_unstable_by(|left, right| {
-            left.split_at(kaspa_bip32::Prefix::LENGTH).1.cmp(right.split_at(kaspa_bip32::Prefix::LENGTH).1)
+            left.split_at(lmt_bip32::Prefix::LENGTH).1.cmp(right.split_at(lmt_bip32::Prefix::LENGTH).1)
         });
         all_pub_keys.retain(|v| {
             let found = pubkeys_from_mnemonics.binary_search_by_key(v, |xpub| xpub.as_str());
@@ -1663,7 +1663,7 @@ impl Wallet {
                     xpub.to_string()
                 })
             })
-            .collect::<Result<Vec<_>, kaspa_bip32::Error>>()?;
+            .collect::<Result<Vec<_>, lmt_bip32::Error>>()?;
 
         let mut generated_xpubs = Vec::with_capacity(mnemonics_secrets.len());
         let mut prv_key_data_ids = Vec::with_capacity(mnemonics_secrets.len());
@@ -1790,18 +1790,18 @@ mod test {
     // use hex_literal::hex;
 
     // use super::*;
-    // use kaspa_addresses::Address;
+    // use lmt_addresses::Address;
 
     /*
     use workflow_rpc::client::ConnectOptions;
     use std::{str::FromStr, thread::sleep, time};
     use crate::derivation::gen1;
     use crate::utxo::{UtxoContext, UtxoContextBinding, UtxoIterator};
-    use kaspa_addresses::{Prefix, Version};
-    use kaspa_bip32::{ChildNumber, ExtendedPrivateKey, SecretKey};
-    use kaspa_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
-    use kaspa_consensus_wasm::{sign_transaction, SignableTransaction, Transaction, TransactionInput, TransactionOutput};
-    use kaspa_txscript::pay_to_address_script;
+    use lmt_addresses::{Prefix, Version};
+    use lmt_bip32::{ChildNumber, ExtendedPrivateKey, SecretKey};
+    use lmt_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
+    use lmt_consensus_wasm::{sign_transaction, SignableTransaction, Transaction, TransactionInput, TransactionOutput};
+    use lmt_txscript::pay_to_address_script;
 
     async fn create_utxos_context_with_addresses(
         rpc: Arc<DynRpcApi>,
@@ -1877,7 +1877,7 @@ mod test {
         let mtx = SignableTransaction::new(tx, (*entries).clone().into());
 
         let derivation_path =
-            gen1::WalletDerivationManager::build_derivate_path(false, 0, None, Some(kaspa_bip32::AddressType::Receive))?;
+            gen1::WalletDerivationManager::build_derivate_path(false, 0, None, Some(lmt_bip32::AddressType::Receive))?;
 
         let xprv = "kprv5y2qurMHCsXYrNfU3GCihuwG3vMqFji7PZXajMEqyBkNh9UZUJgoHYBLTKu1eM4MvUtomcXPQ3Sw9HZ5ebbM4byoUciHo1zrPJBQfqpLorQ";
 

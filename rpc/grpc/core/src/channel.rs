@@ -1,4 +1,4 @@
-use kaspa_rpc_core::Notification;
-use kaspa_utils::channel::Channel;
+use lmt_rpc_core::Notification;
+use lmt_utils::channel::Channel;
 
 pub type NotificationChannel = Channel<Notification>;
