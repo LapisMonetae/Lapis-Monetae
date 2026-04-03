@@ -404,7 +404,8 @@ mod tests {
         let tests = [
             // BIP0062: Pushing an empty byte sequence must use OP_0.
             Test { name: "push empty byte sequence", data: vec![], expected: Ok(vec![Op0]), unchecked: false },
-            Test { name: "push 1 byte 0x00", data: vec![0x00], expected: Ok(vec![Op0]), unchecked: false },
+            // BIP0062: Pushing [0x00] must use OpData1, NOT Op0 (Op0 is for empty data only).
+            Test { name: "push 1 byte 0x00", data: vec![0x00], expected: Ok(vec![OpData1, 0x00]), unchecked: false },
             // BIP0062: Pushing a 1-byte sequence of byte 0x01 through 0x10 must use OP_n.
             Test { name: "push 1 byte 0x01", data: vec![0x01], expected: Ok(vec![Op1]), unchecked: false },
             Test { name: "push 1 byte 0x02", data: vec![0x02], expected: Ok(vec![Op2]), unchecked: false },
