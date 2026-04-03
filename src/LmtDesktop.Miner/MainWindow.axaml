@@ -94,6 +94,7 @@
     </Style>
   </Window.Styles>
 
+  <Panel>
   <Grid RowDefinitions="Auto,2,*,Auto">
 
     <!-- Header -->
@@ -165,7 +166,7 @@
             </Border>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
-              <Button Content="Start Bridge" Command="{Binding StartBridgeCommand}"
+              <Button Content="Start Bridge" Command="{Binding StartBridgeCommand}" IsEnabled="{Binding !BridgeRunning}"
                       Background="#16a34a" Foreground="White" CornerRadius="8" Padding="20,9" FontWeight="SemiBold" FontSize="14" />
               <Button Content="Stop Bridge" Command="{Binding StopBridgeCommand}"
                       Background="#dc2626" Foreground="White" CornerRadius="8" Padding="20,9" FontWeight="SemiBold" FontSize="14" />
@@ -311,4 +312,21 @@
     </Border>
 
   </Grid>
+
+  <!-- Busy overlay (inside Panel) -->
+  <Border IsVisible="{Binding IsBusy}" Background="#40000000" ZIndex="50" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <TextBlock Text="{Binding BusyText}" Foreground="White" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+  </Border>
+
+  <!-- Toast -->
+  <Border IsVisible="{Binding ToastVisible}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="16,12" ZIndex="200"
+          Background="{Binding ActiveToast.Background}" CornerRadius="8" Width="360" BoxShadow="0 4 16 0 #0000001a">
+    <Grid ColumnDefinitions="4,Auto,*">
+      <Border Grid.Column="0" Background="{Binding ActiveToast.AccentColor}" CornerRadius="8,0,0,8" />
+      <TextBlock Grid.Column="1" Text="{Binding ActiveToast.Icon}" Foreground="{Binding ActiveToast.AccentColor}" FontSize="16" VerticalAlignment="Center" Margin="12,10,8,10" />
+      <TextBlock Grid.Column="2" Text="{Binding ActiveToast.Text}" Foreground="{Binding ActiveToast.Foreground}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,10,12,10" />
+    </Grid>
+  </Border>
+
+  </Panel>
 </Window>

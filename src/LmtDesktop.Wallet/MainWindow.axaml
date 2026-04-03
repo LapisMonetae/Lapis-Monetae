@@ -5,446 +5,397 @@
         x:DataType="vm:MainWindowViewModel"
         Title="Lapis Monetae Wallet"
         Icon="avares://LmtDesktop.Wallet/Assets/lmt_icon_64.png"
-        Width="800" Height="640" MinWidth="620" MinHeight="520"
+        Width="820" Height="660" MinWidth="640" MinHeight="540"
         Background="#f4f6fa" WindowStartupLocation="CenterScreen">
 
   <Design.DataContext><vm:MainWindowViewModel /></Design.DataContext>
 
   <Window.Styles>
-    <!-- Button hover animations -->
     <Style Selector="Button">
-      <Setter Property="Transitions">
-        <Transitions>
-          <BrushTransition Property="Background" Duration="0:0:0.15" />
-          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1" />
-        </Transitions>
-      </Setter>
+      <Setter Property="Transitions"><Transitions><BrushTransition Property="Background" Duration="0:0:0.15" /><TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1" /></Transitions></Setter>
       <Setter Property="RenderTransformOrigin" Value="50%,50%" />
     </Style>
-    <Style Selector="Button:pointerover">
-      <Setter Property="Opacity" Value="0.9" />
-      <Setter Property="RenderTransform" Value="scale(1.02)" />
-    </Style>
-    <Style Selector="Button:pressed">
-      <Setter Property="RenderTransform" Value="scale(0.97)" />
-    </Style>
-
-    <!-- Card hover effect -->
+    <Style Selector="Button:pointerover"><Setter Property="Opacity" Value="0.9" /><Setter Property="RenderTransform" Value="scale(1.02)" /></Style>
+    <Style Selector="Button:pressed"><Setter Property="RenderTransform" Value="scale(0.97)" /></Style>
     <Style Selector="Border.card">
-      <Setter Property="Transitions">
-        <Transitions>
-          <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.2" />
-        </Transitions>
-      </Setter>
+      <Setter Property="Transitions"><Transitions><BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.2" /></Transitions></Setter>
       <Setter Property="BoxShadow" Value="0 1 3 0 #0000001a" />
     </Style>
-    <Style Selector="Border.card:pointerover">
-      <Setter Property="BoxShadow" Value="0 4 12 0 #0000001a" />
-    </Style>
-
-    <!-- Pill transition -->
-    <Style Selector="Border.pill">
-      <Setter Property="Transitions">
-        <Transitions>
-          <BrushTransition Property="Background" Duration="0:0:0.3" />
-        </Transitions>
-      </Setter>
-    </Style>
-
-    <!-- Modern TabItem styling -->
+    <Style Selector="Border.card:pointerover"><Setter Property="BoxShadow" Value="0 4 12 0 #0000001a" /></Style>
+    <Style Selector="Border.pill"><Setter Property="Transitions"><Transitions><BrushTransition Property="Background" Duration="0:0:0.3" /></Transitions></Setter></Style>
     <Style Selector="TabItem">
-      <Setter Property="FontSize" Value="13" />
-      <Setter Property="FontWeight" Value="SemiBold" />
-      <Setter Property="Foreground" Value="#64748b" />
-      <Setter Property="Padding" Value="16,10" />
-      <Setter Property="Margin" Value="2,0" />
-      <Setter Property="Transitions">
-        <Transitions>
-          <BrushTransition Property="Foreground" Duration="0:0:0.2" />
-        </Transitions>
-      </Setter>
+      <Setter Property="FontSize" Value="13" /><Setter Property="FontWeight" Value="SemiBold" /><Setter Property="Foreground" Value="#64748b" /><Setter Property="Padding" Value="16,10" /><Setter Property="Margin" Value="2,0" />
+      <Setter Property="Transitions"><Transitions><BrushTransition Property="Foreground" Duration="0:0:0.2" /></Transitions></Setter>
     </Style>
-    <Style Selector="TabItem:pointerover">
-      <Setter Property="Foreground" Value="#2563eb" />
-    </Style>
-    <Style Selector="TabItem:selected">
-      <Setter Property="Foreground" Value="#2563eb" />
-    </Style>
-
-    <!-- Tab content fade-in -->
-    <Style Selector="TabItem:selected > ContentPresenter">
-      <Style.Animations>
-        <Animation Duration="0:0:0.25" FillMode="Forward">
-          <KeyFrame Cue="0%">
-            <Setter Property="Opacity" Value="0" />
-            <Setter Property="TranslateTransform.Y" Value="8" />
-          </KeyFrame>
-          <KeyFrame Cue="100%">
-            <Setter Property="Opacity" Value="1" />
-            <Setter Property="TranslateTransform.Y" Value="0" />
-          </KeyFrame>
-        </Animation>
-      </Style.Animations>
-    </Style>
-
-    <!-- TextBox focus transition -->
-    <Style Selector="TextBox">
-      <Setter Property="Transitions">
-        <Transitions>
-          <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
-        </Transitions>
-      </Setter>
-    </Style>
-    <Style Selector="TextBox:focus">
-      <Setter Property="BorderBrush" Value="#2563eb" />
-    </Style>
+    <Style Selector="TabItem:pointerover"><Setter Property="Foreground" Value="#2563eb" /></Style>
+    <Style Selector="TabItem:selected"><Setter Property="Foreground" Value="#2563eb" /></Style>
+    <Style Selector="TextBox"><Setter Property="Transitions"><Transitions><BrushTransition Property="BorderBrush" Duration="0:0:0.15" /></Transitions></Setter></Style>
+    <Style Selector="TextBox:focus"><Setter Property="BorderBrush" Value="#2563eb" /></Style>
+    <!-- Overlay backdrop -->
+    <Style Selector="Border.overlay"><Setter Property="Background" Value="#80000000" /></Style>
   </Window.Styles>
 
+  <Panel>
   <Grid RowDefinitions="Auto,2,*,Auto">
 
-    <!-- ═══ HEADER ═══ -->
+    <!-- HEADER -->
     <Border Grid.Row="0" Background="White" Padding="16,8" BorderBrush="#e2e8f0" BorderThickness="0,0,0,1">
-      <Grid ColumnDefinitions="Auto,Auto,*,Auto">
-        <Image Grid.Column="0" Source="avares://LmtDesktop.Wallet/Assets/lmt_icon_64.png"
-               Width="32" Height="32" VerticalAlignment="Center" Margin="0,0,10,0" />
+      <Grid ColumnDefinitions="Auto,Auto,*,Auto,8,Auto">
+        <Image Grid.Column="0" Source="avares://LmtDesktop.Wallet/Assets/lmt_icon_64.png" Width="32" Height="32" VerticalAlignment="Center" Margin="0,0,10,0" />
         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
           <TextBlock Text="Lapis Monetae" FontSize="17" FontWeight="Bold" Foreground="#1e293b" />
           <TextBlock Text=" Wallet" FontSize="17" Foreground="#64748b" />
         </StackPanel>
-        <Border Grid.Column="3" Classes="pill" Background="{Binding PillBg}" CornerRadius="12" Padding="12,5" VerticalAlignment="Center">
+        <!-- Backup warning pill -->
+        <Border Grid.Column="3" IsVisible="{Binding BackupPillVisible}" Background="#fbbf24" CornerRadius="10" Padding="10,4" VerticalAlignment="Center">
+          <TextBlock Text="BACKUP" Foreground="#92400e" FontSize="10" FontWeight="Bold" />
+        </Border>
+        <Border Grid.Column="5" Classes="pill" Background="{Binding PillBg}" CornerRadius="12" Padding="12,5" VerticalAlignment="Center">
           <TextBlock Text="{Binding PillText}" Foreground="White" FontSize="11" FontWeight="SemiBold" />
         </Border>
       </Grid>
     </Border>
 
-    <!-- Accent gradient -->
-    <Border Grid.Row="1">
-      <Border.Background>
-        <LinearGradientBrush StartPoint="0%,50%" EndPoint="100%,50%">
-          <GradientStop Color="#2563eb" Offset="0" />
-          <GradientStop Color="#7c3aed" Offset="0.5" />
-          <GradientStop Color="#f59e0b" Offset="1" />
-        </LinearGradientBrush>
-      </Border.Background>
+    <!-- Gradient -->
+    <Border Grid.Row="1"><Border.Background><LinearGradientBrush StartPoint="0%,50%" EndPoint="100%,50%"><GradientStop Color="#2563eb" Offset="0" /><GradientStop Color="#7c3aed" Offset="0.5" /><GradientStop Color="#f59e0b" Offset="1" /></LinearGradientBrush></Border.Background></Border>
+
+    <!-- Busy overlay -->
+    <Border Grid.Row="2" IsVisible="{Binding IsBusy}" Background="#40000000" ZIndex="50">
+      <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+        <TextBlock Text="{Binding BusyText}" Foreground="White" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" />
+      </StackPanel>
     </Border>
 
+    <!-- CONTENT -->
     <Grid Grid.Row="2">
 
-      <!-- ═══ SETUP — Binary Selector ═══ -->
+      <!-- ═══ SETUP ═══ -->
       <Border IsVisible="{Binding ShowSetup}" Background="#f4f6fa">
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16" Width="440" Margin="0,40">
-            <Image Source="avares://LmtDesktop.Wallet/Assets/lmt_logo.png" Width="100" Height="100" HorizontalAlignment="Center" />
-            <TextBlock Text="Setup" FontSize="22" FontWeight="Bold" Foreground="#1e293b" HorizontalAlignment="Center" />
-            <TextBlock Text="To get started, select your lmt-cli binary. This is the command-line tool that manages wallets and communicates with the LMT network."
-                       FontSize="13" Foreground="#64748b" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
-
-            <Border IsVisible="{Binding SetupError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                    Background="#fef2f2" CornerRadius="8" Padding="12,8" BorderBrush="#fecaca" BorderThickness="1">
-              <TextBlock Text="{Binding SetupError}" Foreground="#dc2626" FontSize="12" TextWrapping="Wrap" />
-            </Border>
-
-            <Border IsVisible="{Binding SetupStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                    Background="#f0fdf4" CornerRadius="8" Padding="12,8" BorderBrush="#bbf7d0" BorderThickness="1">
-              <TextBlock Text="{Binding SetupStatus}" Foreground="#166534" FontSize="12" TextWrapping="Wrap" />
-            </Border>
-
-            <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1">
-              <StackPanel Spacing="10">
-                <TextBlock Text="CLI Binary Path" Foreground="#475569" FontSize="13" FontWeight="SemiBold" />
-                <Grid ColumnDefinitions="*,Auto">
-                  <TextBox Text="{Binding CliPath}" Watermark="C:\path\to\lmt-cli.exe" CornerRadius="8" Padding="10,8" FontSize="13" />
-                  <Button Grid.Column="1" Content="Browse..." Click="BrowseCliPath_Click"
-                          Margin="8,0,0,0" Background="#f1f5f9" Foreground="#475569" CornerRadius="8" Padding="14,8"
-                          BorderBrush="#e2e8f0" BorderThickness="1" FontWeight="SemiBold" />
-                </Grid>
-
-                <TextBlock Text="Network" Foreground="#475569" FontSize="13" FontWeight="SemiBold" Margin="0,4,0,0" />
-                <ComboBox SelectedItem="{Binding SelectedNetwork}" CornerRadius="8" HorizontalAlignment="Stretch">
-                  <ComboBoxItem Content="mainnet" />
-                  <ComboBoxItem Content="testnet-10" />
-                  <ComboBoxItem Content="testnet-11" />
-                </ComboBox>
-              </StackPanel>
-            </Border>
-
-            <Button Content="Continue" Command="{Binding ValidateAndContinueCommand}" IsEnabled="{Binding !SetupBusy}"
-                    HorizontalAlignment="Stretch" Height="46" FontSize="15" FontWeight="SemiBold"
-                    Background="#2563eb" Foreground="White" CornerRadius="10" HorizontalContentAlignment="Center" />
-
-            <Border Background="#eff6ff" CornerRadius="8" Padding="12,8" BorderBrush="#bfdbfe" BorderThickness="1">
-              <TextBlock Foreground="#1e40af" FontSize="11" TextWrapping="Wrap" TextAlignment="Center">
-                <Run>If you haven't compiled lmt-cli yet, run: </Run>
-                <Run FontWeight="SemiBold">cargo build --release -p lmt-cli</Run>
-              </TextBlock>
-            </Border>
-          </StackPanel>
-        </ScrollViewer>
+        <ScrollViewer><StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16" Width="440" Margin="0,32">
+          <Image Source="avares://LmtDesktop.Wallet/Assets/lmt_logo.png" Width="100" Height="100" HorizontalAlignment="Center" />
+          <TextBlock Text="Welcome to Lapis Monetae" FontSize="22" FontWeight="Bold" Foreground="#1e293b" HorizontalAlignment="Center" />
+          <TextBlock Text="Select your lmt-cli binary to get started." FontSize="13" Foreground="#64748b" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+          <Border IsVisible="{Binding SetupError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Background="#fef2f2" CornerRadius="8" Padding="12,8" BorderBrush="#fecaca" BorderThickness="1">
+            <TextBlock Text="{Binding SetupError}" Foreground="#dc2626" FontSize="12" TextWrapping="Wrap" /></Border>
+          <Border IsVisible="{Binding SetupStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Background="#f0fdf4" CornerRadius="8" Padding="12,8" BorderBrush="#bbf7d0" BorderThickness="1">
+            <TextBlock Text="{Binding SetupStatus}" Foreground="#166534" FontSize="12" TextWrapping="Wrap" /></Border>
+          <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="10">
+            <TextBlock Text="CLI Binary Path" Foreground="#475569" FontSize="13" FontWeight="SemiBold" />
+            <Grid ColumnDefinitions="*,Auto"><TextBox Text="{Binding CliPath}" Watermark="C:\path\to\lmt-cli.exe" CornerRadius="8" Padding="10,8" FontSize="13" />
+              <Button Grid.Column="1" Content="Browse..." Click="BrowseCliPath_Click" Margin="8,0,0,0" Background="#f1f5f9" Foreground="#475569" CornerRadius="8" Padding="14,8" BorderBrush="#e2e8f0" BorderThickness="1" FontWeight="SemiBold" /></Grid>
+            <TextBlock Text="Network" Foreground="#475569" FontSize="13" FontWeight="SemiBold" Margin="0,4,0,0" />
+            <ComboBox SelectedItem="{Binding SelectedNetwork}" CornerRadius="8" HorizontalAlignment="Stretch"><ComboBoxItem Content="mainnet" /><ComboBoxItem Content="testnet-10" /><ComboBoxItem Content="testnet-11" /></ComboBox>
+          </StackPanel></Border>
+          <Button Content="Continue" Command="{Binding ValidateAndContinueCommand}" IsEnabled="{Binding !SetupBusy}" HorizontalAlignment="Stretch" Height="46" FontSize="15" FontWeight="SemiBold" Background="#2563eb" Foreground="White" CornerRadius="10" HorizontalContentAlignment="Center" />
+          <Border Background="#eff6ff" CornerRadius="8" Padding="12,8" BorderBrush="#bfdbfe" BorderThickness="1"><TextBlock Foreground="#1e40af" FontSize="11" TextWrapping="Wrap" TextAlignment="Center"><Run>Haven't compiled yet? Run: </Run><Run FontWeight="SemiBold">cargo build --release -p lmt-cli</Run></TextBlock></Border>
+        </StackPanel></ScrollViewer>
       </Border>
 
-      <!-- ═══ FIRST RUN — Wallet Wizard ═══ -->
+      <!-- ═══ WIZARD ═══ -->
       <Border IsVisible="{Binding ShowFirstRun}" Background="#f4f6fa">
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16" Width="400" Margin="0,32">
+        <ScrollViewer><StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16" Width="420" Margin="0,32">
+          <Image Source="avares://LmtDesktop.Wallet/Assets/lmt_logo.png" Width="100" Height="100" HorizontalAlignment="Center" />
+          <TextBlock Text="Lapis Monetae Wallet" FontSize="22" FontWeight="Bold" Foreground="#1e293b" HorizontalAlignment="Center" />
+          <!-- Error -->
+          <Border IsVisible="{Binding WizardError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Background="#fef2f2" CornerRadius="8" Padding="12,8" BorderBrush="#fecaca" BorderThickness="1">
+            <TextBlock Text="{Binding WizardError}" Foreground="#dc2626" FontSize="12" TextWrapping="Wrap" /></Border>
 
-            <Image Source="avares://LmtDesktop.Wallet/Assets/lmt_logo.png" Width="120" Height="120" HorizontalAlignment="Center" />
-            <TextBlock Text="Welcome to Lapis Monetae" FontSize="22" FontWeight="Bold" Foreground="#1e293b" HorizontalAlignment="Center" />
-            <TextBlock Text="Secure, fast, and fair cryptocurrency powered by RandomX."
-                       FontSize="13" Foreground="#64748b" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
-
-            <!-- Error -->
-            <Border IsVisible="{Binding WizardError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                    Background="#fef2f2" CornerRadius="8" Padding="12,8" BorderBrush="#fecaca" BorderThickness="1">
-              <TextBlock Text="{Binding WizardError}" Foreground="#dc2626" FontSize="12" TextWrapping="Wrap" />
-            </Border>
-
-            <!-- Step 0: Welcome -->
-            <StackPanel IsVisible="{Binding IsStep0}" Spacing="10" Margin="0,12,0,0">
-              <Button Content="Create New Wallet" Command="{Binding StartCreateWalletCommand}"
-                      HorizontalAlignment="Stretch" Height="46" FontSize="15" FontWeight="SemiBold"
-                      Background="#2563eb" Foreground="White" CornerRadius="10" HorizontalContentAlignment="Center" />
-              <Button Content="I Already Have a Wallet" Command="{Binding StartImportWalletCommand}"
-                      HorizontalAlignment="Stretch" Height="46" FontSize="15"
-                      Background="White" Foreground="#1e293b" CornerRadius="10"
-                      BorderBrush="#e2e8f0" BorderThickness="1" HorizontalContentAlignment="Center" />
-            </StackPanel>
-
-            <!-- Step 1: Name + Password -->
-            <StackPanel IsVisible="{Binding IsStep1}" Spacing="10" Margin="0,8,0,0">
-              <TextBlock Text="Wallet Name" FontSize="13" FontWeight="SemiBold" Foreground="#475569" />
-              <TextBox Watermark="my-wallet" Text="{Binding NewWalletName}" MaxLength="64"
-                       CornerRadius="8" Padding="10,8" FontSize="14" />
-
-              <!-- Import mnemonic -->
-              <StackPanel IsVisible="{Binding IsImportFlow}" Spacing="6">
-                <TextBlock Text="Seed Phrase (12 or 24 words)" FontSize="13" FontWeight="SemiBold" Foreground="#475569" />
-                <TextBox Watermark="word1 word2 word3 ..." Text="{Binding ImportMnemonic}" MaxLength="600"
-                         CornerRadius="8" Padding="10,8" FontSize="13" AcceptsReturn="True" TextWrapping="Wrap" Height="72" />
-              </StackPanel>
-
-              <TextBlock Text="Password" FontSize="13" FontWeight="SemiBold" Foreground="#475569" Margin="0,6,0,0" />
-              <TextBox Watermark="Minimum 8 characters" Text="{Binding NewPassword}" PasswordChar="*" MaxLength="128"
-                       CornerRadius="8" Padding="10,8" FontSize="14" />
-              <TextBox Watermark="Confirm password" Text="{Binding ConfirmPassword}" PasswordChar="*" MaxLength="128"
-                       CornerRadius="8" Padding="10,8" FontSize="14" />
-
-              <Border Background="#fffbeb" CornerRadius="8" Padding="12,8" BorderBrush="#fde68a" BorderThickness="1">
-                <TextBlock Text="Your wallet is encrypted with this password. There is no recovery if you forget it."
-                           Foreground="#92400e" FontSize="12" TextWrapping="Wrap" />
-              </Border>
-
-              <Grid ColumnDefinitions="*,*" Margin="0,10,0,0">
-                <Button Grid.Column="0" Content="Back" Command="{Binding WizardBackCommand}"
-                        Background="White" Foreground="#64748b" CornerRadius="8" HorizontalAlignment="Stretch"
-                        Margin="0,0,4,0" HorizontalContentAlignment="Center" BorderBrush="#e2e8f0" BorderThickness="1" />
-                <Button Grid.Column="1" Content="Continue" Command="{Binding WizardNextCommand}"
-                        Background="#2563eb" Foreground="White" CornerRadius="8" HorizontalAlignment="Stretch"
-                        Margin="4,0,0,0" HorizontalContentAlignment="Center" FontWeight="SemiBold" />
-              </Grid>
-            </StackPanel>
-
-            <!-- Step 2: Mnemonic Display -->
-            <StackPanel IsVisible="{Binding IsStep2}" Spacing="10" Margin="0,8,0,0">
-              <TextBlock Text="Your Seed Phrase" FontSize="16" FontWeight="Bold" Foreground="#1e293b" />
-              <Border Background="#fffbeb" CornerRadius="8" Padding="12,8" BorderBrush="#fde68a" BorderThickness="1">
-                <TextBlock Text="Write these 12 words on paper. This is the ONLY time they will be shown. Never share them with anyone."
-                           Foreground="#92400e" FontSize="12" TextWrapping="Wrap" />
-              </Border>
-              <Border Background="White" CornerRadius="10" Padding="16,14" BorderBrush="#e2e8f0" BorderThickness="1">
-                <TextBlock Text="{Binding MnemonicDisplay}" Foreground="#1e293b" FontSize="15" FontWeight="SemiBold"
-                           TextWrapping="Wrap" LineHeight="30" />
-              </Border>
-              <Grid ColumnDefinitions="*,*" Margin="0,10,0,0">
-                <Button Grid.Column="0" Content="Back" Command="{Binding WizardBackCommand}"
-                        Background="White" Foreground="#64748b" CornerRadius="8" HorizontalAlignment="Stretch"
-                        Margin="0,0,4,0" HorizontalContentAlignment="Center" BorderBrush="#e2e8f0" BorderThickness="1" />
-                <Button Grid.Column="1" Content="I've Written It Down" Command="{Binding WizardNextCommand}"
-                        Background="#16a34a" Foreground="White" CornerRadius="8" HorizontalAlignment="Stretch"
-                        Margin="4,0,0,0" HorizontalContentAlignment="Center" FontWeight="SemiBold" />
-              </Grid>
-            </StackPanel>
-
-            <!-- Step 3: Verify -->
-            <StackPanel IsVisible="{Binding IsStep3}" Spacing="10" Margin="0,8,0,0">
-              <TextBlock Text="Verify Your Backup" FontSize="16" FontWeight="Bold" Foreground="#1e293b" />
-              <TextBlock Text="Enter the following words from your seed phrase." FontSize="13" Foreground="#64748b" />
-              <StackPanel Spacing="8">
-                <Grid ColumnDefinitions="90,*">
-                  <TextBlock Text="{Binding VerifyLabel1}" VerticalAlignment="Center" Foreground="#475569" FontSize="13" FontWeight="SemiBold" />
-                  <TextBox Grid.Column="1" Text="{Binding VerifyWord1}" Watermark="Enter word..." CornerRadius="8" Padding="10,8" />
-                </Grid>
-                <Grid ColumnDefinitions="90,*">
-                  <TextBlock Text="{Binding VerifyLabel2}" VerticalAlignment="Center" Foreground="#475569" FontSize="13" FontWeight="SemiBold" />
-                  <TextBox Grid.Column="1" Text="{Binding VerifyWord2}" Watermark="Enter word..." CornerRadius="8" Padding="10,8" />
-                </Grid>
-                <Grid ColumnDefinitions="90,*">
-                  <TextBlock Text="{Binding VerifyLabel3}" VerticalAlignment="Center" Foreground="#475569" FontSize="13" FontWeight="SemiBold" />
-                  <TextBox Grid.Column="1" Text="{Binding VerifyWord3}" Watermark="Enter word..." CornerRadius="8" Padding="10,8" />
-                </Grid>
-              </StackPanel>
-              <Grid ColumnDefinitions="*,*" Margin="0,10,0,0">
-                <Button Grid.Column="0" Content="Back" Command="{Binding WizardBackCommand}"
-                        Background="White" Foreground="#64748b" CornerRadius="8" HorizontalAlignment="Stretch"
-                        Margin="0,0,4,0" HorizontalContentAlignment="Center" BorderBrush="#e2e8f0" BorderThickness="1" />
-                <Button Grid.Column="1" Content="Verify and Open Wallet" Command="{Binding WizardNextCommand}"
-                        Background="#2563eb" Foreground="White" CornerRadius="8" HorizontalAlignment="Stretch"
-                        Margin="4,0,0,0" HorizontalContentAlignment="Center" FontWeight="SemiBold" />
-              </Grid>
-            </StackPanel>
-
+          <!-- Step 0: Welcome -->
+          <StackPanel IsVisible="{Binding IsStep0}" Spacing="10" Margin="0,12,0,0">
+            <Button Content="Create New Wallet" Command="{Binding StartCreateWalletCommand}" HorizontalAlignment="Stretch" Height="46" FontSize="15" FontWeight="SemiBold" Background="#2563eb" Foreground="White" CornerRadius="10" HorizontalContentAlignment="Center" />
+            <Button Content="I Already Have a Wallet" Command="{Binding StartImportWalletCommand}" HorizontalAlignment="Stretch" Height="46" FontSize="15" Background="White" Foreground="#1e293b" CornerRadius="10" BorderBrush="#e2e8f0" BorderThickness="1" HorizontalContentAlignment="Center" />
           </StackPanel>
-        </ScrollViewer>
+
+          <!-- Step 4: Seed Backup Checklist (create only, before name/pass) -->
+          <StackPanel IsVisible="{Binding IsStep4}" Spacing="10" Margin="0,8,0,0">
+            <TextBlock Text="Before You Begin" FontSize="16" FontWeight="Bold" Foreground="#1e293b" />
+            <Border Background="#fffbeb" CornerRadius="8" Padding="14,10" BorderBrush="#fde68a" BorderThickness="1">
+              <TextBlock Text="Your wallet will generate a secret seed phrase. This is the ONLY way to recover your funds. Please confirm:" Foreground="#92400e" FontSize="13" TextWrapping="Wrap" />
+            </Border>
+            <CheckBox IsChecked="{Binding CheckSafePlace}" Foreground="#1e293b" FontSize="13" Margin="0,4,0,0"><TextBlock TextWrapping="Wrap">I have a safe place to write down my seed phrase</TextBlock></CheckBox>
+            <CheckBox IsChecked="{Binding CheckShownOnce}" Foreground="#1e293b" FontSize="13"><TextBlock TextWrapping="Wrap">I understand the seed is shown only once during creation</TextBlock></CheckBox>
+            <CheckBox IsChecked="{Binding CheckNoScreenshot}" Foreground="#1e293b" FontSize="13"><TextBlock TextWrapping="Wrap">I will NOT screenshot or store the seed digitally</TextBlock></CheckBox>
+            <Grid ColumnDefinitions="*,*" Margin="0,10,0,0">
+              <Button Grid.Column="0" Content="Back" Command="{Binding WizardBackCommand}" Background="White" Foreground="#64748b" CornerRadius="8" HorizontalAlignment="Stretch" Margin="0,0,4,0" HorizontalContentAlignment="Center" BorderBrush="#e2e8f0" BorderThickness="1" />
+              <Button Grid.Column="1" Content="I'm Ready" Command="{Binding ChecklistProceedCommand}" IsEnabled="{Binding AllChecksComplete}" Background="#2563eb" Foreground="White" CornerRadius="8" HorizontalAlignment="Stretch" Margin="4,0,0,0" HorizontalContentAlignment="Center" FontWeight="SemiBold" />
+            </Grid>
+          </StackPanel>
+
+          <!-- Step 1: Name + Password -->
+          <StackPanel IsVisible="{Binding IsStep1}" Spacing="10" Margin="0,8,0,0">
+            <TextBlock Text="Wallet Name" FontSize="13" FontWeight="SemiBold" Foreground="#475569" />
+            <TextBox Watermark="my-wallet" Text="{Binding NewWalletName}" MaxLength="64" CornerRadius="8" Padding="10,8" FontSize="14" />
+            <StackPanel IsVisible="{Binding IsImportFlow}" Spacing="6">
+              <TextBlock Text="Seed Phrase (12 or 24 words)" FontSize="13" FontWeight="SemiBold" Foreground="#475569" />
+              <TextBox Watermark="word1 word2 word3 ..." Text="{Binding ImportMnemonic}" MaxLength="600" CornerRadius="8" Padding="10,8" FontSize="13" AcceptsReturn="True" TextWrapping="Wrap" Height="72" />
+            </StackPanel>
+            <TextBlock Text="Password" FontSize="13" FontWeight="SemiBold" Foreground="#475569" Margin="0,6,0,0" />
+            <TextBox Watermark="Minimum 8 characters" Text="{Binding NewPassword}" PasswordChar="*" MaxLength="128" CornerRadius="8" Padding="10,8" FontSize="14" />
+            <TextBox Watermark="Confirm password" Text="{Binding ConfirmPassword}" PasswordChar="*" MaxLength="128" CornerRadius="8" Padding="10,8" FontSize="14" />
+            <Border Background="#fffbeb" CornerRadius="8" Padding="12,8" BorderBrush="#fde68a" BorderThickness="1">
+              <TextBlock Text="This password encrypts your wallet. No recovery if forgotten." Foreground="#92400e" FontSize="12" TextWrapping="Wrap" /></Border>
+            <Grid ColumnDefinitions="*,*" Margin="0,10,0,0">
+              <Button Grid.Column="0" Content="Back" Command="{Binding WizardBackCommand}" Background="White" Foreground="#64748b" CornerRadius="8" HorizontalAlignment="Stretch" Margin="0,0,4,0" HorizontalContentAlignment="Center" BorderBrush="#e2e8f0" BorderThickness="1" />
+              <Button Grid.Column="1" Content="Continue" Command="{Binding WizardNextCommand}" IsEnabled="{Binding !WizardBusy}" Background="#2563eb" Foreground="White" CornerRadius="8" HorizontalAlignment="Stretch" Margin="4,0,0,0" HorizontalContentAlignment="Center" FontWeight="SemiBold" />
+            </Grid>
+          </StackPanel>
+
+          <!-- Step 2: Mnemonic Display -->
+          <StackPanel IsVisible="{Binding IsStep2}" Spacing="10" Margin="0,8,0,0">
+            <TextBlock Text="Your Seed Phrase" FontSize="16" FontWeight="Bold" Foreground="#1e293b" />
+            <Border Background="#fffbeb" CornerRadius="8" Padding="12,8" BorderBrush="#fde68a" BorderThickness="1">
+              <TextBlock Text="Write these words on paper NOW. They will NOT be shown again." Foreground="#92400e" FontSize="12" TextWrapping="Wrap" /></Border>
+            <Border Background="White" CornerRadius="10" Padding="16,14" BorderBrush="#e2e8f0" BorderThickness="1">
+              <TextBlock Text="{Binding MnemonicDisplay}" Foreground="#1e293b" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" LineHeight="30" /></Border>
+            <Grid ColumnDefinitions="*,*" Margin="0,10,0,0">
+              <Button Grid.Column="0" Content="Back" Command="{Binding WizardBackCommand}" Background="White" Foreground="#64748b" CornerRadius="8" HorizontalAlignment="Stretch" Margin="0,0,4,0" HorizontalContentAlignment="Center" BorderBrush="#e2e8f0" BorderThickness="1" />
+              <Button Grid.Column="1" Content="I Wrote It Down" Command="{Binding WizardNextCommand}" Background="#16a34a" Foreground="White" CornerRadius="8" HorizontalAlignment="Stretch" Margin="4,0,0,0" HorizontalContentAlignment="Center" FontWeight="SemiBold" />
+            </Grid>
+          </StackPanel>
+
+          <!-- Step 3: Verify -->
+          <StackPanel IsVisible="{Binding IsStep3}" Spacing="10" Margin="0,8,0,0">
+            <TextBlock Text="Verify Your Backup" FontSize="16" FontWeight="Bold" Foreground="#1e293b" />
+            <TextBlock Text="Enter these words from your seed phrase:" FontSize="13" Foreground="#64748b" />
+            <Grid ColumnDefinitions="90,*"><TextBlock Text="{Binding VerifyLabel1}" VerticalAlignment="Center" Foreground="#475569" FontSize="13" FontWeight="SemiBold" /><TextBox Grid.Column="1" Text="{Binding VerifyWord1}" Watermark="Enter word..." CornerRadius="8" Padding="10,8" /></Grid>
+            <Grid ColumnDefinitions="90,*"><TextBlock Text="{Binding VerifyLabel2}" VerticalAlignment="Center" Foreground="#475569" FontSize="13" FontWeight="SemiBold" /><TextBox Grid.Column="1" Text="{Binding VerifyWord2}" Watermark="Enter word..." CornerRadius="8" Padding="10,8" /></Grid>
+            <Grid ColumnDefinitions="90,*"><TextBlock Text="{Binding VerifyLabel3}" VerticalAlignment="Center" Foreground="#475569" FontSize="13" FontWeight="SemiBold" /><TextBox Grid.Column="1" Text="{Binding VerifyWord3}" Watermark="Enter word..." CornerRadius="8" Padding="10,8" /></Grid>
+            <Grid ColumnDefinitions="*,*" Margin="0,10,0,0">
+              <Button Grid.Column="0" Content="Back" Command="{Binding WizardBackCommand}" Background="White" Foreground="#64748b" CornerRadius="8" HorizontalAlignment="Stretch" Margin="0,0,4,0" HorizontalContentAlignment="Center" BorderBrush="#e2e8f0" BorderThickness="1" />
+              <Button Grid.Column="1" Content="Verify and Open" Command="{Binding WizardNextCommand}" Background="#2563eb" Foreground="White" CornerRadius="8" HorizontalAlignment="Stretch" Margin="4,0,0,0" HorizontalContentAlignment="Center" FontWeight="SemiBold" />
+            </Grid>
+          </StackPanel>
+        </StackPanel></ScrollViewer>
       </Border>
 
       <!-- ═══ MAIN TABS ═══ -->
       <TabControl IsVisible="{Binding ShowMain}" Background="#f4f6fa" Padding="0" Margin="0,2,0,0">
 
-        <TabItem Header="  Actions  ">
-          <ScrollViewer Padding="16">
-            <StackPanel Spacing="16">
-              <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1">
-                <StackPanel Spacing="8">
-                  <TextBlock Text="Wallet" FontSize="14" FontWeight="SemiBold" Foreground="#2563eb" />
-                  <WrapPanel>
-                    <Button Content="Open" Command="{Binding LaunchInteractiveCommand}" CommandParameter="wallet open"
-                            Margin="3" CornerRadius="8" Padding="14,7" />
-                    <Button Content="Create" Command="{Binding LaunchInteractiveCommand}" CommandParameter="wallet create"
-                            Margin="3" CornerRadius="8" Padding="14,7" />
-                    <Button Content="Import" Command="{Binding LaunchInteractiveCommand}" CommandParameter="wallet import"
-                            Margin="3" CornerRadius="8" Padding="14,7" />
-                    <Button Content="Lock" Command="{Binding LockWalletCommand}"
-                            Margin="3" CornerRadius="8" Padding="14,7" />
-                  </WrapPanel>
-                </StackPanel>
-              </Border>
-              <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1">
-                <StackPanel Spacing="8">
-                  <TextBlock Text="Accounts" FontSize="14" FontWeight="SemiBold" Foreground="#0891b2" />
-                  <WrapPanel>
-                    <Button Content="Balances" Command="{Binding RefreshBalancesCommand}" Margin="3" CornerRadius="8" Padding="14,7" />
-                    <Button Content="Address" Command="{Binding GetAddressCommand}" Margin="3" CornerRadius="8" Padding="14,7" />
-                    <Button Content="New Address" Command="{Binding NewAddressCommand}" Margin="3" CornerRadius="8" Padding="14,7" />
-                  </WrapPanel>
-                </StackPanel>
-              </Border>
-              <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1">
-                <StackPanel Spacing="8">
-                  <TextBlock Text="Transactions" FontSize="14" FontWeight="SemiBold" Foreground="#d97706" />
-                  <WrapPanel>
-                    <Button Content="Send" Command="{Binding LaunchInteractiveCommand}" CommandParameter="send"
-                            Margin="3" Background="#d97706" Foreground="White" CornerRadius="8" Padding="14,7" FontWeight="SemiBold" />
-                    <Button Content="Transfer" Command="{Binding LaunchInteractiveCommand}" CommandParameter="transfer"
-                            Margin="3" CornerRadius="8" Padding="14,7" />
-                    <Button Content="Tx History" Command="{Binding RefreshTransactionsCommand}" Margin="3" CornerRadius="8" Padding="14,7" />
-                  </WrapPanel>
-                </StackPanel>
-              </Border>
+        <!-- Actions -->
+        <TabItem Header="  Actions  "><ScrollViewer Padding="16"><StackPanel Spacing="16">
+          <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="8">
+            <TextBlock Text="Wallet" FontSize="14" FontWeight="SemiBold" Foreground="#2563eb" />
+            <WrapPanel>
+              <Button Content="Open" Command="{Binding OpenWalletCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
+              <Button Content="Create" Command="{Binding LaunchInteractiveCommand}" CommandParameter="wallet create" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
+              <Button Content="Import" Command="{Binding LaunchInteractiveCommand}" CommandParameter="wallet import" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
+              <Button Content="Lock" Command="{Binding LockWalletCommand}" Margin="3" CornerRadius="8" Padding="14,7" />
+            </WrapPanel>
+          </StackPanel></Border>
+          <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="8">
+            <TextBlock Text="Accounts" FontSize="14" FontWeight="SemiBold" Foreground="#0891b2" />
+            <WrapPanel>
+              <Button Content="Balances" Command="{Binding RefreshBalancesCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
+              <Button Content="Address" Command="{Binding GetAddressCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
+              <Button Content="New Address" Command="{Binding NewAddressCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
+            </WrapPanel>
+          </StackPanel></Border>
+          <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="8">
+            <TextBlock Text="Transactions" FontSize="14" FontWeight="SemiBold" Foreground="#d97706" />
+            <WrapPanel>
+              <Button Content="Send" Command="{Binding OpenSendDialogCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" Background="#d97706" Foreground="White" CornerRadius="8" Padding="14,7" FontWeight="SemiBold" />
+              <Button Content="Transfer" Command="{Binding OpenTransferDialogCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
+              <Button Content="Tx History" Command="{Binding RefreshTransactionsCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
+              <Button Content="Contacts" Command="{Binding OpenContactsDialogCommand}" Margin="3" CornerRadius="8" Padding="14,7" />
+            </WrapPanel>
+          </StackPanel></Border>
+        </StackPanel></ScrollViewer></TabItem>
+
+        <!-- Output -->
+        <TabItem Header="  Output  "><Border Padding="12" Background="#f4f6fa">
+          <ListBox ItemsSource="{Binding OutputLines}" Background="White" BorderBrush="#e2e8f0" BorderThickness="1" CornerRadius="8" FontFamily="Consolas,Menlo,monospace" FontSize="12" />
+        </Border></TabItem>
+
+        <!-- History -->
+        <TabItem Header="  History  "><Border Padding="12" Background="#f4f6fa">
+          <DataGrid ItemsSource="{Binding HistoryEntries}" IsReadOnly="True" Background="White" BorderBrush="#e2e8f0" CornerRadius="8" GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowBackground="White">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Time" Binding="{Binding Timestamp}" Width="80" />
+              <DataGridTextColumn Header="" Binding="{Binding StatusSymbol}" Width="30" />
+              <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="90" />
+              <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
+            </DataGrid.Columns>
+          </DataGrid>
+        </Border></TabItem>
+
+        <!-- Transactions -->
+        <TabItem Header="  Transactions  "><Border Padding="12" Background="#f4f6fa">
+          <DataGrid ItemsSource="{Binding Transactions}" IsReadOnly="True" Background="White" BorderBrush="#e2e8f0" CornerRadius="8" GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowBackground="White">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Time" Binding="{Binding When}" Width="80" />
+              <DataGridTextColumn Header="TxID" Binding="{Binding TxId}" Width="100" />
+              <DataGridTextColumn Header="Dir" Binding="{Binding Direction}" Width="50" />
+              <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="120" />
+              <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="90" />
+            </DataGrid.Columns>
+          </DataGrid>
+        </Border></TabItem>
+
+        <!-- Node -->
+        <TabItem Header="  Node  "><ScrollViewer Padding="16"><StackPanel Spacing="12">
+          <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="5">
+            <TextBlock Text="Connection" FontSize="14" FontWeight="SemiBold" Foreground="#2563eb" />
+            <Grid ColumnDefinitions="110,*"><TextBlock Text="Status" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding NodeStatusText}" Foreground="#1e293b" FontWeight="SemiBold" /></Grid>
+            <Grid ColumnDefinitions="110,*"><TextBlock Text="Latency" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Latency}" Foreground="#1e293b" /></Grid>
+          </StackPanel></Border>
+          <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="5">
+            <TextBlock Text="DAG" FontSize="14" FontWeight="SemiBold" Foreground="#0891b2" />
+            <Grid ColumnDefinitions="110,*"><TextBlock Text="DAA Score" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding DaaScore}" Foreground="#1e293b" /></Grid>
+            <Grid ColumnDefinitions="110,*"><TextBlock Text="Tip Hash" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding TipHash}" Foreground="#1e293b" /></Grid>
+            <Grid ColumnDefinitions="110,*"><TextBlock Text="Difficulty" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Difficulty}" Foreground="#1e293b" /></Grid>
+          </StackPanel></Border>
+          <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="5">
+            <TextBlock Text="Network" FontSize="14" FontWeight="SemiBold" Foreground="#d97706" />
+            <Grid ColumnDefinitions="110,*"><TextBlock Text="Peers" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Peers}" Foreground="#1e293b" /></Grid>
+            <Grid ColumnDefinitions="110,*"><TextBlock Text="Network" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding NetworkName}" Foreground="#1e293b" /></Grid>
+          </StackPanel></Border>
+        </StackPanel></ScrollViewer></TabItem>
+
+        <!-- Config -->
+        <TabItem Header="  Config  "><ScrollViewer Padding="16"><StackPanel Spacing="12">
+          <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="10">
+            <TextBlock Text="CLI Binary Path" Foreground="#64748b" FontSize="12" FontWeight="SemiBold" />
+            <Grid ColumnDefinitions="*,Auto,Auto">
+              <TextBox Text="{Binding CliPath}" Watermark="/path/to/lmt-cli" CornerRadius="8" Padding="10,8" FontSize="13" />
+              <Button Grid.Column="1" Content="Browse..." Click="BrowseCliPath_Click" Margin="6,0,0,0" Background="#f1f5f9" Foreground="#475569" CornerRadius="8" Padding="12,8" BorderBrush="#e2e8f0" BorderThickness="1" />
+              <Button Grid.Column="2" Content="Save" Command="{Binding SaveCliPathCommand}" Margin="6,0,0,0" Background="#2563eb" Foreground="White" CornerRadius="8" Padding="16,8" FontWeight="SemiBold" />
+            </Grid>
+            <TextBlock Text="Network" Foreground="#64748b" FontSize="12" FontWeight="SemiBold" Margin="0,8,0,0" />
+            <ComboBox SelectedItem="{Binding SelectedNetwork}" CornerRadius="8" HorizontalAlignment="Stretch"><ComboBoxItem Content="mainnet" /><ComboBoxItem Content="testnet-10" /><ComboBoxItem Content="testnet-11" /></ComboBox>
+          </StackPanel></Border>
+          <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="10">
+            <TextBlock Text="Session Timeout" Foreground="#64748b" FontSize="12" FontWeight="SemiBold" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="Lock after" VerticalAlignment="Center" Foreground="#475569" />
+              <NumericUpDown Value="{Binding SessionTimeoutMinutes}" Minimum="0" Maximum="60" Increment="5" Width="100" />
+              <TextBlock Text="minutes (0 = off)" VerticalAlignment="Center" Foreground="#64748b" FontSize="12" />
             </StackPanel>
-          </ScrollViewer>
-        </TabItem>
-
-        <TabItem Header="  Output  ">
-          <Border Padding="12" Background="#f4f6fa">
-            <ListBox ItemsSource="{Binding OutputLines}" Background="White"
-                     BorderBrush="#e2e8f0" BorderThickness="1" CornerRadius="8"
-                     FontFamily="Consolas,Menlo,monospace" FontSize="12" />
-          </Border>
-        </TabItem>
-
-        <TabItem Header="  History  ">
-          <Border Padding="12" Background="#f4f6fa">
-            <DataGrid ItemsSource="{Binding HistoryEntries}" IsReadOnly="True"
-                      Background="White" BorderBrush="#e2e8f0" CornerRadius="8"
-                      GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowBackground="White">
-              <DataGrid.Columns>
-                <DataGridTextColumn Header="Time" Binding="{Binding Timestamp}" Width="80" />
-                <DataGridTextColumn Header="" Binding="{Binding StatusSymbol}" Width="30" />
-                <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="90" />
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
-              </DataGrid.Columns>
-            </DataGrid>
-          </Border>
-        </TabItem>
-
-        <TabItem Header="  Transactions  ">
-          <Border Padding="12" Background="#f4f6fa">
-            <DataGrid ItemsSource="{Binding Transactions}" IsReadOnly="True"
-                      Background="White" BorderBrush="#e2e8f0" CornerRadius="8"
-                      GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowBackground="White">
-              <DataGrid.Columns>
-                <DataGridTextColumn Header="Time" Binding="{Binding When}" Width="80" />
-                <DataGridTextColumn Header="TxID" Binding="{Binding TxId}" Width="100" />
-                <DataGridTextColumn Header="Dir" Binding="{Binding Direction}" Width="50" />
-                <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="120" />
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="90" />
-              </DataGrid.Columns>
-            </DataGrid>
-          </Border>
-        </TabItem>
-
-        <TabItem Header="  Node  ">
-          <ScrollViewer Padding="16">
-            <StackPanel Spacing="12">
-              <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1">
-                <StackPanel Spacing="5">
-                  <TextBlock Text="Connection" FontSize="14" FontWeight="SemiBold" Foreground="#2563eb" />
-                  <Grid ColumnDefinitions="110,*"><TextBlock Text="Status" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding NodeStatusText}" Foreground="#1e293b" FontWeight="SemiBold" /></Grid>
-                  <Grid ColumnDefinitions="110,*"><TextBlock Text="Latency" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Latency}" Foreground="#1e293b" /></Grid>
-                </StackPanel>
-              </Border>
-              <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1">
-                <StackPanel Spacing="5">
-                  <TextBlock Text="DAG" FontSize="14" FontWeight="SemiBold" Foreground="#0891b2" />
-                  <Grid ColumnDefinitions="110,*"><TextBlock Text="DAA Score" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding DaaScore}" Foreground="#1e293b" /></Grid>
-                  <Grid ColumnDefinitions="110,*"><TextBlock Text="Tip Hash" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding TipHash}" Foreground="#1e293b" /></Grid>
-                  <Grid ColumnDefinitions="110,*"><TextBlock Text="Difficulty" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Difficulty}" Foreground="#1e293b" /></Grid>
-                </StackPanel>
-              </Border>
-              <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1">
-                <StackPanel Spacing="5">
-                  <TextBlock Text="Network" FontSize="14" FontWeight="SemiBold" Foreground="#d97706" />
-                  <Grid ColumnDefinitions="110,*"><TextBlock Text="Peers" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Peers}" Foreground="#1e293b" /></Grid>
-                  <Grid ColumnDefinitions="110,*"><TextBlock Text="Network" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding NetworkName}" Foreground="#1e293b" /></Grid>
-                </StackPanel>
-              </Border>
-            </StackPanel>
-          </ScrollViewer>
-        </TabItem>
-
-        <TabItem Header="  Config  ">
-          <ScrollViewer Padding="16">
-            <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1">
-              <StackPanel Spacing="10">
-                <TextBlock Text="CLI Binary Path" Foreground="#64748b" FontSize="12" FontWeight="SemiBold" />
-                <Grid ColumnDefinitions="*,Auto,Auto">
-                  <TextBox Text="{Binding CliPath}" Watermark="/path/to/lmt-cli" CornerRadius="8" Padding="10,8" FontSize="13" />
-                  <Button Grid.Column="1" Content="Browse..." Click="BrowseCliPath_Click"
-                          Margin="6,0,0,0" Background="#f1f5f9" Foreground="#475569" CornerRadius="8" Padding="12,8"
-                          BorderBrush="#e2e8f0" BorderThickness="1" />
-                  <Button Grid.Column="2" Content="Save" Command="{Binding SaveCliPathCommand}"
-                          Margin="6,0,0,0" Background="#2563eb" Foreground="White" CornerRadius="8" Padding="16,8" FontWeight="SemiBold" />
-                </Grid>
-                <TextBlock Text="Network" Foreground="#64748b" FontSize="12" FontWeight="SemiBold" Margin="0,8,0,0" />
-                <ComboBox SelectedItem="{Binding SelectedNetwork}" CornerRadius="8" HorizontalAlignment="Stretch">
-                  <ComboBoxItem Content="mainnet" />
-                  <ComboBoxItem Content="testnet-10" />
-                  <ComboBoxItem Content="testnet-11" />
-                </ComboBox>
-              </StackPanel>
-            </Border>
-          </ScrollViewer>
-        </TabItem>
+            <CheckBox IsChecked="{Binding AutoLockOnTimeout}" Content="Auto-lock (no confirmation prompt)" Foreground="#475569" />
+            <Button Content="Save Session Settings" Command="{Binding SaveSessionSettingsCommand}" Background="#2563eb" Foreground="White" CornerRadius="8" Padding="16,8" FontWeight="SemiBold" HorizontalAlignment="Left" />
+          </StackPanel></Border>
+        </StackPanel></ScrollViewer></TabItem>
 
       </TabControl>
     </Grid>
 
     <!-- Status bar -->
     <Border Grid.Row="3" Background="White" Padding="12,5" BorderBrush="#e2e8f0" BorderThickness="0,1,0,0">
-      <Grid ColumnDefinitions="*,Auto">
-        <TextBlock Text="{Binding StatusText}" Foreground="#64748b" FontSize="11" VerticalAlignment="Center" />
-        <TextBlock Grid.Column="1" Text="{Binding NodeStatusText}" Foreground="#64748b" FontSize="11" VerticalAlignment="Center" />
-      </Grid>
+      <Grid ColumnDefinitions="*,Auto"><TextBlock Text="{Binding StatusText}" Foreground="#64748b" FontSize="11" VerticalAlignment="Center" /><TextBlock Grid.Column="1" Text="{Binding NodeStatusText}" Foreground="#64748b" FontSize="11" VerticalAlignment="Center" /></Grid>
     </Border>
 
   </Grid>
+
+  <!-- ═══ OVERLAY DIALOGS ═══ -->
+
+  <!-- Send Dialog -->
+  <Border Classes="overlay" IsVisible="{Binding ShowSendDialog}" ZIndex="100">
+    <Border Background="White" CornerRadius="12" Padding="24" Width="460" VerticalAlignment="Center" HorizontalAlignment="Center" BoxShadow="0 8 24 0 #00000033">
+      <StackPanel Spacing="12">
+        <TextBlock Text="Send LMT" FontSize="18" FontWeight="Bold" Foreground="#1e293b" />
+        <Border IsVisible="{Binding SendError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Background="#fef2f2" CornerRadius="6" Padding="10,6" BorderBrush="#fecaca" BorderThickness="1">
+          <TextBlock Text="{Binding SendError}" Foreground="#dc2626" FontSize="12" TextWrapping="Wrap" /></Border>
+
+        <!-- Not showing confirm -->
+        <StackPanel IsVisible="{Binding !ShowSendConfirm}" Spacing="10">
+          <TextBlock Text="Contact (optional)" Foreground="#64748b" FontSize="12" />
+          <ComboBox ItemsSource="{Binding Contacts}" SelectedIndex="{Binding SelectedContactIndex}" DisplayMemberBinding="{Binding Name}" HorizontalAlignment="Stretch" CornerRadius="8" />
+          <Button Content="Use contact address" Command="{Binding FillFromContactCommand}" Background="#f1f5f9" Foreground="#475569" CornerRadius="6" Padding="10,6" FontSize="12" BorderBrush="#e2e8f0" BorderThickness="1" />
+          <TextBlock Text="Recipient Address" Foreground="#64748b" FontSize="12" />
+          <TextBox Text="{Binding SendAddress}" Watermark="lmt:..." CornerRadius="8" Padding="10,8" FontSize="13" />
+          <Grid ColumnDefinitions="*,*"><StackPanel Grid.Column="0" Margin="0,0,4,0"><TextBlock Text="Amount (LMT)" Foreground="#64748b" FontSize="12" /><TextBox Text="{Binding SendAmount}" Watermark="0.00" CornerRadius="8" Padding="10,8" /></StackPanel>
+            <StackPanel Grid.Column="1" Margin="4,0,0,0"><TextBlock Text="Fee (optional)" Foreground="#64748b" FontSize="12" /><TextBox Text="{Binding SendFee}" Watermark="0" CornerRadius="8" Padding="10,8" /></StackPanel></Grid>
+          <Grid ColumnDefinitions="*,*" Margin="0,8,0,0">
+            <Button Grid.Column="0" Content="Cancel" Command="{Binding CloseSendDialogCommand}" Background="White" Foreground="#64748b" CornerRadius="8" HorizontalAlignment="Stretch" Margin="0,0,4,0" HorizontalContentAlignment="Center" BorderBrush="#e2e8f0" BorderThickness="1" />
+            <Button Grid.Column="1" Content="Review Send" Command="{Binding SubmitSendCommand}" Background="#d97706" Foreground="White" CornerRadius="8" HorizontalAlignment="Stretch" Margin="4,0,0,0" HorizontalContentAlignment="Center" FontWeight="SemiBold" />
+          </Grid>
+        </StackPanel>
+
+        <!-- Confirmation -->
+        <StackPanel IsVisible="{Binding ShowSendConfirm}" Spacing="8">
+          <TextBlock Text="Confirm Transaction" FontSize="15" FontWeight="SemiBold" Foreground="#1e293b" />
+          <Grid ColumnDefinitions="100,*"><TextBlock Text="Network" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding ConfirmNetwork}" Foreground="#1e293b" FontWeight="SemiBold" /></Grid>
+          <Grid ColumnDefinitions="100,*"><TextBlock Text="Amount" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding ConfirmAmount}" Foreground="#1e293b" FontWeight="SemiBold" /></Grid>
+          <Grid ColumnDefinitions="100,*"><TextBlock Text="Fee" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding ConfirmFee}" Foreground="#1e293b" /></Grid>
+          <Grid ColumnDefinitions="100,*"><TextBlock Text="Total" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding ConfirmTotal}" Foreground="#dc2626" FontWeight="Bold" /></Grid>
+          <TextBlock Text="To address:" Foreground="#64748b" FontSize="12" Margin="0,4,0,0" />
+          <Border Background="#f1f5f9" CornerRadius="6" Padding="10,6"><TextBlock Text="{Binding ConfirmAddress}" Foreground="#1e293b" FontSize="11" FontFamily="Consolas,monospace" TextWrapping="Wrap" /></Border>
+          <Border Background="#fffbeb" CornerRadius="6" Padding="10,6" BorderBrush="#fde68a" BorderThickness="1">
+            <TextBlock Text="This will open a terminal for your wallet password." Foreground="#92400e" FontSize="11" TextWrapping="Wrap" /></Border>
+          <Grid ColumnDefinitions="*,*" Margin="0,8,0,0">
+            <Button Grid.Column="0" Content="Cancel" Command="{Binding CloseSendDialogCommand}" Background="White" Foreground="#64748b" CornerRadius="8" HorizontalAlignment="Stretch" Margin="0,0,4,0" HorizontalContentAlignment="Center" BorderBrush="#e2e8f0" BorderThickness="1" />
+            <Button Grid.Column="1" Content="Send Now" Command="{Binding ConfirmSendCommand}" Background="#16a34a" Foreground="White" CornerRadius="8" HorizontalAlignment="Stretch" Margin="4,0,0,0" HorizontalContentAlignment="Center" FontWeight="SemiBold" />
+          </Grid>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Border>
+
+  <!-- Transfer Dialog -->
+  <Border Classes="overlay" IsVisible="{Binding ShowTransferDialog}" ZIndex="100">
+    <Border Background="White" CornerRadius="12" Padding="24" Width="420" VerticalAlignment="Center" HorizontalAlignment="Center" BoxShadow="0 8 24 0 #00000033">
+      <StackPanel Spacing="12">
+        <TextBlock Text="Transfer Between Accounts" FontSize="18" FontWeight="Bold" Foreground="#1e293b" />
+        <Border IsVisible="{Binding TransferError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Background="#fef2f2" CornerRadius="6" Padding="10,6" BorderBrush="#fecaca" BorderThickness="1">
+          <TextBlock Text="{Binding TransferError}" Foreground="#dc2626" FontSize="12" TextWrapping="Wrap" /></Border>
+        <TextBlock Text="Target Account" Foreground="#64748b" FontSize="12" />
+        <ComboBox ItemsSource="{Binding AccountSuggestions}" SelectedItem="{Binding TransferAccount}" IsEditable="True" HorizontalAlignment="Stretch" CornerRadius="8" />
+        <Grid ColumnDefinitions="*,*"><StackPanel Grid.Column="0" Margin="0,0,4,0"><TextBlock Text="Amount (LMT)" Foreground="#64748b" FontSize="12" /><TextBox Text="{Binding TransferAmount}" Watermark="0.00" CornerRadius="8" Padding="10,8" /></StackPanel>
+          <StackPanel Grid.Column="1" Margin="4,0,0,0"><TextBlock Text="Fee (optional)" Foreground="#64748b" FontSize="12" /><TextBox Text="{Binding TransferFee}" Watermark="0" CornerRadius="8" Padding="10,8" /></StackPanel></Grid>
+        <Grid ColumnDefinitions="*,*" Margin="0,8,0,0">
+          <Button Grid.Column="0" Content="Cancel" Command="{Binding CloseTransferDialogCommand}" Background="White" Foreground="#64748b" CornerRadius="8" HorizontalAlignment="Stretch" Margin="0,0,4,0" HorizontalContentAlignment="Center" BorderBrush="#e2e8f0" BorderThickness="1" />
+          <Button Grid.Column="1" Content="Transfer" Command="{Binding SubmitTransferCommand}" Background="#2563eb" Foreground="White" CornerRadius="8" HorizontalAlignment="Stretch" Margin="4,0,0,0" HorizontalContentAlignment="Center" FontWeight="SemiBold" />
+        </Grid>
+      </StackPanel>
+    </Border>
+  </Border>
+
+  <!-- Contacts Dialog -->
+  <Border Classes="overlay" IsVisible="{Binding ShowContactsDialog}" ZIndex="100">
+    <Border Background="White" CornerRadius="12" Padding="24" Width="500" MaxHeight="500" VerticalAlignment="Center" HorizontalAlignment="Center" BoxShadow="0 8 24 0 #00000033">
+      <StackPanel Spacing="12">
+        <TextBlock Text="Contacts" FontSize="18" FontWeight="Bold" Foreground="#1e293b" />
+        <Border IsVisible="{Binding ContactError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Background="#fef2f2" CornerRadius="6" Padding="10,6" BorderBrush="#fecaca" BorderThickness="1">
+          <TextBlock Text="{Binding ContactError}" Foreground="#dc2626" FontSize="12" TextWrapping="Wrap" /></Border>
+        <ListBox ItemsSource="{Binding Contacts}" SelectedIndex="{Binding SelectedContactEditIndex}" Height="120" Background="#f8fafc" BorderBrush="#e2e8f0" CornerRadius="6">
+          <ListBox.ItemTemplate><DataTemplate><TextBlock><Run Text="{Binding Name}" FontWeight="SemiBold" /> <Run Text=" — " Foreground="#94a3b8" /> <Run Text="{Binding Address}" Foreground="#64748b" FontSize="11" /></TextBlock></DataTemplate></ListBox.ItemTemplate>
+        </ListBox>
+        <Grid ColumnDefinitions="*,*"><StackPanel Grid.Column="0" Margin="0,0,4,0"><TextBlock Text="Name" Foreground="#64748b" FontSize="12" /><TextBox Text="{Binding ContactName}" Watermark="Alice" CornerRadius="8" Padding="8,6" MaxLength="48" /></StackPanel>
+          <StackPanel Grid.Column="1" Margin="4,0,0,0"><TextBlock Text="Note" Foreground="#64748b" FontSize="12" /><TextBox Text="{Binding ContactNote}" Watermark="Optional" CornerRadius="8" Padding="8,6" MaxLength="140" /></StackPanel></Grid>
+        <TextBlock Text="Address" Foreground="#64748b" FontSize="12" />
+        <TextBox Text="{Binding ContactAddress}" Watermark="lmt:..." CornerRadius="8" Padding="10,8" FontSize="12" MaxLength="120" />
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <Button Content="Add" Command="{Binding AddContactCommand}" Background="#16a34a" Foreground="White" CornerRadius="6" Padding="14,6" FontWeight="SemiBold" />
+          <Button Content="Remove" Command="{Binding RemoveContactCommand}" Background="#dc2626" Foreground="White" CornerRadius="6" Padding="14,6" />
+          <Button Content="Close" Command="{Binding CloseContactsDialogCommand}" Background="White" Foreground="#64748b" CornerRadius="6" Padding="14,6" BorderBrush="#e2e8f0" BorderThickness="1" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Border>
+
+  <!-- Error Action Dialog -->
+  <Border Classes="overlay" IsVisible="{Binding ShowErrorDialog}" ZIndex="100">
+    <Border Background="White" CornerRadius="12" Padding="24" Width="380" VerticalAlignment="Center" HorizontalAlignment="Center" BoxShadow="0 8 24 0 #00000033">
+      <StackPanel Spacing="14">
+        <TextBlock Text="Action Needed" FontSize="16" FontWeight="Bold" Foreground="#dc2626" />
+        <TextBlock Text="{Binding ErrorDialogMessage}" Foreground="#1e293b" FontSize="14" TextWrapping="Wrap" />
+        <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
+          <Button Grid.Column="0" Content="Dismiss" Command="{Binding DismissErrorDialogCommand}" Background="White" Foreground="#64748b" CornerRadius="8" HorizontalAlignment="Stretch" Margin="0,0,4,0" HorizontalContentAlignment="Center" BorderBrush="#e2e8f0" BorderThickness="1" />
+          <Button Grid.Column="1" Content="{Binding ErrorDialogAction}" Command="{Binding ExecuteErrorActionCommand}" Background="#2563eb" Foreground="White" CornerRadius="8" HorizontalAlignment="Stretch" Margin="4,0,0,0" HorizontalContentAlignment="Center" FontWeight="SemiBold" />
+        </Grid>
+      </StackPanel>
+    </Border>
+  </Border>
+
+  <!-- Toast Notification -->
+  <Border IsVisible="{Binding ToastVisible}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="16,12" ZIndex="200"
+          Background="{Binding ActiveToast.Background}" CornerRadius="8" Padding="0" Width="360" BoxShadow="0 4 16 0 #0000001a">
+    <Border.Transitions><Transitions><DoubleTransition Property="Opacity" Duration="0:0:0.25" /></Transitions></Border.Transitions>
+    <Grid ColumnDefinitions="4,Auto,*">
+      <Border Grid.Column="0" Background="{Binding ActiveToast.AccentColor}" CornerRadius="8,0,0,8" />
+      <TextBlock Grid.Column="1" Text="{Binding ActiveToast.Icon}" Foreground="{Binding ActiveToast.AccentColor}" FontSize="16" VerticalAlignment="Center" Margin="12,10,8,10" />
+      <TextBlock Grid.Column="2" Text="{Binding ActiveToast.Text}" Foreground="{Binding ActiveToast.Foreground}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,10,12,10" />
+    </Grid>
+  </Border>
+
+  </Panel>
 </Window>
