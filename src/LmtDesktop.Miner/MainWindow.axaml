@@ -228,7 +228,7 @@
             <!-- Hash Rate -->
             <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1">
               <StackPanel Spacing="5">
-                <TextBlock Text="Hash Rate" FontSize="14" FontWeight="SemiBold" Foreground="#16a34a" />
+                <StackPanel Orientation="Horizontal" Spacing="6"><PathIcon Data="{StaticResource IconChart}" Width="15" Height="15" Foreground="#16a34a" /><TextBlock Text="Hash Rate" FontSize="14" FontWeight="SemiBold" Foreground="#16a34a" /></StackPanel>
                 <Grid ColumnDefinitions="100,*"><TextBlock Text="10s avg" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Hashrate10S}" Foreground="#1e293b" FontWeight="SemiBold" FontSize="16" /></Grid>
                 <Grid ColumnDefinitions="100,*"><TextBlock Text="60s avg" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Hashrate60S}" Foreground="#1e293b" /></Grid>
                 <Grid ColumnDefinitions="100,*"><TextBlock Text="15m avg" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Hashrate15M}" Foreground="#1e293b" /></Grid>
@@ -238,7 +238,7 @@
             <!-- Shares -->
             <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1">
               <StackPanel Spacing="5">
-                <TextBlock Text="Shares" FontSize="14" FontWeight="SemiBold" Foreground="#2563eb" />
+                <StackPanel Orientation="Horizontal" Spacing="6"><PathIcon Data="{StaticResource IconMining}" Width="15" Height="15" Foreground="#2563eb" /><TextBlock Text="Shares" FontSize="14" FontWeight="SemiBold" Foreground="#2563eb" /></StackPanel>
                 <Grid ColumnDefinitions="100,*"><TextBlock Text="Accepted" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Accepted}" Foreground="#16a34a" FontWeight="SemiBold" /></Grid>
                 <Grid ColumnDefinitions="100,*"><TextBlock Text="Rejected" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Rejected}" Foreground="#dc2626" FontWeight="SemiBold" /></Grid>
               </StackPanel>
@@ -247,7 +247,7 @@
             <!-- Uptime / Status -->
             <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1">
               <StackPanel Spacing="5">
-                <TextBlock Text="Status" FontSize="14" FontWeight="SemiBold" Foreground="#d97706" />
+                <StackPanel Orientation="Horizontal" Spacing="6"><PathIcon Data="{StaticResource IconNode}" Width="15" Height="15" Foreground="#d97706" /><TextBlock Text="Status" FontSize="14" FontWeight="SemiBold" Foreground="#d97706" /></StackPanel>
                 <Grid ColumnDefinitions="100,*"><TextBlock Text="Bridge" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding BridgeUptime}" Foreground="#1e293b" /></Grid>
                 <Grid ColumnDefinitions="100,*"><TextBlock Text="Miner" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding MinerUptime}" Foreground="#1e293b" /></Grid>
                 <Grid ColumnDefinitions="100,*"><TextBlock Text="Pool Latency" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding PoolLatency}" Foreground="#1e293b" /></Grid>

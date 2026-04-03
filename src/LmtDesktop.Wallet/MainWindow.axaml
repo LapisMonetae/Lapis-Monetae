@@ -174,16 +174,16 @@
         <!-- Actions -->
         <TabItem Header="  Actions  "><ScrollViewer Padding="16"><StackPanel Spacing="16">
           <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="8">
-            <TextBlock Text="Wallet" FontSize="14" FontWeight="SemiBold" Foreground="#2563eb" />
+            <StackPanel Orientation="Horizontal" Spacing="6"><PathIcon Data="{StaticResource IconWallet}" Width="15" Height="15" Foreground="#2563eb" /><TextBlock Text="Wallet" FontSize="14" FontWeight="SemiBold" Foreground="#2563eb" /></StackPanel>
             <WrapPanel>
-              <Button Content="Open" Command="{Binding OpenWalletCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
+              <Button Command="{Binding OpenWalletCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
               <Button Content="Create" Command="{Binding LaunchInteractiveCommand}" CommandParameter="wallet create" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
               <Button Content="Import" Command="{Binding LaunchInteractiveCommand}" CommandParameter="wallet import" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
               <Button Content="Lock" Command="{Binding LockWalletCommand}" Margin="3" CornerRadius="8" Padding="14,7" />
             </WrapPanel>
           </StackPanel></Border>
           <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="8">
-            <TextBlock Text="Accounts" FontSize="14" FontWeight="SemiBold" Foreground="#0891b2" />
+            <StackPanel Orientation="Horizontal" Spacing="6"><PathIcon Data="{StaticResource IconAddress}" Width="15" Height="15" Foreground="#0891b2" /><TextBlock Text="Accounts" FontSize="14" FontWeight="SemiBold" Foreground="#0891b2" /></StackPanel>
             <WrapPanel>
               <Button Content="Balances" Command="{Binding RefreshBalancesCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
               <Button Content="Address" Command="{Binding GetAddressCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
@@ -191,7 +191,7 @@
             </WrapPanel>
           </StackPanel></Border>
           <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="8">
-            <TextBlock Text="Transactions" FontSize="14" FontWeight="SemiBold" Foreground="#d97706" />
+            <StackPanel Orientation="Horizontal" Spacing="6"><PathIcon Data="{StaticResource IconSend}" Width="15" Height="15" Foreground="#d97706" /><TextBlock Text="Transactions" FontSize="14" FontWeight="SemiBold" Foreground="#d97706" /></StackPanel>
             <WrapPanel>
               <Button Content="Send" Command="{Binding OpenSendDialogCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" Background="#d97706" Foreground="White" CornerRadius="8" Padding="14,7" FontWeight="SemiBold" />
               <Button Content="Transfer" Command="{Binding OpenTransferDialogCommand}" IsEnabled="{Binding IsNotBusy}" Margin="3" CornerRadius="8" Padding="14,7" />
@@ -234,18 +234,18 @@
         <!-- Node -->
         <TabItem Header="  Node  "><ScrollViewer Padding="16"><StackPanel Spacing="12">
           <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="5">
-            <TextBlock Text="Connection" FontSize="14" FontWeight="SemiBold" Foreground="#2563eb" />
+            <StackPanel Orientation="Horizontal" Spacing="6"><PathIcon Data="{StaticResource IconNode}" Width="15" Height="15" Foreground="#2563eb" /><TextBlock Text="Connection" FontSize="14" FontWeight="SemiBold" Foreground="#2563eb" /></StackPanel>
             <Grid ColumnDefinitions="110,*"><TextBlock Text="Status" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding NodeStatusText}" Foreground="#1e293b" FontWeight="SemiBold" /></Grid>
             <Grid ColumnDefinitions="110,*"><TextBlock Text="Latency" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Latency}" Foreground="#1e293b" /></Grid>
           </StackPanel></Border>
           <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="5">
-            <TextBlock Text="DAG" FontSize="14" FontWeight="SemiBold" Foreground="#0891b2" />
+            <StackPanel Orientation="Horizontal" Spacing="6"><PathIcon Data="{StaticResource IconChart}" Width="15" Height="15" Foreground="#0891b2" /><TextBlock Text="DAG" FontSize="14" FontWeight="SemiBold" Foreground="#0891b2" /></StackPanel>
             <Grid ColumnDefinitions="110,*"><TextBlock Text="DAA Score" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding DaaScore}" Foreground="#1e293b" /></Grid>
             <Grid ColumnDefinitions="110,*"><TextBlock Text="Tip Hash" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding TipHash}" Foreground="#1e293b" /></Grid>
             <Grid ColumnDefinitions="110,*"><TextBlock Text="Difficulty" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Difficulty}" Foreground="#1e293b" /></Grid>
           </StackPanel></Border>
           <Border Classes="card" Background="White" CornerRadius="10" Padding="16" BorderBrush="#e2e8f0" BorderThickness="1"><StackPanel Spacing="5">
-            <TextBlock Text="Network" FontSize="14" FontWeight="SemiBold" Foreground="#d97706" />
+            <StackPanel Orientation="Horizontal" Spacing="6"><PathIcon Data="{StaticResource IconNode}" Width="15" Height="15" Foreground="#d97706" /><TextBlock Text="Network" FontSize="14" FontWeight="SemiBold" Foreground="#d97706" /></StackPanel>
             <Grid ColumnDefinitions="110,*"><TextBlock Text="Peers" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding Peers}" Foreground="#1e293b" /></Grid>
             <Grid ColumnDefinitions="110,*"><TextBlock Text="Network" Foreground="#64748b" /><TextBlock Grid.Column="1" Text="{Binding NetworkName}" Foreground="#1e293b" /></Grid>
           </StackPanel></Border>

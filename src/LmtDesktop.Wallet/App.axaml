@@ -12,6 +12,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://LmtDesktop.Wallet/Themes/SharedColors.axaml" />
+                <ResourceInclude Source="avares://LmtDesktop.Wallet/Themes/Icons.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
