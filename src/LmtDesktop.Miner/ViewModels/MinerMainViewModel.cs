@@ -264,6 +264,7 @@ public partial class MinerMainViewModel : ViewModelBase
             var connectTask = client.ConnectAsync(uri.Host, uri.Port);
             if (await Task.WhenAny(connectTask, Task.Delay(5000)) == connectTask)
             {
+                await connectTask;
                 ShowToast($"RPC reachable at {uri.Host}:{uri.Port}", ToastKind.Ok);
                 ConsoleLog("system", $"RPC OK: {uri.Host}:{uri.Port}");
             }
@@ -290,6 +291,7 @@ public partial class MinerMainViewModel : ViewModelBase
             var connectTask = client.ConnectAsync(host, port);
             if (await Task.WhenAny(connectTask, Task.Delay(5000)) == connectTask)
             {
+                await connectTask;
                 ShowToast($"Stratum reachable at {host}:{port}", ToastKind.Ok);
                 ConsoleLog("system", $"Stratum OK: {host}:{port}");
             }

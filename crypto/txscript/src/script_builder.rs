@@ -579,10 +579,11 @@ mod tests {
 
         // Ensure adding data that would exceed the maximum size of the script
         // does not add the data.
+        // BIP-62: [0x00] now encodes as OpData1 + 0x00 (2 bytes), not Op0 (1 byte)
         let result = builder.add_data([0u8].as_slice()).map(|_| ());
         assert_eq!(
             result,
-            Err(ScriptBuilderError::DataRejected(1)),
+            Err(ScriptBuilderError::DataRejected(2)),
             "adding data that would exceed the maximum size of the script must fail"
         );
         assert_eq!(builder.script(), &original_result, "unexpected modified script");
