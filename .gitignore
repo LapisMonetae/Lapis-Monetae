@@ -13,6 +13,7 @@ Cargo.lock
 *.swp
 *.swo
 *~
+*.code-workspace
 
 # OS generated files
 .DS_Store
@@ -36,16 +37,8 @@ pids
 .ci/failed-run.log
 .ci/failed-run-summary.md
 
-# Coverage directory used by tools like istanbul
-coverage/
-
-# nyc test coverage
-.nyc_output
-
 # Dependency directories
 node_modules/
-
-# Optional npm cache directory
 .npm
 
 # Optional REPL history
@@ -60,10 +53,6 @@ node_modules/
 # dotenv environment variables file
 .env
 
-# Rust specific
-**/*.rs.bk
-*.pdb
-
 # WASM build artifacts
 pkg/
 dist/
@@ -74,6 +63,7 @@ docs/_build/
 # Test artifacts
 test-results/
 coverage/
+.nyc_output
 
 # Temporary files
 *.tmp
@@ -84,45 +74,14 @@ agent-rules.local.md
 README-LOCAL-PRUEBAS.md
 REFACTOR-TRACKING.local.md
 
-# Python cache artifacts
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+# Compiled binaries (local distribution)
+binarios/
 
-# Wallet GUI generated config/state
-wallet-gui/.wallet_gui_config.json
-**/.wallet_gui_config.json
-
-# .NET build artifacts
-bin/
-obj/
-.vs/
-*.user
-*.suo
-*.DotSettings.user
-**/publish/
-
-# Local mining build artifacts/deps (do not commit generated binaries)
+# Local mining build artifacts/deps
 tools/xmrig-lmt/bridge/target/
 tools/xmrig-lmt/xmrig-fork/build/
 tools/xmrig-lmt/deps/
 tools/xmrig-lmt/xmrig-fork/bin/WinRing0/WinRing0x64.sys
 
-# PyInstaller / packaged GUI artifacts
-wallet-gui/build/
-wallet-gui/dist/
-wallet-gui/*.spec
-tools/xmrig-lmt/gui/build/
-tools/xmrig-lmt/gui/dist/
-tools/xmrig-lmt/gui/*.spec
-
 # Landing page
 landing/
-bin/
-obj/
-.vs/
-*.user
