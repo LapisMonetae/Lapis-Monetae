@@ -85,3 +85,8 @@ tools/xmrig-lmt/xmrig-fork/bin/WinRing0/WinRing0x64.sys
 
 # Landing page
 landing/
+
+# Local assets
+assets/
+
+binarios/

@@ -1,0 +1,24 @@
+[package]
+name = "lmt-wallet-gui"
+version = "1.0.1"
+edition = "2021"
+description = "Lapis Monetae Wallet GUI (egui)"
+
+[[bin]]
+name = "lmt-wallet-gui"
+path = "src/main.rs"
+
+[dependencies]
+eframe = { version = "0.31", default-features = false, features = ["default_fonts", "glow", "persistence"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+regex = "1.10"
+dirs = "5.0"
+rand = "0.8"
+chrono = "0.4"
+rfd = "0.15"
+open = "5"
+image = { version = "0.25", default-features = false, features = ["png"] }
+
+[target.'cfg(target_os = "windows")'.build-dependencies]
+winres = "0.1"

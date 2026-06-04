@@ -3,6 +3,8 @@ resolver = "2"
 members = [
     "daemon",
     "cli",
+    "lmt-wallet-gui",
+    "lmt-miner-gui",
     "core",
     "wallet/macros",
     "wallet/core",
