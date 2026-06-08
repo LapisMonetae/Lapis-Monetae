@@ -16,11 +16,7 @@ fn load_icon() -> Option<egui::IconData> {
     let png_data = include_bytes!("../assets/lmt_icon_64.png");
     let image = image::load_from_memory(png_data).ok()?.into_rgba8();
     let (width, height) = image.dimensions();
-    Some(egui::IconData {
-        rgba: image.into_raw(),
-        width,
-        height,
-    })
+    Some(egui::IconData { rgba: image.into_raw(), width, height })
 }
 
 fn main() -> eframe::Result<()> {
@@ -33,13 +29,6 @@ fn main() -> eframe::Result<()> {
         viewport = viewport.with_icon(std::sync::Arc::new(icon));
     }
 
-    let options = eframe::NativeOptions {
-        viewport,
-        ..Default::default()
-    };
-    eframe::run_native(
-        "Lapis Monetae Wallet",
-        options,
-        Box::new(|cc| Ok(Box::new(WalletApp::new(cc)))),
-    )
+    let options = eframe::NativeOptions { viewport, ..Default::default() };
+    eframe::run_native("Lapis Monetae Wallet", options, Box::new(|cc| Ok(Box::new(WalletApp::new(cc)))))
 }

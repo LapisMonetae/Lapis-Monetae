@@ -88,17 +88,17 @@ impl AppConfig {
 
 fn which_cli() -> Option<PathBuf> {
     let cmd = if cfg!(windows) { "where" } else { "which" };
-    std::process::Command::new(cmd)
-        .arg("lmt-cli")
-        .output()
-        .ok()
-        .and_then(|o| {
-            if o.status.success() {
-                let s = String::from_utf8_lossy(&o.stdout).trim().to_string();
-                let p = PathBuf::from(s.lines().next()?);
-                if p.exists() { Some(p) } else { None }
+    std::process::Command::new(cmd).arg("lmt-cli").output().ok().and_then(|o| {
+        if o.status.success() {
+            let s = String::from_utf8_lossy(&o.stdout).trim().to_string();
+            let p = PathBuf::from(s.lines().next()?);
+            if p.exists() {
+                Some(p)
             } else {
                 None
             }
-        })
+        } else {
+            None
+        }
+    })
 }

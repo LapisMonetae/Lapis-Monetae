@@ -33,7 +33,7 @@ fuzz_target!(|data: &[u8]| {
 fn num_to_le(n: &BigInt) -> [u8; muhash::SERIALIZED_MUHASH_SIZE] {
     let mut res = [0u8; muhash::SERIALIZED_MUHASH_SIZE];
     for (i, word) in n.iter_u64_digits().enumerate() {
-        let part = &mut res[i*size_of::<u64>()..(i+1)*size_of::<u64>()];
+        let part = &mut res[i * size_of::<u64>()..(i + 1) * size_of::<u64>()];
         part.copy_from_slice(&word.to_le_bytes());
     }
     res

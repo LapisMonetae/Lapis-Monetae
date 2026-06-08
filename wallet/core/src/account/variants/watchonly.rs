@@ -265,7 +265,6 @@ impl Account for WatchOnly {
     fn as_derivation_capable(self: Arc<Self>) -> Result<Arc<dyn DerivationCapableAccount>> {
         Ok(self.clone())
     }
-
 }
 
 impl DerivationCapableAccount for WatchOnly {

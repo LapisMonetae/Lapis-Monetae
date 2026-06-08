@@ -1,4 +1,3 @@
-
 #[derive(Debug, Error)]
 enum Error {
     #[error("WebSocket error: {0}")]
@@ -8,4 +7,3 @@ enum Error {
     #[error("I/O error: {0}")]
     IoError(#[from] std::io::Error),
 }
-

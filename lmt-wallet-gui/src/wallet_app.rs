@@ -158,11 +158,7 @@ impl WalletApp {
     }
 
     fn push_toast(&mut self, msg: &str, kind: ToastKind) {
-        self.toasts.push(ToastMsg {
-            message: msg.to_string(),
-            kind,
-            created: Instant::now(),
-        });
+        self.toasts.push(ToastMsg { message: msg.to_string(), kind, created: Instant::now() });
     }
 
     fn log(&mut self, msg: &str) {
@@ -481,10 +477,7 @@ impl WalletApp {
                 ui.horizontal(|ui| {
                     ui.text_edit_singleline(&mut self.setup_cli_path);
                     if btn_secondary(ui, "Browse...").clicked() {
-                        if let Some(path) = rfd::FileDialog::new()
-                            .set_title("Select lmt-cli binary")
-                            .pick_file()
-                        {
+                        if let Some(path) = rfd::FileDialog::new().set_title("Select lmt-cli binary").pick_file() {
                             self.setup_cli_path = path.to_string_lossy().to_string();
                         }
                     }
@@ -493,13 +486,11 @@ impl WalletApp {
 
                 ui.label(label_text("Network:"));
                 ui.add_space(4.0);
-                egui::ComboBox::from_id_salt("network_select")
-                    .selected_text(&self.setup_network)
-                    .show_ui(ui, |ui| {
-                        ui.selectable_value(&mut self.setup_network, "mainnet".into(), "mainnet");
-                        ui.selectable_value(&mut self.setup_network, "testnet-10".into(), "testnet-10");
-                        ui.selectable_value(&mut self.setup_network, "testnet-11".into(), "testnet-11");
-                    });
+                egui::ComboBox::from_id_salt("network_select").selected_text(&self.setup_network).show_ui(ui, |ui| {
+                    ui.selectable_value(&mut self.setup_network, "mainnet".into(), "mainnet");
+                    ui.selectable_value(&mut self.setup_network, "testnet-10".into(), "testnet-10");
+                    ui.selectable_value(&mut self.setup_network, "testnet-11".into(), "testnet-11");
+                });
 
                 if !self.setup_error.is_empty() {
                     ui.add_space(8.0);
@@ -512,19 +503,14 @@ impl WalletApp {
                         if self.setup_cli_path.is_empty() {
                             self.setup_error = "Please specify the lmt-cli path".into();
                         } else if !verify_cli(&self.setup_cli_path) {
-                            self.setup_error =
-                                "Invalid lmt-cli binary (could not run --version)".into();
+                            self.setup_error = "Invalid lmt-cli binary (could not run --version)".into();
                         } else {
                             self.config.cli_path = self.setup_cli_path.clone();
                             self.config.network = self.setup_network.clone();
                             self.config.save();
                             self.setup_error.clear();
 
-                            let _ = run_cli(
-                                &self.config.cli_path,
-                                &["network", &self.config.network],
-                                5,
-                            );
+                            let _ = run_cli(&self.config.cli_path, &["network", &self.config.network], 5);
                             self.screen = Screen::Wizard;
                             self.wizard.step = WizardStep::Welcome;
                         }
@@ -553,9 +539,7 @@ impl WalletApp {
                     self.log("Enter password to import wallet");
                 }
                 WizardAction::BackupVerified => {
-                    self.config
-                        .seed_backups_confirmed
-                        .push(self.wizard.wallet_name.clone());
+                    self.config.seed_backups_confirmed.push(self.wizard.wallet_name.clone());
                     self.config.save();
                 }
                 WizardAction::Finish => {
@@ -579,10 +563,7 @@ impl WalletApp {
         // ── Top header ───────────────────────────────────────────────
         egui::TopBottomPanel::top("top_bar")
             .frame(
-                egui::Frame::new()
-                    .fill(BG_WHITE)
-                    .inner_margin(egui::Margin::symmetric(16, 10))
-                    .stroke(egui::Stroke::new(1.0, BORDER)),
+                egui::Frame::new().fill(BG_WHITE).inner_margin(egui::Margin::symmetric(16, 10)).stroke(egui::Stroke::new(1.0, BORDER)),
             )
             .show(ctx, |ui| {
                 ui.horizontal(|ui| {
@@ -632,20 +613,14 @@ impl WalletApp {
             });
 
         // ── Gradient bar ─────────────────────────────────────────────
-        egui::TopBottomPanel::top("gradient")
-            .frame(egui::Frame::NONE)
-            .exact_height(3.0)
-            .show(ctx, |ui| {
-                gradient_bar(ui);
-            });
+        egui::TopBottomPanel::top("gradient").frame(egui::Frame::NONE).exact_height(3.0).show(ctx, |ui| {
+            gradient_bar(ui);
+        });
 
         // ── Tab bar ──────────────────────────────────────────────────
         egui::TopBottomPanel::top("tab_bar")
             .frame(
-                egui::Frame::new()
-                    .fill(BG_WHITE)
-                    .inner_margin(egui::Margin::symmetric(8, 0))
-                    .stroke(egui::Stroke::new(1.0, BORDER)),
+                egui::Frame::new().fill(BG_WHITE).inner_margin(egui::Margin::symmetric(8, 0)).stroke(egui::Stroke::new(1.0, BORDER)),
             )
             .show(ctx, |ui| {
                 ui.horizontal(|ui| {
@@ -665,10 +640,7 @@ impl WalletApp {
                         let resp = ui
                             .horizontal(|ui| {
                                 icon(ui, ico, 16.0, color);
-                                let text = egui::RichText::new(name)
-                                    .font(egui::FontId::proportional(13.0))
-                                    .color(color)
-                                    .strong();
+                                let text = egui::RichText::new(name).font(egui::FontId::proportional(13.0)).color(color).strong();
                                 ui.selectable_label(selected, text)
                             })
                             .inner;
@@ -704,11 +676,7 @@ impl WalletApp {
             // Busy overlay
             if self.busy {
                 let rect = ui.max_rect();
-                ui.painter().rect_filled(
-                    rect,
-                    egui::CornerRadius::ZERO,
-                    egui::Color32::from_black_alpha(150),
-                );
+                ui.painter().rect_filled(rect, egui::CornerRadius::ZERO, egui::Color32::from_black_alpha(150));
                 ui.painter().text(
                     rect.center(),
                     egui::Align2::CENTER_CENTER,
@@ -759,21 +727,15 @@ impl WalletApp {
         let (net_status, net_col) = if self.node_latency_ms.is_some() { ("Online", GREEN) } else { ("Offline", RED) };
 
         ui.columns(3, |cols| {
-            cols[0].allocate_ui_with_layout(
-                egui::Vec2::new(box_w, box_h),
-                egui::Layout::top_down(egui::Align::Min),
-                |ui| { stat_box(ui, "Balance", &bal_display, Icon::Wallet, GREEN); },
-            );
-            cols[1].allocate_ui_with_layout(
-                egui::Vec2::new(box_w, box_h),
-                egui::Layout::top_down(egui::Align::Min),
-                |ui| { stat_box(ui, "Address", &addr_short, Icon::Copy, BLUE); },
-            );
-            cols[2].allocate_ui_with_layout(
-                egui::Vec2::new(box_w, box_h),
-                egui::Layout::top_down(egui::Align::Min),
-                |ui| { stat_box(ui, "Network", net_status, Icon::Globe, net_col); },
-            );
+            cols[0].allocate_ui_with_layout(egui::Vec2::new(box_w, box_h), egui::Layout::top_down(egui::Align::Min), |ui| {
+                stat_box(ui, "Balance", &bal_display, Icon::Wallet, GREEN);
+            });
+            cols[1].allocate_ui_with_layout(egui::Vec2::new(box_w, box_h), egui::Layout::top_down(egui::Align::Min), |ui| {
+                stat_box(ui, "Address", &addr_short, Icon::Copy, BLUE);
+            });
+            cols[2].allocate_ui_with_layout(egui::Vec2::new(box_w, box_h), egui::Layout::top_down(egui::Align::Min), |ui| {
+                stat_box(ui, "Network", net_status, Icon::Globe, net_col);
+            });
         });
         ui.add_space(14.0);
 
@@ -819,10 +781,7 @@ impl WalletApp {
                         }
                         if btn_small(ui, "New Address", GREEN).clicked() {
                             if self.require_wallet_open() {
-                                self.run_cli_async(
-                                    "new_address",
-                                    vec!["address".into(), "new".into()],
-                                );
+                                self.run_cli_async("new_address", vec!["address".into(), "new".into()]);
                             }
                         }
                     });
@@ -916,11 +875,7 @@ impl WalletApp {
                 ui.add_space(4.0);
                 ui.horizontal_wrapped(|ui| {
                     for c in &self.contacts.contacts {
-                        let short = if c.address.len() > 16 {
-                            &c.address[..16]
-                        } else {
-                            &c.address
-                        };
+                        let short = if c.address.len() > 16 { &c.address[..16] } else { &c.address };
                         if btn_small(ui, &format!("{} ({}...)", c.name, short), TEAL).clicked() {
                             self.send_address = c.address.clone();
                         }
@@ -952,20 +907,10 @@ impl WalletApp {
             self.send_error = e;
         } else {
             self.send_error.clear();
-            let fee = if self.send_fee.is_empty() {
-                "0".to_string()
-            } else {
-                self.send_fee.clone()
-            };
-            self.password_prompt = Some(format!(
-                "send:{}:{}:{}",
-                self.send_address, self.send_amount, fee
-            ));
+            let fee = if self.send_fee.is_empty() { "0".to_string() } else { self.send_fee.clone() };
+            self.password_prompt = Some(format!("send:{}:{}:{}", self.send_address, self.send_amount, fee));
             self.password_input.clear();
-            self.log(&format!(
-                "Send {} LMT to {} - enter password",
-                self.send_amount, self.send_address
-            ));
+            self.log(&format!("Send {} LMT to {} - enter password", self.send_amount, self.send_address));
         }
     }
 
@@ -983,10 +928,7 @@ impl WalletApp {
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     if btn_small(ui, "Refresh", BLUE).clicked() {
                         if self.is_wallet_open() {
-                            self.run_cli_async(
-                                "history",
-                                vec!["history".into(), "list".into(), "30".into()],
-                            );
+                            self.run_cli_async("history", vec!["history".into(), "list".into(), "30".into()]);
                         }
                     }
                 });
@@ -997,55 +939,33 @@ impl WalletApp {
                 ui.label(body_text("No transactions found"));
             } else {
                 egui::ScrollArea::vertical().show(ui, |ui| {
-                    egui::Grid::new("tx_grid")
-                        .num_columns(4)
-                        .spacing([15.0, 6.0])
-                        .striped(true)
-                        .show(ui, |ui| {
-                            ui.label(label_text("TxID"));
-                            ui.label(label_text("Direction"));
-                            ui.label(label_text("Amount"));
-                            ui.label(label_text("Status"));
+                    egui::Grid::new("tx_grid").num_columns(4).spacing([15.0, 6.0]).striped(true).show(ui, |ui| {
+                        ui.label(label_text("TxID"));
+                        ui.label(label_text("Direction"));
+                        ui.label(label_text("Amount"));
+                        ui.label(label_text("Status"));
+                        ui.end_row();
+
+                        for tx in &self.transactions {
+                            let short_id = if tx.tx_id.len() > 12 {
+                                format!("{}...{}", &tx.tx_id[..6], &tx.tx_id[tx.tx_id.len() - 6..])
+                            } else {
+                                tx.tx_id.clone()
+                            };
+                            ui.label(mono(&short_id));
+
+                            let (dir_text, dir_color) = match tx.direction {
+                                TxDirection::Incoming => ("IN", GREEN),
+                                TxDirection::Outgoing => ("OUT", ORANGE),
+                            };
+                            pill(ui, dir_text, dir_color.linear_multiply(0.15), dir_color);
+                            ui.label(mono(&tx.amount));
+
+                            let status_color = if tx.status == "confirmed" { GREEN } else { AMBER };
+                            pill(ui, &tx.status, status_color.linear_multiply(0.15), status_color);
                             ui.end_row();
-
-                            for tx in &self.transactions {
-                                let short_id = if tx.tx_id.len() > 12 {
-                                    format!(
-                                        "{}...{}",
-                                        &tx.tx_id[..6],
-                                        &tx.tx_id[tx.tx_id.len() - 6..]
-                                    )
-                                } else {
-                                    tx.tx_id.clone()
-                                };
-                                ui.label(mono(&short_id));
-
-                                let (dir_text, dir_color) = match tx.direction {
-                                    TxDirection::Incoming => ("IN", GREEN),
-                                    TxDirection::Outgoing => ("OUT", ORANGE),
-                                };
-                                pill(
-                                    ui,
-                                    dir_text,
-                                    dir_color.linear_multiply(0.15),
-                                    dir_color,
-                                );
-                                ui.label(mono(&tx.amount));
-
-                                let status_color = if tx.status == "confirmed" {
-                                    GREEN
-                                } else {
-                                    AMBER
-                                };
-                                pill(
-                                    ui,
-                                    &tx.status,
-                                    status_color.linear_multiply(0.15),
-                                    status_color,
-                                );
-                                ui.end_row();
-                            }
-                        });
+                        }
+                    });
                 });
             }
         });
@@ -1062,58 +982,51 @@ impl WalletApp {
 
             let connected = self.node_latency_ms.is_some();
 
-            egui::Grid::new("node_grid")
-                .num_columns(2)
-                .spacing([20.0, 10.0])
-                .show(ui, |ui| {
-                    ui.label(label_text("Status:"));
-                    if connected {
-                        pill(ui, "Connected", GREEN_BG, GREEN);
-                    } else {
-                        pill(ui, "Disconnected", RED_BG, RED);
-                    }
+            egui::Grid::new("node_grid").num_columns(2).spacing([20.0, 10.0]).show(ui, |ui| {
+                ui.label(label_text("Status:"));
+                if connected {
+                    pill(ui, "Connected", GREEN_BG, GREEN);
+                } else {
+                    pill(ui, "Disconnected", RED_BG, RED);
+                }
+                ui.end_row();
+
+                ui.label(label_text("Network:"));
+                ui.label(mono(if self.node_info.network.is_empty() { &self.config.network } else { &self.node_info.network }));
+                ui.end_row();
+
+                ui.label(label_text("DAA Score:"));
+                ui.label(mono(&self.node_info.daa_score.to_string()));
+                ui.end_row();
+
+                ui.label(label_text("Difficulty:"));
+                ui.label(mono(&format!("{:.2}", self.node_info.difficulty)));
+                ui.end_row();
+
+                if !self.node_info.tip_hash.is_empty() {
+                    ui.label(label_text("Tip Hash:"));
+                    ui.label(mono(&self.node_info.tip_hash));
                     ui.end_row();
+                }
 
-                    ui.label(label_text("Network:"));
-                    ui.label(mono(if self.node_info.network.is_empty() {
-                        &self.config.network
-                    } else {
-                        &self.node_info.network
-                    }));
+                ui.label(label_text("Header Count:"));
+                ui.label(mono(&self.node_info.header_count.to_string()));
+                ui.end_row();
+
+                ui.label(label_text("Block Count:"));
+                ui.label(mono(&self.node_info.block_count.to_string()));
+                ui.end_row();
+
+                ui.label(label_text("Peers:"));
+                ui.label(mono(&self.peer_info.count.to_string()));
+                ui.end_row();
+
+                if let Some(ms) = self.node_latency_ms {
+                    ui.label(label_text("Latency:"));
+                    ui.label(mono(&format!("{ms} ms")));
                     ui.end_row();
-
-                    ui.label(label_text("DAA Score:"));
-                    ui.label(mono(&self.node_info.daa_score.to_string()));
-                    ui.end_row();
-
-                    ui.label(label_text("Difficulty:"));
-                    ui.label(mono(&format!("{:.2}", self.node_info.difficulty)));
-                    ui.end_row();
-
-                    if !self.node_info.tip_hash.is_empty() {
-                        ui.label(label_text("Tip Hash:"));
-                        ui.label(mono(&self.node_info.tip_hash));
-                        ui.end_row();
-                    }
-
-                    ui.label(label_text("Header Count:"));
-                    ui.label(mono(&self.node_info.header_count.to_string()));
-                    ui.end_row();
-
-                    ui.label(label_text("Block Count:"));
-                    ui.label(mono(&self.node_info.block_count.to_string()));
-                    ui.end_row();
-
-                    ui.label(label_text("Peers:"));
-                    ui.label(mono(&self.peer_info.count.to_string()));
-                    ui.end_row();
-
-                    if let Some(ms) = self.node_latency_ms {
-                        ui.label(label_text("Latency:"));
-                        ui.label(mono(&format!("{ms} ms")));
-                        ui.end_row();
-                    }
-                });
+                }
+            });
         });
     }
 
@@ -1141,7 +1054,8 @@ impl WalletApp {
             ui.text_edit_singleline(&mut self.contacts.search);
             ui.add_space(10.0);
 
-            let filtered: Vec<(usize, crate::config::Contact)> = self.contacts.filtered().into_iter().map(|(i, c)| (i, c.clone())).collect();
+            let filtered: Vec<(usize, crate::config::Contact)> =
+                self.contacts.filtered().into_iter().map(|(i, c)| (i, c.clone())).collect();
             if filtered.is_empty() {
                 ui.label(body_text("No contacts"));
             } else {
@@ -1157,30 +1071,23 @@ impl WalletApp {
                             .show(ui, |ui| {
                                 ui.horizontal(|ui| {
                                     ui.vertical(|ui| {
-                                        ui.label(
-                                            egui::RichText::new(&contact.name)
-                                                .color(TEXT_PRIMARY)
-                                                .strong(),
-                                        );
+                                        ui.label(egui::RichText::new(&contact.name).color(TEXT_PRIMARY).strong());
                                         ui.label(mono(&contact.address));
                                         if !contact.note.is_empty() {
                                             ui.label(label_text(&contact.note));
                                         }
                                     });
-                                    ui.with_layout(
-                                        egui::Layout::right_to_left(egui::Align::Center),
-                                        |ui| {
-                                            if btn_small(ui, "Delete", RED).clicked() {
-                                                to_remove = Some(*idx);
-                                            }
-                                            if btn_small(ui, "Edit", BLUE).clicked() {
-                                                to_edit = Some(*idx);
-                                            }
-                                            if btn_small(ui, "Copy", TEAL).clicked() {
-                                                copied_addr = Some(contact.address.clone());
-                                            }
-                                        },
-                                    );
+                                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                                        if btn_small(ui, "Delete", RED).clicked() {
+                                            to_remove = Some(*idx);
+                                        }
+                                        if btn_small(ui, "Edit", BLUE).clicked() {
+                                            to_edit = Some(*idx);
+                                        }
+                                        if btn_small(ui, "Copy", TEAL).clicked() {
+                                            copied_addr = Some(contact.address.clone());
+                                        }
+                                    });
                                 });
                             });
                         ui.add_space(4.0);
@@ -1226,37 +1133,20 @@ impl WalletApp {
             ui.label(label_text("Network:"));
             ui.add_space(2.0);
             let prev_network = self.config.network.clone();
-            egui::ComboBox::from_id_salt("config_network")
-                .selected_text(&self.config.network)
-                .show_ui(ui, |ui| {
-                    ui.selectable_value(&mut self.config.network, "mainnet".into(), "mainnet");
-                    ui.selectable_value(
-                        &mut self.config.network,
-                        "testnet-10".into(),
-                        "testnet-10",
-                    );
-                    ui.selectable_value(
-                        &mut self.config.network,
-                        "testnet-11".into(),
-                        "testnet-11",
-                    );
-                });
+            egui::ComboBox::from_id_salt("config_network").selected_text(&self.config.network).show_ui(ui, |ui| {
+                ui.selectable_value(&mut self.config.network, "mainnet".into(), "mainnet");
+                ui.selectable_value(&mut self.config.network, "testnet-10".into(), "testnet-10");
+                ui.selectable_value(&mut self.config.network, "testnet-11".into(), "testnet-11");
+            });
             if self.config.network != prev_network {
-                let _ = run_cli(
-                    &self.config.cli_path,
-                    &["network", &self.config.network],
-                    5,
-                );
+                let _ = run_cli(&self.config.cli_path, &["network", &self.config.network], 5);
                 self.log(&format!("Switched network to {}", self.config.network));
             }
             ui.add_space(10.0);
 
             ui.label(label_text("Session Timeout (minutes, 0 = disabled):"));
             ui.add_space(2.0);
-            ui.add(egui::Slider::new(
-                &mut self.config.session_timeout_min,
-                0..=60,
-            ));
+            ui.add(egui::Slider::new(&mut self.config.session_timeout_min, 0..=60));
 
             divider(ui);
 
@@ -1279,12 +1169,7 @@ impl WalletApp {
                 ui.add_space(4.0);
                 ui.label(heading("Console"));
                 ui.add_space(8.0);
-                pill(
-                    ui,
-                    &format!("{} lines", self.console_lines.len()),
-                    BLUE_BG,
-                    BLUE,
-                );
+                pill(ui, &format!("{} lines", self.console_lines.len()), BLUE_BG, BLUE);
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     if btn_small(ui, "Clear", RED).clicked() {
                         self.console_lines.clear();
@@ -1293,20 +1178,16 @@ impl WalletApp {
             });
             divider(ui);
 
-            egui::Frame::new()
-                .fill(TERMINAL_BG)
-                .corner_radius(egui::CornerRadius::same(6))
-                .inner_margin(egui::Margin::same(10))
-                .show(ui, |ui| {
-                    egui::ScrollArea::vertical()
-                        .stick_to_bottom(true)
-                        .max_height(ui.available_height() - 8.0)
-                        .show(ui, |ui| {
-                            for line in &self.console_lines {
-                                ui.label(mono_term(line));
-                            }
-                        });
-                });
+            egui::Frame::new().fill(TERMINAL_BG).corner_radius(egui::CornerRadius::same(6)).inner_margin(egui::Margin::same(10)).show(
+                ui,
+                |ui| {
+                    egui::ScrollArea::vertical().stick_to_bottom(true).max_height(ui.available_height() - 8.0).show(ui, |ui| {
+                        for line in &self.console_lines {
+                            ui.label(mono_term(line));
+                        }
+                    });
+                },
+            );
         });
     }
 
@@ -1315,38 +1196,34 @@ impl WalletApp {
     // ═════════════════════════════════════════════════════════════════
     fn show_send_dialog_window(&mut self, ctx: &egui::Context) {
         let mut open = self.show_send_dialog;
-        egui::Window::new("Send LMT")
-            .open(&mut open)
-            .resizable(false)
-            .collapsible(false)
-            .show(ctx, |ui| {
-                if !self.is_wallet_open() {
-                    alert_warning(ui, "Wallet is not open.");
-                    return;
-                }
+        egui::Window::new("Send LMT").open(&mut open).resizable(false).collapsible(false).show(ctx, |ui| {
+            if !self.is_wallet_open() {
+                alert_warning(ui, "Wallet is not open.");
+                return;
+            }
 
-                ui.label(label_text("Address:"));
-                ui.text_edit_singleline(&mut self.send_address);
+            ui.label(label_text("Address:"));
+            ui.text_edit_singleline(&mut self.send_address);
+            ui.add_space(5.0);
+            ui.label(label_text("Amount:"));
+            ui.text_edit_singleline(&mut self.send_amount);
+            ui.add_space(5.0);
+            ui.label(label_text("Fee:"));
+            ui.text_edit_singleline(&mut self.send_fee);
+
+            if !self.send_error.is_empty() {
                 ui.add_space(5.0);
-                ui.label(label_text("Amount:"));
-                ui.text_edit_singleline(&mut self.send_amount);
-                ui.add_space(5.0);
-                ui.label(label_text("Fee:"));
-                ui.text_edit_singleline(&mut self.send_fee);
+                alert_error(ui, &self.send_error);
+            }
 
-                if !self.send_error.is_empty() {
-                    ui.add_space(5.0);
-                    alert_error(ui, &self.send_error);
+            ui.add_space(10.0);
+            if btn_success(ui, "Confirm Send").clicked() {
+                self.do_send();
+                if self.send_error.is_empty() {
+                    self.show_send_dialog = false;
                 }
-
-                ui.add_space(10.0);
-                if btn_success(ui, "Confirm Send").clicked() {
-                    self.do_send();
-                    if self.send_error.is_empty() {
-                        self.show_send_dialog = false;
-                    }
-                }
-            });
+            }
+        });
         self.show_send_dialog = open;
     }
 
@@ -1355,62 +1232,48 @@ impl WalletApp {
     // ═════════════════════════════════════════════════════════════════
     fn show_transfer_dialog_window(&mut self, ctx: &egui::Context) {
         let mut open = self.show_transfer_dialog;
-        egui::Window::new("Transfer Between Accounts")
-            .open(&mut open)
-            .resizable(false)
-            .collapsible(false)
-            .show(ctx, |ui| {
-                if !self.is_wallet_open() {
-                    alert_warning(ui, "Wallet is not open.");
+        egui::Window::new("Transfer Between Accounts").open(&mut open).resizable(false).collapsible(false).show(ctx, |ui| {
+            if !self.is_wallet_open() {
+                alert_warning(ui, "Wallet is not open.");
+                return;
+            }
+
+            ui.label(label_text("Target Account:"));
+            ui.text_edit_singleline(&mut self.transfer_account);
+            ui.add_space(5.0);
+            ui.label(label_text("Amount:"));
+            ui.text_edit_singleline(&mut self.transfer_amount);
+            ui.add_space(5.0);
+            ui.label(label_text("Fee:"));
+            ui.text_edit_singleline(&mut self.transfer_fee);
+
+            if !self.transfer_error.is_empty() {
+                ui.add_space(5.0);
+                alert_error(ui, &self.transfer_error);
+            }
+
+            ui.add_space(10.0);
+            if btn_warning(ui, "Confirm Transfer").clicked() {
+                if !self.require_wallet_open() {
                     return;
                 }
-
-                ui.label(label_text("Target Account:"));
-                ui.text_edit_singleline(&mut self.transfer_account);
-                ui.add_space(5.0);
-                ui.label(label_text("Amount:"));
-                ui.text_edit_singleline(&mut self.transfer_amount);
-                ui.add_space(5.0);
-                ui.label(label_text("Fee:"));
-                ui.text_edit_singleline(&mut self.transfer_fee);
-
-                if !self.transfer_error.is_empty() {
-                    ui.add_space(5.0);
-                    alert_error(ui, &self.transfer_error);
+                if self.transfer_account.trim().is_empty() {
+                    self.transfer_error = "Target account is required".into();
+                } else if let Err(e) = validators::validate_amount(&self.transfer_amount) {
+                    self.transfer_error = e;
+                } else if let Err(e) = validators::validate_fee(&self.transfer_fee) {
+                    self.transfer_error = e;
+                } else {
+                    self.transfer_error.clear();
+                    let fee = if self.transfer_fee.is_empty() { "0".into() } else { self.transfer_fee.clone() };
+                    self.password_prompt = Some(format!("transfer:{}:{}:{}", self.transfer_account, self.transfer_amount, fee));
+                    self.password_input.clear();
+                    self.show_transfer_dialog = false;
+                    self.push_toast("Enter password to confirm transfer", ToastKind::Info);
+                    self.log(&format!("Transfer {} LMT to account {} - enter password", self.transfer_amount, self.transfer_account));
                 }
-
-                ui.add_space(10.0);
-                if btn_warning(ui, "Confirm Transfer").clicked() {
-                    if !self.require_wallet_open() {
-                        return;
-                    }
-                    if self.transfer_account.trim().is_empty() {
-                        self.transfer_error = "Target account is required".into();
-                    } else if let Err(e) = validators::validate_amount(&self.transfer_amount) {
-                        self.transfer_error = e;
-                    } else if let Err(e) = validators::validate_fee(&self.transfer_fee) {
-                        self.transfer_error = e;
-                    } else {
-                        self.transfer_error.clear();
-                        let fee = if self.transfer_fee.is_empty() {
-                            "0".into()
-                        } else {
-                            self.transfer_fee.clone()
-                        };
-                        self.password_prompt = Some(format!(
-                            "transfer:{}:{}:{}",
-                            self.transfer_account, self.transfer_amount, fee
-                        ));
-                        self.password_input.clear();
-                        self.show_transfer_dialog = false;
-                        self.push_toast("Enter password to confirm transfer", ToastKind::Info);
-                        self.log(&format!(
-                            "Transfer {} LMT to account {} - enter password",
-                            self.transfer_amount, self.transfer_account
-                        ));
-                    }
-                }
-            });
+            }
+        });
         self.show_transfer_dialog = open;
     }
 
@@ -1419,39 +1282,32 @@ impl WalletApp {
     // ═════════════════════════════════════════════════════════════════
     fn show_contact_dialog(&mut self, ctx: &egui::Context) {
         let mut open = self.contacts.show_dialog;
-        let title = if self.contacts.editing_index.is_some() {
-            "Edit Contact"
-        } else {
-            "Add Contact"
-        };
-        egui::Window::new(title)
-            .open(&mut open)
-            .resizable(false)
-            .show(ctx, |ui| {
-                ui.label(label_text("Name:"));
-                ui.text_edit_singleline(&mut self.contacts.edit_name);
-                ui.add_space(5.0);
-                ui.label(label_text("Address:"));
-                ui.text_edit_singleline(&mut self.contacts.edit_address);
-                ui.add_space(5.0);
-                ui.label(label_text("Note (optional):"));
-                ui.text_edit_singleline(&mut self.contacts.edit_note);
+        let title = if self.contacts.editing_index.is_some() { "Edit Contact" } else { "Add Contact" };
+        egui::Window::new(title).open(&mut open).resizable(false).show(ctx, |ui| {
+            ui.label(label_text("Name:"));
+            ui.text_edit_singleline(&mut self.contacts.edit_name);
+            ui.add_space(5.0);
+            ui.label(label_text("Address:"));
+            ui.text_edit_singleline(&mut self.contacts.edit_address);
+            ui.add_space(5.0);
+            ui.label(label_text("Note (optional):"));
+            ui.text_edit_singleline(&mut self.contacts.edit_note);
 
-                if !self.contacts.validation_error.is_empty() {
-                    ui.add_space(8.0);
-                    alert_error(ui, &self.contacts.validation_error);
-                }
+            if !self.contacts.validation_error.is_empty() {
+                ui.add_space(8.0);
+                alert_error(ui, &self.contacts.validation_error);
+            }
 
-                ui.add_space(10.0);
-                if btn_primary(ui, "Save").clicked() {
-                    self.contacts.network = self.config.network.clone();
-                    if self.contacts.save_contact() {
-                        self.config.contacts = self.contacts.contacts.clone();
-                        self.config.save();
-                        self.push_toast("Contact saved", ToastKind::Ok);
-                    }
+            ui.add_space(10.0);
+            if btn_primary(ui, "Save").clicked() {
+                self.contacts.network = self.config.network.clone();
+                if self.contacts.save_contact() {
+                    self.config.contacts = self.contacts.contacts.clone();
+                    self.config.save();
+                    self.push_toast("Contact saved", ToastKind::Ok);
                 }
-            });
+            }
+        });
         self.contacts.show_dialog = open;
     }
 
@@ -1463,27 +1319,23 @@ impl WalletApp {
     // ═════════════════════════════════════════════════════════════════
     fn show_about_dialog(&mut self, ctx: &egui::Context) {
         let mut open = self.show_about;
-        egui::Window::new("About")
-            .open(&mut open)
-            .resizable(false)
-            .collapsible(false)
-            .show(ctx, |ui| {
-                card(ui, |ui| {
-                    ui.vertical_centered(|ui| {
-                        icon(ui, Icon::Wallet, 48.0, BLUE);
-                        ui.add_space(8.0);
-                        ui.label(heading("Lapis Monetae Wallet"));
-                        ui.add_space(4.0);
-                        ui.label(body_text("Version 1.0.1"));
-                        ui.add_space(4.0);
-                        ui.label(body_text("Lapis Monetae Project"));
-                        ui.add_space(12.0);
-                        if btn_secondary(ui, "Close").clicked() {
-                            self.show_about = false;
-                        }
-                    });
+        egui::Window::new("About").open(&mut open).resizable(false).collapsible(false).show(ctx, |ui| {
+            card(ui, |ui| {
+                ui.vertical_centered(|ui| {
+                    icon(ui, Icon::Wallet, 48.0, BLUE);
+                    ui.add_space(8.0);
+                    ui.label(heading("Lapis Monetae Wallet"));
+                    ui.add_space(4.0);
+                    ui.label(body_text("Version 1.0.1"));
+                    ui.add_space(4.0);
+                    ui.label(body_text("Lapis Monetae Project"));
+                    ui.add_space(12.0);
+                    if btn_secondary(ui, "Close").clicked() {
+                        self.show_about = false;
+                    }
                 });
             });
+        });
         self.show_about = open;
     }
 
@@ -1501,41 +1353,35 @@ impl WalletApp {
         };
 
         let mut open = true;
-        egui::Window::new("Password Required")
-            .open(&mut open)
-            .resizable(false)
-            .collapsible(false)
-            .show(ctx, |ui| {
-                card(ui, |ui| {
-                    ui.vertical_centered(|ui| {
-                        icon(ui, Icon::Lock, 32.0, BLUE);
-                        ui.add_space(8.0);
-                        ui.label(body_text(prompt_label));
-                    });
+        egui::Window::new("Password Required").open(&mut open).resizable(false).collapsible(false).show(ctx, |ui| {
+            card(ui, |ui| {
+                ui.vertical_centered(|ui| {
+                    icon(ui, Icon::Lock, 32.0, BLUE);
                     ui.add_space(8.0);
-                    ui.label(label_text("Password:"));
-                    let response = ui.add(
-                        egui::TextEdit::singleline(&mut self.password_input).password(true),
-                    );
+                    ui.label(body_text(prompt_label));
+                });
+                ui.add_space(8.0);
+                ui.label(label_text("Password:"));
+                let response = ui.add(egui::TextEdit::singleline(&mut self.password_input).password(true));
 
-                    // Auto-focus the password field
-                    if response.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter)) {
+                // Auto-focus the password field
+                if response.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter)) {
+                    self.execute_password_operation();
+                    return;
+                }
+
+                ui.add_space(12.0);
+                ui.horizontal(|ui| {
+                    if btn_primary(ui, "Confirm").clicked() {
                         self.execute_password_operation();
-                        return;
                     }
-
-                    ui.add_space(12.0);
-                    ui.horizontal(|ui| {
-                        if btn_primary(ui, "Confirm").clicked() {
-                            self.execute_password_operation();
-                        }
-                        if btn_secondary(ui, "Cancel").clicked() {
-                            self.password_prompt = None;
-                            self.password_input.clear();
-                        }
-                    });
+                    if btn_secondary(ui, "Cancel").clicked() {
+                        self.password_prompt = None;
+                        self.password_input.clear();
+                    }
                 });
             });
+        });
         if !open {
             self.password_prompt = None;
             self.password_input.clear();
@@ -1623,15 +1469,13 @@ impl WalletApp {
         if self.toasts.is_empty() {
             return;
         }
-        egui::Area::new(egui::Id::new("toasts"))
-            .anchor(egui::Align2::RIGHT_TOP, egui::Vec2::new(-20.0, 70.0))
-            .show(ctx, |ui| {
-                for t in &self.toasts {
-                    let alpha = 1.0 - (t.created.elapsed().as_secs_f32() / 3.0).min(1.0);
-                    toast(ui, &t.message, t.kind.color(), alpha);
-                    ui.add_space(6.0);
-                }
-            });
+        egui::Area::new(egui::Id::new("toasts")).anchor(egui::Align2::RIGHT_TOP, egui::Vec2::new(-20.0, 70.0)).show(ctx, |ui| {
+            for t in &self.toasts {
+                let alpha = 1.0 - (t.created.elapsed().as_secs_f32() / 3.0).min(1.0);
+                toast(ui, &t.message, t.kind.color(), alpha);
+                ui.add_space(6.0);
+            }
+        });
     }
 }
 

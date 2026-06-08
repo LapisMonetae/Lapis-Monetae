@@ -5,17 +5,17 @@
 use crate::imports::*;
 use crate::result::Result;
 use lmt_consensus_core::hashing::sighash::SigHashReusedValues;
-use lmt_consensus_core::hashing::*;
 use lmt_consensus_core::hashing::sighash_type::{SigHashType, SIG_HASH_ALL};
+use lmt_consensus_core::hashing::*;
 use lmt_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
 use lmt_consensus_core::tx::{TransactionOutpoint, TransactionOutput, VerifiableTransaction};
 // use lmt_hashes::{Hash, Hasher, HasherBase, TransactionSigningHash};
-use crate::transaction::{Transaction,ITransaction};
 use crate::input::{ITransactionInput, TransactionInput};
-use crate::utxo::{IUtxoEntry,UtxoEntryReference};
-use lmt_hashes::{Hash, Hasher, HasherBase, TransactionSigningHash, TransactionSigningHashECDSA, ZERO_HASH};
-use lmt_consensus_core::hashing::HasherExtensions;
+use crate::transaction::{ITransaction, Transaction};
+use crate::utxo::{IUtxoEntry, UtxoEntryReference};
 use lmt_consensus_core::hashing::sighash::*;
+use lmt_consensus_core::hashing::HasherExtensions;
+use lmt_hashes::{Hash, Hasher, HasherBase, TransactionSigningHash, TransactionSigningHashECDSA, ZERO_HASH};
 
 #[derive(Default)]
 #[wasm_bindgen]
@@ -153,10 +153,10 @@ impl SigHashCache {
 }
 
 pub fn calc_schnorr_signature_hash(
-    tx : ITransaction,
-    input : ITransactionInput,
+    tx: ITransaction,
+    input: ITransactionInput,
     // utxo : IUtxoEntry,
-//    verifiable_tx: &impl VerifiableTransaction,
+    //    verifiable_tx: &impl VerifiableTransaction,
     input_index: usize,
     // hash_type: SigHashType,
     // reused_values: &mut SigHashReusedValues,

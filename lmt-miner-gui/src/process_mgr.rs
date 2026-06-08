@@ -235,15 +235,11 @@ impl ProcessManager {
     }
 
     pub fn bridge_uptime(&self) -> String {
-        self.bridge_start_time
-            .map(|t| format_duration(t.elapsed()))
-            .unwrap_or_else(|| "—".into())
+        self.bridge_start_time.map(|t| format_duration(t.elapsed())).unwrap_or_else(|| "—".into())
     }
 
     pub fn miner_uptime(&self) -> String {
-        self.miner_start_time
-            .map(|t| format_duration(t.elapsed()))
-            .unwrap_or_else(|| "—".into())
+        self.miner_start_time.map(|t| format_duration(t.elapsed())).unwrap_or_else(|| "—".into())
     }
 
     fn restart_delay(count: u32) -> Duration {
@@ -296,9 +292,6 @@ fn format_duration(d: Duration) -> String {
 
 pub fn test_tcp(addr: &str, timeout_ms: u64) -> bool {
     use std::net::TcpStream;
-    TcpStream::connect_timeout(
-        &addr.parse().unwrap_or_else(|_| "127.0.0.1:1".parse().unwrap()),
-        Duration::from_millis(timeout_ms),
-    )
-    .is_ok()
+    TcpStream::connect_timeout(&addr.parse().unwrap_or_else(|_| "127.0.0.1:1".parse().unwrap()), Duration::from_millis(timeout_ms))
+        .is_ok()
 }

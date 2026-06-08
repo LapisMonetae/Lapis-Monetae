@@ -195,20 +195,12 @@ impl MinerApp {
     }
 
     fn toast(&mut self, msg: &str, color: egui::Color32) {
-        self.toasts.push(Toast {
-            message: msg.to_string(),
-            color,
-            created: Instant::now(),
-        });
+        self.toasts.push(Toast { message: msg.to_string(), color, created: Instant::now() });
     }
 
     fn log(&mut self, tag: &str, text: &str) {
         let ts = chrono::Local::now().format("%H:%M:%S").to_string();
-        self.console_lines.push(ConsoleLine {
-            timestamp: ts,
-            tag: tag.to_string(),
-            text: text.to_string(),
-        });
+        self.console_lines.push(ConsoleLine { timestamp: ts, tag: tag.to_string(), text: text.to_string() });
         if self.console_lines.len() > 2000 {
             self.console_lines.drain(..500);
         }
@@ -310,10 +302,7 @@ impl eframe::App for MinerApp {
         // ── Top header bar ───────────────────────────────────────────
         egui::TopBottomPanel::top("top_bar")
             .frame(
-                egui::Frame::new()
-                    .fill(BG_WHITE)
-                    .inner_margin(egui::Margin::symmetric(16, 10))
-                    .stroke(egui::Stroke::new(1.0, BORDER)),
+                egui::Frame::new().fill(BG_WHITE).inner_margin(egui::Margin::symmetric(16, 10)).stroke(egui::Stroke::new(1.0, BORDER)),
             )
             .show(ctx, |ui| {
                 ui.horizontal(|ui| {
@@ -347,30 +336,21 @@ impl eframe::App for MinerApp {
                             self.show_about = !self.show_about;
                         }
                         if self.proc_mgr.miner_running && self.metrics.hashrate_10s > 0.0 {
-                            ui.label(big_number(
-                                &format!("{:.1} H/s", self.metrics.hashrate_10s),
-                                GREEN,
-                            ));
+                            ui.label(big_number(&format!("{:.1} H/s", self.metrics.hashrate_10s), GREEN));
                         }
                     });
                 });
             });
 
         // ── Gradient bar under header ────────────────────────────────
-        egui::TopBottomPanel::top("gradient")
-            .frame(egui::Frame::NONE)
-            .exact_height(3.0)
-            .show(ctx, |ui| {
-                gradient_bar(ui);
-            });
+        egui::TopBottomPanel::top("gradient").frame(egui::Frame::NONE).exact_height(3.0).show(ctx, |ui| {
+            gradient_bar(ui);
+        });
 
         // ── Tab bar ──────────────────────────────────────────────────
         egui::TopBottomPanel::top("tab_bar")
             .frame(
-                egui::Frame::new()
-                    .fill(BG_WHITE)
-                    .inner_margin(egui::Margin::symmetric(8, 0))
-                    .stroke(egui::Stroke::new(1.0, BORDER)),
+                egui::Frame::new().fill(BG_WHITE).inner_margin(egui::Margin::symmetric(8, 0)).stroke(egui::Stroke::new(1.0, BORDER)),
             )
             .show(ctx, |ui| {
                 ui.horizontal(|ui| {
@@ -387,10 +367,7 @@ impl eframe::App for MinerApp {
                         let resp = ui
                             .horizontal(|ui| {
                                 icon(ui, ico, 16.0, color);
-                                let text = egui::RichText::new(name)
-                                    .font(egui::FontId::proportional(13.0))
-                                    .color(color)
-                                    .strong();
+                                let text = egui::RichText::new(name).font(egui::FontId::proportional(13.0)).color(color).strong();
                                 ui.selectable_label(selected, text)
                             })
                             .inner;
@@ -462,16 +439,13 @@ impl eframe::App for MinerApp {
 
         // ── Toasts ───────────────────────────────────────────────────
         if !self.toasts.is_empty() {
-            egui::Area::new(egui::Id::new("toasts"))
-                .anchor(egui::Align2::RIGHT_TOP, egui::Vec2::new(-20.0, 60.0))
-                .show(ctx, |ui| {
-                    for t in &self.toasts {
-                        let alpha =
-                            1.0 - (t.created.elapsed().as_secs_f32() / 3.0).min(1.0);
-                        toast(ui, &t.message, t.color, alpha);
-                        ui.add_space(4.0);
-                    }
-                });
+            egui::Area::new(egui::Id::new("toasts")).anchor(egui::Align2::RIGHT_TOP, egui::Vec2::new(-20.0, 60.0)).show(ctx, |ui| {
+                for t in &self.toasts {
+                    let alpha = 1.0 - (t.created.elapsed().as_secs_f32() / 3.0).min(1.0);
+                    toast(ui, &t.message, t.color, alpha);
+                    ui.add_space(4.0);
+                }
+            });
         }
     }
 }
@@ -487,51 +461,46 @@ impl MinerApp {
             divider(ui);
             ui.add_space(4.0);
 
-            egui::Grid::new("bridge_config")
-                .num_columns(2)
-                .spacing([10.0, 8.0])
-                .show(ui, |ui| {
-                    ui.label(label_text("Bridge Binary:"));
-                    ui.horizontal(|ui| {
-                        ui.text_edit_singleline(&mut self.bridge_binary);
-                        if btn_secondary(ui, "Browse").clicked() {
-                            if let Some(p) =
-                                rfd::FileDialog::new().set_title("Select bridge binary").pick_file()
-                            {
-                                self.bridge_binary = p.to_string_lossy().to_string();
-                            }
+            egui::Grid::new("bridge_config").num_columns(2).spacing([10.0, 8.0]).show(ui, |ui| {
+                ui.label(label_text("Bridge Binary:"));
+                ui.horizontal(|ui| {
+                    ui.text_edit_singleline(&mut self.bridge_binary);
+                    if btn_secondary(ui, "Browse").clicked() {
+                        if let Some(p) = rfd::FileDialog::new().set_title("Select bridge binary").pick_file() {
+                            self.bridge_binary = p.to_string_lossy().to_string();
                         }
-                    });
-                    ui.end_row();
-
-                    ui.label(label_text("Listen Address:"));
-                    ui.text_edit_singleline(&mut self.listen_address);
-                    ui.end_row();
-
-                    ui.label(label_text("gRPC RPC URL:"));
-                    ui.text_edit_singleline(&mut self.grpc_url);
-                    ui.end_row();
-
-                    ui.label(label_text("Pay Address:"));
-                    ui.text_edit_singleline(&mut self.pay_address);
-                    ui.end_row();
-
-                    ui.label(label_text("Extra Data (hex):"));
-                    ui.text_edit_singleline(&mut self.extra_data_hex);
-                    ui.end_row();
-
-                    ui.label(label_text("Refresh Interval (ms):"));
-                    ui.text_edit_singleline(&mut self.refresh_ms);
-                    ui.end_row();
-
-                    ui.label(label_text(""));
-                    ui.checkbox(&mut self.allow_non_daa, "Allow non-DAA blocks");
-                    ui.end_row();
-
-                    ui.label(label_text(""));
-                    ui.checkbox(&mut self.bridge_auto_restart, "Auto-restart on crash");
-                    ui.end_row();
+                    }
                 });
+                ui.end_row();
+
+                ui.label(label_text("Listen Address:"));
+                ui.text_edit_singleline(&mut self.listen_address);
+                ui.end_row();
+
+                ui.label(label_text("gRPC RPC URL:"));
+                ui.text_edit_singleline(&mut self.grpc_url);
+                ui.end_row();
+
+                ui.label(label_text("Pay Address:"));
+                ui.text_edit_singleline(&mut self.pay_address);
+                ui.end_row();
+
+                ui.label(label_text("Extra Data (hex):"));
+                ui.text_edit_singleline(&mut self.extra_data_hex);
+                ui.end_row();
+
+                ui.label(label_text("Refresh Interval (ms):"));
+                ui.text_edit_singleline(&mut self.refresh_ms);
+                ui.end_row();
+
+                ui.label(label_text(""));
+                ui.checkbox(&mut self.allow_non_daa, "Allow non-DAA blocks");
+                ui.end_row();
+
+                ui.label(label_text(""));
+                ui.checkbox(&mut self.bridge_auto_restart, "Auto-restart on crash");
+                ui.end_row();
+            });
 
             if !self.bridge_error.is_empty() {
                 ui.add_space(8.0);
@@ -560,8 +529,7 @@ impl MinerApp {
                                 self.toast("Bridge started", GREEN);
                                 if self.miner_auto_start {
                                     let margs = self.build_miner_args();
-                                    let _ =
-                                        self.proc_mgr.start_miner(&self.miner_binary, margs);
+                                    let _ = self.proc_mgr.start_miner(&self.miner_binary, margs);
                                     self.log("system", "Miner auto-started");
                                 }
                             }
@@ -618,39 +586,34 @@ impl MinerApp {
             divider(ui);
             ui.add_space(4.0);
 
-            egui::Grid::new("miner_config")
-                .num_columns(2)
-                .spacing([10.0, 8.0])
-                .show(ui, |ui| {
-                    ui.label(label_text("XMRig Binary:"));
-                    ui.horizontal(|ui| {
-                        ui.text_edit_singleline(&mut self.miner_binary);
-                        if btn_secondary(ui, "Browse").clicked() {
-                            if let Some(p) =
-                                rfd::FileDialog::new().set_title("Select XMRig binary").pick_file()
-                            {
-                                self.miner_binary = p.to_string_lossy().to_string();
-                            }
+            egui::Grid::new("miner_config").num_columns(2).spacing([10.0, 8.0]).show(ui, |ui| {
+                ui.label(label_text("XMRig Binary:"));
+                ui.horizontal(|ui| {
+                    ui.text_edit_singleline(&mut self.miner_binary);
+                    if btn_secondary(ui, "Browse").clicked() {
+                        if let Some(p) = rfd::FileDialog::new().set_title("Select XMRig binary").pick_file() {
+                            self.miner_binary = p.to_string_lossy().to_string();
                         }
-                    });
-                    ui.end_row();
-
-                    ui.label(label_text("Stratum URL:"));
-                    ui.text_edit_singleline(&mut self.stratum_url);
-                    ui.end_row();
-
-                    ui.label(label_text("Extra Arguments:"));
-                    ui.text_edit_singleline(&mut self.miner_extra_args);
-                    ui.end_row();
-
-                    ui.label(label_text(""));
-                    ui.checkbox(&mut self.miner_auto_start, "Start miner with bridge");
-                    ui.end_row();
-
-                    ui.label(label_text(""));
-                    ui.checkbox(&mut self.miner_auto_restart, "Auto-restart on crash");
-                    ui.end_row();
+                    }
                 });
+                ui.end_row();
+
+                ui.label(label_text("Stratum URL:"));
+                ui.text_edit_singleline(&mut self.stratum_url);
+                ui.end_row();
+
+                ui.label(label_text("Extra Arguments:"));
+                ui.text_edit_singleline(&mut self.miner_extra_args);
+                ui.end_row();
+
+                ui.label(label_text(""));
+                ui.checkbox(&mut self.miner_auto_start, "Start miner with bridge");
+                ui.end_row();
+
+                ui.label(label_text(""));
+                ui.checkbox(&mut self.miner_auto_restart, "Auto-restart on crash");
+                ui.end_row();
+            });
 
             if !self.miner_error.is_empty() {
                 ui.add_space(8.0);
@@ -690,34 +653,12 @@ impl MinerApp {
             ui.add_space(8.0);
 
             ui.horizontal(|ui| {
-                stat_box(
-                    ui,
-                    "Hashrate (10s)",
-                    &format!("{:.1} H/s", self.metrics.hashrate_10s),
-                    Icon::Chart,
-                    GREEN,
-                );
+                stat_box(ui, "Hashrate (10s)", &format!("{:.1} H/s", self.metrics.hashrate_10s), Icon::Chart, GREEN);
                 ui.add_space(12.0);
-                stat_box(
-                    ui,
-                    "Accepted",
-                    &self.metrics.shares_accepted.to_string(),
-                    Icon::Check,
-                    BLUE,
-                );
+                stat_box(ui, "Accepted", &self.metrics.shares_accepted.to_string(), Icon::Check, BLUE);
                 ui.add_space(12.0);
-                let rej_color = if self.metrics.shares_rejected > 0 {
-                    RED
-                } else {
-                    TEXT_MUTED
-                };
-                stat_box(
-                    ui,
-                    "Rejected",
-                    &self.metrics.shares_rejected.to_string(),
-                    Icon::Warning,
-                    rej_color,
-                );
+                let rej_color = if self.metrics.shares_rejected > 0 { RED } else { TEXT_MUTED };
+                stat_box(ui, "Rejected", &self.metrics.shares_rejected.to_string(), Icon::Warning, rej_color);
             });
         }
     }
@@ -729,12 +670,7 @@ impl MinerApp {
         ui.horizontal(|ui| {
             ui.label(heading("Console"));
             ui.add_space(8.0);
-            pill(
-                ui,
-                &format!("{} lines", self.console_lines.len()),
-                BLUE_BG,
-                BLUE,
-            );
+            pill(ui, &format!("{} lines", self.console_lines.len()), BLUE_BG, BLUE);
             ui.add_space(8.0);
             if btn_secondary(ui, "Clear").clicked() {
                 self.console_lines.clear();
@@ -748,26 +684,24 @@ impl MinerApp {
             .inner_margin(egui::Margin::same(12))
             .stroke(egui::Stroke::new(1.0, BORDER))
             .show(ui, |ui| {
-                egui::ScrollArea::vertical()
-                    .stick_to_bottom(true)
-                    .show(ui, |ui| {
-                        for line in &self.console_lines {
-                            let tag_color = match line.tag.as_str() {
-                                "bridge" => BLUE_LIGHT,
-                                "miner" => GREEN,
-                                "system" => ORANGE,
-                                "error" => RED,
-                                _ => TEXT_MUTED,
-                            };
-                            ui.horizontal(|ui| {
-                                ui.label(mono_term(&format!("[{}]", line.timestamp)));
-                                // Color-coded tag pill
-                                let tag_bg = tag_color.linear_multiply(0.2);
-                                pill(ui, &line.tag, tag_bg, tag_color);
-                                ui.label(mono_term(&line.text));
-                            });
-                        }
-                    });
+                egui::ScrollArea::vertical().stick_to_bottom(true).show(ui, |ui| {
+                    for line in &self.console_lines {
+                        let tag_color = match line.tag.as_str() {
+                            "bridge" => BLUE_LIGHT,
+                            "miner" => GREEN,
+                            "system" => ORANGE,
+                            "error" => RED,
+                            _ => TEXT_MUTED,
+                        };
+                        ui.horizontal(|ui| {
+                            ui.label(mono_term(&format!("[{}]", line.timestamp)));
+                            // Color-coded tag pill
+                            let tag_bg = tag_color.linear_multiply(0.2);
+                            pill(ui, &line.tag, tag_bg, tag_color);
+                            ui.label(mono_term(&line.text));
+                        });
+                    }
+                });
             });
     }
 
@@ -779,55 +713,21 @@ impl MinerApp {
 
         // Row 1: hashrate cards
         ui.horizontal(|ui| {
-            stat_box(
-                ui,
-                "Hashrate (10s)",
-                &format!("{:.2} H/s", self.metrics.hashrate_10s),
-                Icon::Chart,
-                BLUE,
-            );
+            stat_box(ui, "Hashrate (10s)", &format!("{:.2} H/s", self.metrics.hashrate_10s), Icon::Chart, BLUE);
             ui.add_space(12.0);
-            stat_box(
-                ui,
-                "Hashrate (60s)",
-                &format!("{:.2} H/s", self.metrics.hashrate_60s),
-                Icon::Chart,
-                PURPLE,
-            );
+            stat_box(ui, "Hashrate (60s)", &format!("{:.2} H/s", self.metrics.hashrate_60s), Icon::Chart, PURPLE);
             ui.add_space(12.0);
-            stat_box(
-                ui,
-                "Hashrate (15m)",
-                &format!("{:.2} H/s", self.metrics.hashrate_15m),
-                Icon::Chart,
-                TEAL,
-            );
+            stat_box(ui, "Hashrate (15m)", &format!("{:.2} H/s", self.metrics.hashrate_15m), Icon::Chart, TEAL);
         });
 
         ui.add_space(12.0);
 
         // Row 2: shares and uptime
         ui.horizontal(|ui| {
-            stat_box(
-                ui,
-                "Shares Accepted",
-                &self.metrics.shares_accepted.to_string(),
-                Icon::Check,
-                GREEN,
-            );
+            stat_box(ui, "Shares Accepted", &self.metrics.shares_accepted.to_string(), Icon::Check, GREEN);
             ui.add_space(12.0);
-            let rej_color = if self.metrics.shares_rejected > 0 {
-                RED
-            } else {
-                TEXT_MUTED
-            };
-            stat_box(
-                ui,
-                "Shares Rejected",
-                &self.metrics.shares_rejected.to_string(),
-                Icon::Warning,
-                rej_color,
-            );
+            let rej_color = if self.metrics.shares_rejected > 0 { RED } else { TEXT_MUTED };
+            stat_box(ui, "Shares Rejected", &self.metrics.shares_rejected.to_string(), Icon::Warning, rej_color);
         });
 
         ui.add_space(12.0);
@@ -900,13 +800,9 @@ impl MinerApp {
             section(ui, Icon::Shield, "Mining Algorithm", PURPLE);
             divider(ui);
 
-            ui.label(body_text(
-                "Lapis Monetae uses RandomX (CPU-friendly PoW algorithm)",
-            ));
+            ui.label(body_text("Lapis Monetae uses RandomX (CPU-friendly PoW algorithm)"));
             ui.add_space(2.0);
-            ui.label(body_text(
-                "Mining is optimized for modern CPUs with AES-NI support",
-            ));
+            ui.label(body_text("Mining is optimized for modern CPUs with AES-NI support"));
         });
     }
 }

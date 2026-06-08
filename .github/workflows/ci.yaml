@@ -33,7 +33,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Run cargo check
-        run: cargo check --tests --workspace --benches
+        run: cargo check --tests --workspace --exclude lmt-wallet-gui --exclude lmt-miner-gui --benches
 
   test:
     name: Test Suite
@@ -117,14 +117,14 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Run cargo build with devnet-prealloc feature
-        run: cargo build --release --features devnet-prealloc --workspace --all --tests --benches
+        run: cargo build --release --features devnet-prealloc --workspace --exclude lmt-wallet-gui --exclude lmt-miner-gui --tests --benches
 
       - name: Run cargo test regular features
         run: |
-          cargo nextest run --release --workspace
+          cargo nextest run --release --workspace --exclude lmt-wallet-gui --exclude lmt-miner-gui
 
       - name: Run cargo doc tests
-        run: cargo test --doc --release --workspace
+        run: cargo test --doc --release --workspace --exclude lmt-wallet-gui --exclude lmt-miner-gui
 
       - name: Run cargo test on lmt-hashes without asm
         run: cargo nextest run --release -p lmt-hashes --features=no-asm --benches
@@ -133,7 +133,7 @@ jobs:
         run: cargo test --doc --release -p lmt-hashes --features=no-asm
 
       - name: Run cargo doc
-        run: cargo doc --release --no-deps --workspace
+        run: cargo doc --release --no-deps --workspace --exclude lmt-wallet-gui --exclude lmt-miner-gui
       - name: Run kip-10 example
         run: cargo run --example kip-10
 
@@ -215,11 +215,59 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Run cargo fmt
-        run: cargo fmt --all -- --check
+      - name: Run rustfmt on core workspace
+        shell: bash
+        run: |
+          git ls-files '*.rs' ':(exclude)lmt-wallet-gui/**' ':(exclude)lmt-miner-gui/**' \
+            | xargs rustfmt --check
 
       - name: Run cargo clippy
-        run: cargo clippy --workspace --tests --benches --examples -- -D warnings
+        run: cargo clippy --workspace --exclude lmt-wallet-gui --exclude lmt-miner-gui --tests --benches --examples -- -D warnings
+
+  gui-lints:
+    name: GUI Lints
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - name: Run rustfmt on GUI crates
+        shell: bash
+        run: |
+          git ls-files 'lmt-wallet-gui/**/*.rs' 'lmt-miner-gui/**/*.rs' \
+            | xargs rustfmt --check
+
+  gui-build:
+    name: GUI Build
+    runs-on: macos-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build wallet GUI
+        run: cargo build -p lmt-wallet-gui --release
+
+      - name: Build miner GUI
+        run: cargo build -p lmt-miner-gui --release
 
 
   check-wasm32:

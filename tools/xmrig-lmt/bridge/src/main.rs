@@ -1,6 +1,7 @@
 use std::{net::SocketAddr, sync::Arc, time::Duration};
 
 use clap::Parser;
+use futures_util::{SinkExt, StreamExt};
 use lmt_consensus_core::{hashing, header::Header};
 use lmt_grpc_client::GrpcClient;
 use lmt_math::Uint256;
@@ -16,10 +17,9 @@ use lmt_utils::hex::{FromHex, ToHex};
 use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use futures_util::{SinkExt, StreamExt};
+use std::sync::atomic::{AtomicU64, Ordering};
 use tokio::{net::TcpListener, sync::RwLock};
 use tokio_util::codec::{FramedRead, FramedWrite, LinesCodec};
-use std::sync::atomic::{AtomicU64, Ordering};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about = "LMT Stratum bridge for RandomX mining")]
@@ -127,11 +127,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     let args = Args::parse();
     let pay_address = RpcAddress::try_from(args.pay_address.as_str())?;
-    let extra_data: RpcExtraData = if args.extra_data_hex.is_empty() {
-        Vec::new()
-    } else {
-        Vec::<u8>::from_hex(args.extra_data_hex.as_str())?
-    };
+    let extra_data: RpcExtraData =
+        if args.extra_data_hex.is_empty() { Vec::new() } else { Vec::<u8>::from_hex(args.extra_data_hex.as_str())? };
 
     info!("Connecting to gRPC at {}", args.rpc_url);
     let client = GrpcClient::connect(args.rpc_url.clone()).await?;
@@ -140,10 +137,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // Verify connectivity
     tokio::time::timeout(
         Duration::from_secs(10),
-        client.get_block_template_call(
-            None,
-            GetBlockTemplateRequest::new(pay_address.clone(), extra_data.clone()),
-        ),
+        client.get_block_template_call(None, GetBlockTemplateRequest::new(pay_address.clone(), extra_data.clone())),
     )
     .await
     .map_err(|_| "initial gRPC connection timed out after 10s")?
@@ -213,10 +207,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         info!("Client connected: {addr}");
 
         tokio::spawn(async move {
-            if let Err(err) = handle_client(
-                stream, addr, client, pay_address, extra_data, allow_non_daa,
-                template, jc, m.clone(), max_submits,
-            ).await {
+            if let Err(err) =
+                handle_client(stream, addr, client, pay_address, extra_data, allow_non_daa, template, jc, m.clone(), max_submits).await
+            {
                 warn!("Client {addr} error: {err}");
             }
             m.clients_active.fetch_sub(1, Ordering::Relaxed);
@@ -439,10 +432,18 @@ async fn fetch_template(
 
 fn raw_header_to_header(header: &RpcRawHeader) -> Header {
     Header::new_finalized(
-        header.version, header.parents_by_level.clone(),
-        header.hash_merkle_root, header.accepted_id_merkle_root, header.utxo_commitment,
-        header.timestamp, header.bits, header.nonce, header.daa_score,
-        header.blue_work, header.blue_score, header.pruning_point,
+        header.version,
+        header.parents_by_level.clone(),
+        header.hash_merkle_root,
+        header.accepted_id_merkle_root,
+        header.utxo_commitment,
+        header.timestamp,
+        header.bits,
+        header.nonce,
+        header.daa_score,
+        header.blue_work,
+        header.blue_score,
+        header.pruning_point,
     )
 }
 
@@ -541,8 +542,18 @@ mod tests {
     #[test]
     fn mining_notify_payload_shape_matches_protocol() {
         let header = Header::new_finalized(
-            0, vec![], Default::default(), Default::default(), Default::default(),
-            0, 0, 0, 0, 0.into(), 0, Default::default(),
+            0,
+            vec![],
+            Default::default(),
+            Default::default(),
+            Default::default(),
+            0,
+            0,
+            0,
+            0,
+            0.into(),
+            0,
+            Default::default(),
         );
         let template = Template {
             job_id: 7,

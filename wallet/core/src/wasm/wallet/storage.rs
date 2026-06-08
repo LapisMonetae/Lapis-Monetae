@@ -1,4 +1,3 @@
-
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -10,7 +9,7 @@ use web_sys::Element;
 #[wasm_bindgen]
 extern "C" {
 
-    #[wasm_bindgen(js_name="Storage")]
+    #[wasm_bindgen(js_name = "Storage")]
     pub type Storage;
 
     #[wasm_bindgen(method, js_name = "exists")]
@@ -46,9 +45,8 @@ extern "C" {
 
     // ~~~
 
-
     #[wasm_bindgen(method, js_name = "getKeyInfoRange")]
-    async fn get_key_info_range(this: &Storage, start: usize, stop : usize) -> Result<PrvKeyDataInfo>;
+    async fn get_key_info_range(this: &Storage, start: usize, stop: usize) -> Result<PrvKeyDataInfo>;
     #[wasm_bindgen(method, js_name = "loadKeyInfo")]
     async fn load_key_info(this: &Storage, id: &PrvKeyDataId) -> Result<Option<Arc<PrvKeyDataInfo>>>;
     #[wasm_bindgen(method, js_name = "loadKeyData")]
@@ -59,7 +57,7 @@ extern "C" {
     async fn store_key_data(this: &Storage, wallet_secret: &Secret, data: PrvKeyData) -> Result<()>;
     #[wasm_bindgen(method, js_name = "removeKeyData")]
     async fn remove_key_data(this: &Storage, wallet_secret: &Secret, id: &PrvKeyDataId) -> Result<()>;
-    
+
     #[wasm_bindgen(method, js_name = "getAccountRange")]
     async fn get_account_range(this: &Storage, prv_key_data_id_filter: Option<PrvKeyDataId>) -> Result<StorageStream<Account>>;
     #[wasm_bindgen(method, js_name = "getAccountLen")]
@@ -70,11 +68,11 @@ extern "C" {
     async fn store_accounts(this: &Storage, data: &[&Account]) -> Result<()>;
     #[wasm_bindgen(method, js_name = "removeAccounts")]
     async fn remove_accounts(this: &Storage, id: &[&AccountId]) -> Result<()>;
-    
+
     // pub trait MetadataStore: Send + Sync {
-        // async fn get_metadata_range(&self, prv_key_data_id_filter: Option<PrvKeyDataId>) -> Result<StorageStream<Metadata>>;
-        // async fn load_metadata(&self, id: &[AccountId]) -> Result<Vec<Arc<Metadata>>>;
-        
+    // async fn get_metadata_range(&self, prv_key_data_id_filter: Option<PrvKeyDataId>) -> Result<StorageStream<Metadata>>;
+    // async fn load_metadata(&self, id: &[AccountId]) -> Result<Vec<Arc<Metadata>>>;
+
     #[wasm_bindgen(method, js_name = "getTransactionRecordRange")]
     async fn get_transaction_record_range(this: &Storage) -> Result<StorageStream<TransactionRecord>>;
     #[wasm_bindgen(method, js_name = "loadTransactionRecords")]
@@ -85,7 +83,6 @@ extern "C" {
     async fn remove_transaction_records(this: &Storage, id: &[&TransactionRecordId]) -> Result<()>;
 
 }
-
 
 pub(crate) struct Inner {
     storage: Storage,
@@ -98,7 +95,7 @@ pub(crate) struct Proxy {
 
 impl Proxy {
     pub fn try_new(storage: Storage) -> Result<Self> {
-        Ok(Self{ inner : Inner { storage : Arc::new(storage) }, })
+        Ok(Self { inner: Inner { storage: Arc::new(storage) } })
     }
 }
 

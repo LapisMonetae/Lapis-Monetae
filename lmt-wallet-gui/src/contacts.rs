@@ -93,11 +93,7 @@ impl ContactsManager {
         self.contacts
             .iter()
             .enumerate()
-            .filter(|(_, c)| {
-                q.is_empty()
-                    || c.name.to_lowercase().contains(&q)
-                    || c.address.to_lowercase().contains(&q)
-            })
+            .filter(|(_, c)| q.is_empty() || c.name.to_lowercase().contains(&q) || c.address.to_lowercase().contains(&q))
             .collect()
     }
 }

@@ -19,11 +19,7 @@ pub fn strip_ansi(text: &str) -> String {
 
 /// Run a CLI command and capture output with timeout
 pub fn run_cli(cli_path: &str, args: &[&str], timeout_secs: u64) -> CliResult {
-    let child = Command::new(cli_path)
-        .args(args)
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn();
+    let child = Command::new(cli_path).args(args).stdout(Stdio::piped()).stderr(Stdio::piped()).spawn();
 
     match child {
         Ok(child) => {
@@ -37,33 +33,17 @@ pub fn run_cli(cli_path: &str, args: &[&str], timeout_secs: u64) -> CliResult {
                 Ok(Ok(output)) => {
                     let stdout = strip_ansi(&String::from_utf8_lossy(&output.stdout));
                     let stderr = strip_ansi(&String::from_utf8_lossy(&output.stderr));
-                    let combined = if stderr.is_empty() {
-                        stdout
-                    } else {
-                        format!("{stdout}\n{stderr}")
-                    };
-                    CliResult {
-                        exit_code: output.status.code().unwrap_or(-1),
-                        output: combined.trim().to_string(),
-                    }
+                    let combined = if stderr.is_empty() { stdout } else { format!("{stdout}\n{stderr}") };
+                    CliResult { exit_code: output.status.code().unwrap_or(-1), output: combined.trim().to_string() }
                 }
-                Ok(Err(e)) => CliResult {
-                    exit_code: -1,
-                    output: format!("Process error: {e}"),
-                },
+                Ok(Err(e)) => CliResult { exit_code: -1, output: format!("Process error: {e}") },
                 Err(_) => {
                     drop(handle);
-                    CliResult {
-                        exit_code: -1,
-                        output: "Command timed out".into(),
-                    }
+                    CliResult { exit_code: -1, output: "Command timed out".into() }
                 }
             }
         }
-        Err(e) => CliResult {
-            exit_code: -1,
-            output: format!("Failed to launch CLI: {e}"),
-        },
+        Err(e) => CliResult { exit_code: -1, output: format!("Failed to launch CLI: {e}") },
     }
 }
 
@@ -71,12 +51,7 @@ pub fn run_cli(cli_path: &str, args: &[&str], timeout_secs: u64) -> CliResult {
 pub fn run_cli_with_stdin(cli_path: &str, args: &[&str], stdin_data: &str, timeout_secs: u64) -> CliResult {
     use std::io::Write;
 
-    let child = Command::new(cli_path)
-        .args(args)
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn();
+    let child = Command::new(cli_path).args(args).stdin(Stdio::piped()).stdout(Stdio::piped()).stderr(Stdio::piped()).spawn();
 
     match child {
         Ok(mut child) => {
@@ -96,33 +71,17 @@ pub fn run_cli_with_stdin(cli_path: &str, args: &[&str], stdin_data: &str, timeo
                 Ok(Ok(output)) => {
                     let stdout = strip_ansi(&String::from_utf8_lossy(&output.stdout));
                     let stderr = strip_ansi(&String::from_utf8_lossy(&output.stderr));
-                    let combined = if stderr.is_empty() {
-                        stdout
-                    } else {
-                        format!("{stdout}\n{stderr}")
-                    };
-                    CliResult {
-                        exit_code: output.status.code().unwrap_or(-1),
-                        output: combined.trim().to_string(),
-                    }
+                    let combined = if stderr.is_empty() { stdout } else { format!("{stdout}\n{stderr}") };
+                    CliResult { exit_code: output.status.code().unwrap_or(-1), output: combined.trim().to_string() }
                 }
-                Ok(Err(e)) => CliResult {
-                    exit_code: -1,
-                    output: format!("Process error: {e}"),
-                },
+                Ok(Err(e)) => CliResult { exit_code: -1, output: format!("Process error: {e}") },
                 Err(_) => {
                     drop(handle);
-                    CliResult {
-                        exit_code: -1,
-                        output: "Command timed out".into(),
-                    }
+                    CliResult { exit_code: -1, output: "Command timed out".into() }
                 }
             }
         }
-        Err(e) => CliResult {
-            exit_code: -1,
-            output: format!("Failed to launch CLI: {e}"),
-        },
+        Err(e) => CliResult { exit_code: -1, output: format!("Failed to launch CLI: {e}") },
     }
 }
 

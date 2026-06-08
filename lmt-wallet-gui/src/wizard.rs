@@ -101,14 +101,9 @@ impl WizardState {
     pub fn verify_backup(&mut self) -> bool {
         for (i, idx) in self.verify_indices.iter().enumerate() {
             let input = self.verify_inputs[i].trim().to_lowercase();
-            if *idx < self.mnemonic_words.len() && input != self.mnemonic_words[*idx].to_lowercase()
-            {
-                self.verify_error = format!(
-                    "Word #{} is incorrect. Expected '{}', got '{}'",
-                    idx + 1,
-                    self.mnemonic_words[*idx],
-                    input
-                );
+            if *idx < self.mnemonic_words.len() && input != self.mnemonic_words[*idx].to_lowercase() {
+                self.verify_error =
+                    format!("Word #{} is incorrect. Expected '{}', got '{}'", idx + 1, self.mnemonic_words[*idx], input);
                 return false;
             }
         }
@@ -180,22 +175,15 @@ impl WizardState {
 
                 ui.checkbox(&mut self.check_safe_place, "I am in a safe, private place");
                 ui.add_space(8.0);
-                ui.checkbox(
-                    &mut self.check_shown_once,
-                    "I understand the seed phrase is shown ONCE and cannot be recovered",
-                );
+                ui.checkbox(&mut self.check_shown_once, "I understand the seed phrase is shown ONCE and cannot be recovered");
                 ui.add_space(8.0);
-                ui.checkbox(
-                    &mut self.check_no_screenshot,
-                    "I will NOT take a screenshot \u{2014} I will write it down on paper",
-                );
+                ui.checkbox(&mut self.check_no_screenshot, "I will NOT take a screenshot \u{2014} I will write it down on paper");
                 ui.add_space(4.0);
             });
 
             ui.add_space(20.0);
 
-            let all_checked =
-                self.check_safe_place && self.check_shown_once && self.check_no_screenshot;
+            let all_checked = self.check_safe_place && self.check_shown_once && self.check_no_screenshot;
 
             ui.horizontal(|ui| {
                 if btn_secondary(ui, "Back").clicked() {
@@ -233,9 +221,7 @@ impl WizardState {
 
                 ui.label(label_text("Wallet Name"));
                 ui.add_space(4.0);
-                let name_edit = egui::TextEdit::singleline(&mut self.wallet_name)
-                    .desired_width(f32::INFINITY)
-                    .hint_text("My Wallet");
+                let name_edit = egui::TextEdit::singleline(&mut self.wallet_name).desired_width(f32::INFINITY).hint_text("My Wallet");
                 ui.add(name_edit);
                 ui.add_space(14.0);
 
@@ -252,9 +238,7 @@ impl WizardState {
 
                 ui.label(label_text("Confirm Password"));
                 ui.add_space(4.0);
-                let pw2 = egui::TextEdit::singleline(&mut self.password_confirm)
-                    .password(true)
-                    .desired_width(f32::INFINITY);
+                let pw2 = egui::TextEdit::singleline(&mut self.password_confirm).password(true).desired_width(f32::INFINITY);
                 ui.add(pw2);
 
                 if is_import {
@@ -282,11 +266,7 @@ impl WizardState {
 
             ui.horizontal(|ui| {
                 if btn_secondary(ui, "Back").clicked() {
-                    self.step = if is_import {
-                        WizardStep::Welcome
-                    } else {
-                        WizardStep::SafetyChecklist
-                    };
+                    self.step = if is_import { WizardStep::Welcome } else { WizardStep::SafetyChecklist };
                 }
                 ui.add_space(8.0);
                 if btn_primary(ui, "Continue").clicked() {
@@ -336,10 +316,7 @@ impl WizardState {
 
             card_colored(ui, RED, |ui| {
                 ui.add_space(4.0);
-                alert_warning(
-                    ui,
-                    "WRITE THESE WORDS DOWN ON PAPER. This is the ONLY time they will be shown!",
-                );
+                alert_warning(ui, "WRITE THESE WORDS DOWN ON PAPER. This is the ONLY time they will be shown!");
                 ui.add_space(14.0);
 
                 // Word grid with terminal-style background
@@ -348,24 +325,18 @@ impl WizardState {
                     .corner_radius(egui::CornerRadius::same(8))
                     .inner_margin(egui::Margin::same(16))
                     .show(ui, |ui| {
-                        egui::Grid::new("mnemonic_grid")
-                            .num_columns(4)
-                            .spacing([20.0, 10.0])
-                            .show(ui, |ui| {
-                                for (i, word) in self.mnemonic_words.iter().enumerate() {
-                                    ui.label(mono_term(&format!("{:>2}. {}", i + 1, word)));
-                                    if (i + 1) % 4 == 0 {
-                                        ui.end_row();
-                                    }
+                        egui::Grid::new("mnemonic_grid").num_columns(4).spacing([20.0, 10.0]).show(ui, |ui| {
+                            for (i, word) in self.mnemonic_words.iter().enumerate() {
+                                ui.label(mono_term(&format!("{:>2}. {}", i + 1, word)));
+                                if (i + 1) % 4 == 0 {
+                                    ui.end_row();
                                 }
-                            });
+                            }
+                        });
                     });
 
                 ui.add_space(10.0);
-                alert_error(
-                    ui,
-                    "Never share your seed phrase. Anyone with these words can steal your funds.",
-                );
+                alert_error(ui, "Never share your seed phrase. Anyone with these words can steal your funds.");
                 ui.add_space(4.0);
             });
 
@@ -387,9 +358,7 @@ impl WizardState {
 
             section(ui, Icon::Check, "Verify Your Backup", GREEN);
             ui.add_space(4.0);
-            ui.label(body_text(
-                "Enter the following words from your seed phrase to confirm your backup.",
-            ));
+            ui.label(body_text("Enter the following words from your seed phrase to confirm your backup."));
             ui.add_space(12.0);
 
             card(ui, |ui| {
@@ -450,15 +419,8 @@ impl WizardState {
                     ui.label(heading("Wallet Ready!"));
                     ui.add_space(8.0);
 
-                    let verb = if self.flow == WizardFlow::Create {
-                        "created"
-                    } else {
-                        "imported"
-                    };
-                    ui.label(body_text(&format!(
-                        "Your wallet '{}' has been successfully {}.",
-                        self.wallet_name, verb,
-                    )));
+                    let verb = if self.flow == WizardFlow::Create { "created" } else { "imported" };
+                    ui.label(body_text(&format!("Your wallet '{}' has been successfully {}.", self.wallet_name, verb,)));
 
                     ui.add_space(8.0);
                     pill(ui, "Ready", GREEN_BG, GREEN);

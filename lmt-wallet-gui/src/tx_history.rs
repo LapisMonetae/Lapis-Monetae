@@ -53,25 +53,14 @@ pub fn parse_transactions(output: &str) -> Vec<Transaction> {
                     // Find which currency matched
                     let rest = &context[c.get(0).unwrap().start()..];
                     let currency_re = Regex::new(r"[+-]?\d+(?:\.\d+)?\s+(LMT|TLMT|SLMT|DLMT)").unwrap();
-                    let cur = currency_re.captures(rest)
-                        .map(|cc| cc[1].to_string())
-                        .unwrap_or_else(|| "LMT".into());
+                    let cur = currency_re.captures(rest).map(|cc| cc[1].to_string()).unwrap_or_else(|| "LMT".into());
                     format!("{} {}", num, cur)
                 })
                 .unwrap_or_else(|| "\u{2014}".into());
 
-            let status = if context_lower.contains("pending") {
-                "pending".into()
-            } else {
-                "confirmed".into()
-            };
+            let status = if context_lower.contains("pending") { "pending".into() } else { "confirmed".into() };
 
-            txs.push(Transaction {
-                tx_id,
-                direction,
-                amount,
-                status,
-            });
+            txs.push(Transaction { tx_id, direction, amount, status });
         }
     }
     txs.truncate(30);
