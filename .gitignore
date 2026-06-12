@@ -70,6 +70,7 @@ coverage/
 *.temp
 
 # Local agent rules
+/AGENTS.md
 agent-rules.local.md
 README-LOCAL-PRUEBAS.md
 REFACTOR-TRACKING.local.md
@@ -86,7 +87,7 @@ tools/xmrig-lmt/xmrig-fork/bin/WinRing0/WinRing0x64.sys
 # Landing page
 landing/
 
-# Local assets
-assets/
+# Local root-only assets
+/assets/
 
 binarios/
