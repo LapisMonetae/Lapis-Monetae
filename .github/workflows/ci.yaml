@@ -103,7 +103,28 @@ jobs:
         uses: Swatinem/rust-cache@v2
       
       - name: Install cargo-nextest
-        run: cargo install --locked cargo-nextest
+        shell: bash
+        env:
+          CARGO_NET_RETRY: 10
+          CARGO_HTTP_MULTIPLEXING: "false"
+        run: |
+          if cargo nextest --version >/dev/null 2>&1; then
+            exit 0
+          fi
+
+          for attempt in 1 2 3; do
+            if cargo install --locked cargo-nextest; then
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 3 ]; then
+              echo "cargo-nextest installation failed after ${attempt} attempts" >&2
+              exit 1
+            fi
+
+            echo "Retrying cargo-nextest install after network failure (attempt ${attempt}/3 failed)..."
+            sleep $((attempt * 5))
+          done
 
       - name: Cache
         uses: actions/cache@v4
