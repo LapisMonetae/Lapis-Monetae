@@ -56,7 +56,7 @@ impl RebalancingWeightedTransactionSelector {
     pub fn new(policy: Policy, mut transactions: Vec<CandidateTransaction>) -> Self {
         let _sw = Stopwatch::<100>::with_threshold("TransactionsSelector::new op");
         // Sort the transactions by subnetwork_id.
-        transactions.sort_by(|a, b| a.tx.subnetwork_id.cmp(&b.tx.subnetwork_id));
+        transactions.sort_by_key(|tx| tx.tx.subnetwork_id.clone());
 
         // Create the object without selectable transactions
         let mut selector = Self {

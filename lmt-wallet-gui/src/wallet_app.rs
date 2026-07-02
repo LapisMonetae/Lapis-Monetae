@@ -756,10 +756,8 @@ impl WalletApp {
                     self.screen = Screen::Wizard;
                     self.wizard.start_import();
                 }
-                if self.is_wallet_open() {
-                    if btn_warning(ui, "Lock").clicked() {
-                        self.run_cli_async("lock", vec!["wallet".into(), "close".into()]);
-                    }
+                if self.is_wallet_open() && btn_warning(ui, "Lock").clicked() {
+                    self.run_cli_async("lock", vec!["wallet".into(), "close".into()]);
                 }
             });
         });
@@ -779,10 +777,8 @@ impl WalletApp {
                             ui.ctx().copy_text(self.address.clone());
                             self.push_toast("Address copied", ToastKind::Ok);
                         }
-                        if btn_small(ui, "New Address", GREEN).clicked() {
-                            if self.require_wallet_open() {
-                                self.run_cli_async("new_address", vec!["address".into(), "new".into()]);
-                            }
+                        if btn_small(ui, "New Address", GREEN).clicked() && self.require_wallet_open() {
+                            self.run_cli_async("new_address", vec!["address".into(), "new".into()]);
                         }
                     });
                 }
@@ -802,18 +798,14 @@ impl WalletApp {
                     }
                 }
                 ui.add_space(4.0);
-                if btn_warning(ui, "Send").clicked() {
-                    if self.require_wallet_open() {
-                        self.show_send_dialog = true;
-                        self.send_error.clear();
-                    }
+                if btn_warning(ui, "Send").clicked() && self.require_wallet_open() {
+                    self.show_send_dialog = true;
+                    self.send_error.clear();
                 }
                 ui.add_space(4.0);
-                if btn_secondary(ui, "Transfer").clicked() {
-                    if self.require_wallet_open() {
-                        self.show_transfer_dialog = true;
-                        self.transfer_error.clear();
-                    }
+                if btn_secondary(ui, "Transfer").clicked() && self.require_wallet_open() {
+                    self.show_transfer_dialog = true;
+                    self.transfer_error.clear();
                 }
             });
         });
@@ -926,10 +918,8 @@ impl WalletApp {
                 ui.add_space(4.0);
                 ui.label(heading("Transaction History"));
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if btn_small(ui, "Refresh", BLUE).clicked() {
-                        if self.is_wallet_open() {
-                            self.run_cli_async("history", vec!["history".into(), "list".into(), "30".into()]);
-                        }
+                    if btn_small(ui, "Refresh", BLUE).clicked() && self.is_wallet_open() {
+                        self.run_cli_async("history", vec!["history".into(), "list".into(), "30".into()]);
                     }
                 });
             });

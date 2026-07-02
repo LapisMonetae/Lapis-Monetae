@@ -177,7 +177,7 @@ impl ConsensusSessionOwned {
 
     pub fn validate_and_insert_block_batch(&self, mut batch: Vec<Block>) -> BlockProcessingBatch {
         // Sort by blue work in order to ensure topological order
-        batch.sort_by(|a, b| a.header.blue_work.partial_cmp(&b.header.blue_work).unwrap());
+        batch.sort_by_key(|block| block.header.blue_work);
         let (block_tasks, virtual_state_tasks) = batch
             .iter()
             .map(|b| {

@@ -1,6 +1,5 @@
-/// Bech32 address validator for LMT addresses.
-/// Prefixes: lmt: (mainnet), lmttest: (testnet), lmtsim: (simnet), lmtdev: (devnet)
-
+// Bech32 address validator for LMT addresses.
+// Prefixes: lmt: (mainnet), lmttest: (testnet), lmtsim: (simnet), lmtdev: (devnet)
 const CHARSET: &str = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
 
 fn charset_index(c: char) -> Option<u32> {

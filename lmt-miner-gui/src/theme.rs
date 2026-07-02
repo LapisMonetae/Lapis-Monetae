@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use eframe::egui::{self, Color32, CornerRadius, FontId, Margin, Pos2, RichText, Stroke, StrokeKind, Vec2, Visuals};
 
 // ── Light palette ─────────────────────────────────────────────────────

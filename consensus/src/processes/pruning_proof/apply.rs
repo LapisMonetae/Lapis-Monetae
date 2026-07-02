@@ -66,7 +66,7 @@ impl PruningProofManager {
         }
 
         proof.iter_mut().for_each(|level_proof| {
-            level_proof.sort_by(|a, b| a.blue_work.cmp(&b.blue_work));
+            level_proof.sort_by_key(|header| header.blue_work);
         });
 
         self.populate_reachability_and_headers(&proof);

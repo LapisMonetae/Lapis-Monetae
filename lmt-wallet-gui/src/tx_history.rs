@@ -26,6 +26,7 @@ impl std::fmt::Display for TxDirection {
 pub fn parse_transactions(output: &str) -> Vec<Transaction> {
     let tx_re = Regex::new(r"\b[a-fA-F0-9]{64}\b").unwrap();
     let amount_re = Regex::new(r"([+-]?\d+(?:\.\d+)?)\s+(?:LMT|TLMT|SLMT|DLMT)\b").unwrap();
+    let currency_re = Regex::new(r"[+-]?\d+(?:\.\d+)?\s+(LMT|TLMT|SLMT|DLMT)").unwrap();
     let mut txs = Vec::new();
     let lines: Vec<&str> = output.lines().collect();
 
@@ -52,7 +53,6 @@ pub fn parse_transactions(output: &str) -> Vec<Transaction> {
                     let num = &c[1];
                     // Find which currency matched
                     let rest = &context[c.get(0).unwrap().start()..];
-                    let currency_re = Regex::new(r"[+-]?\d+(?:\.\d+)?\s+(LMT|TLMT|SLMT|DLMT)").unwrap();
                     let cur = currency_re.captures(rest).map(|cc| cc[1].to_string()).unwrap_or_else(|| "LMT".into());
                     format!("{} {}", num, cur)
                 })

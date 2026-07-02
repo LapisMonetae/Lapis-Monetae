@@ -366,10 +366,7 @@ impl PruningProofManager {
         }
 
         let mut has_required_block = required_block.is_some_and(|required_block| root == required_block);
-        loop {
-            let Some(current) = topological_heap.pop() else {
-                break;
-            };
+        while let Some(current) = topological_heap.pop() {
             let current_hash = current.0.hash;
             if !visited.insert(current_hash) {
                 continue;

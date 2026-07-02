@@ -271,22 +271,18 @@ impl MinerApp {
         }
 
         // Auto-restart logic
-        if !self.proc_mgr.bridge_running && self.bridge_auto_restart {
-            if self.proc_mgr.should_restart_bridge() {
-                self.log("system", "Auto-restarting bridge...");
-                let args = self.build_bridge_args();
-                if let Err(e) = self.proc_mgr.start_bridge(&self.bridge_binary, args) {
-                    self.log("error", &format!("Bridge restart failed: {e}"));
-                }
+        if !self.proc_mgr.bridge_running && self.bridge_auto_restart && self.proc_mgr.should_restart_bridge() {
+            self.log("system", "Auto-restarting bridge...");
+            let args = self.build_bridge_args();
+            if let Err(e) = self.proc_mgr.start_bridge(&self.bridge_binary, args) {
+                self.log("error", &format!("Bridge restart failed: {e}"));
             }
         }
-        if !self.proc_mgr.miner_running && self.miner_auto_restart {
-            if self.proc_mgr.should_restart_miner() {
-                self.log("system", "Auto-restarting miner...");
-                let args = self.build_miner_args();
-                if let Err(e) = self.proc_mgr.start_miner(&self.miner_binary, args) {
-                    self.log("error", &format!("Miner restart failed: {e}"));
-                }
+        if !self.proc_mgr.miner_running && self.miner_auto_restart && self.proc_mgr.should_restart_miner() {
+            self.log("system", "Auto-restarting miner...");
+            let args = self.build_miner_args();
+            if let Err(e) = self.proc_mgr.start_miner(&self.miner_binary, args) {
+                self.log("error", &format!("Miner restart failed: {e}"));
             }
         }
     }

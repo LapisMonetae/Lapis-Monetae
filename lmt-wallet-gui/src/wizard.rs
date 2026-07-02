@@ -11,6 +11,7 @@ pub enum WizardFlow {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+#[allow(dead_code)]
 pub enum WizardStep {
     Welcome,
     SafetyChecklist,
@@ -391,11 +392,9 @@ impl WizardState {
                     self.step = WizardStep::ShowMnemonic;
                 }
                 ui.add_space(8.0);
-                if btn_success(ui, "Verify").clicked() {
-                    if self.verify_backup() {
-                        action = WizardAction::BackupVerified;
-                        self.step = WizardStep::Done;
-                    }
+                if btn_success(ui, "Verify").clicked() && self.verify_backup() {
+                    action = WizardAction::BackupVerified;
+                    self.step = WizardStep::Done;
                 }
             });
         });
